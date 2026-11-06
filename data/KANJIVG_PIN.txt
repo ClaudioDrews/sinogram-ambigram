@@ -1,0 +1,21 @@
+KanjiVG reference snapshot for Sinogram Ambigrams
+=================================================
+
+Repository: https://github.com/KanjiVG/kanjivg
+Commit: 70a0b7ae0c18ceb5cb358274b029cce0234a43bc
+Commit URL: https://github.com/KanjiVG/kanjivg/commit/70a0b7ae0c18ceb5cb358274b029cce0234a43bc
+SHA-256 of kvg-index.json: 8a9686f4cda0188d926ddcd4010eda521630f5f40de8b9c308bb8892923136c9
+Canonical source SVG directory: kanji/
+
+Re-download the pinned snapshot (not the changing master branch):
+
+    curl -L -o kanjivg-pinned.tar.gz \
+      https://github.com/KanjiVG/kanjivg/archive/70a0b7ae0c18ceb5cb358274b029cce0234a43bc.tar.gz
+    tar xf kanjivg-pinned.tar.gz
+    sha256sum kanjivg-70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kvg-index.json
+
+Expected SHA-256: 8a9686f4cda0188d926ddcd4010eda521630f5f40de8b9c308bb8892923136c9
+The SHA refers to the extracted index file, not the compressed archive.
+
+Browser fallback for glyphs not embedded in generator/index.html:
+https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@70a0b7ae0c18ceb5cb358274b029cce0234a43bc/kanji/<five-digit-lowercase-hex-codepoint>.svg

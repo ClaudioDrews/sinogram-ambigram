@@ -1,0 +1,12 @@
+pair,evidence,status,metric,value,qualification
+由↔甲,MEASURED,candidate,exact_H,0.0751,Second among distinct refined pairs; not human validated
+目↔目,MEASURED,self_rotation,exact_H,0.0323,KanjiVG canonical glyph only
+日↔日,MEASURED,self_rotation,exact_H,0.0436,KanjiVG canonical glyph only
+一↔一,MEASURED,self_rotation,exact_H,0.0504,KanjiVG canonical glyph only
+田↔田,MEASURED,self_rotation,exact_H,0.0509,KanjiVG canonical glyph only
+口↔口,MEASURED,self_rotation,exact_H,0.0614,KanjiVG canonical glyph only
+回↔回,MEASURED,self_rotation,exact_H,0.0697,KanjiVG canonical glyph only
+上↔下,MEASURED,negative_control,mirror_vs_rotation,,Mirror confound; reject as confirmed rotational pair
+未↔末,REPORTED,disputed,,,Visual interpretation and metrics disagree
+土↔士,REPORTED,disputed,,,Different fonts and metrics conflict
+王↔玉,MEASURED,candidate,,,Approximate geometry; one distinguishing dot; no human validation
