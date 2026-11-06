@@ -1,21 +1,6 @@
----
-title: "Pair Evidence Matrix"
-id: pair-evidence-matrix
-type: finding
-status: reviewed
-evidence: [MEASURED, REPORTED, DERIVED]
-tags: [sinogram, ambigram, rotation-180, control-pair, candidate-pair]
-created: 2026-11-01
-updated: 2026-11-05
-language: en
-license: MIT
-translations: {zh: machine-assisted, ja: machine-assisted}
-related: [results-summary, conflicts-and-corrections, metrics-comparison, exp-08]
----
-
 # Pair Evidence Matrix
 
-One row per pair; every cell cites the run that produced it. **Not comparable across columns** (different metrics, fonts, universes — see [metrics-comparison](../methods/metrics-comparison.md)). Higher = more similar except Mistral (distance, lower = more similar). "—" = not measured / not in the output. Labels: see README (source reference in repo2: `../README.md`).
+One row per pair; every cell cites the run that produced it. **Not comparable across columns** (different metrics, fonts, universes — see [metrics-comparison](../methods/metrics-comparison.md)). Higher = more similar except Mistral (distance, lower = more similar). "—" = not measured / not in the output. Evidence labels are defined in the [repository README](../README.md).
 
 | Pair | GPT pilot (IoU aligned/unshifted) | GLM (IoU) | Claude v1 (F1) | Claude v2 (score) | Kimi (IoU gothic/Mincho) | Mistral (d_bb, rank/6,328) | MiniMax (exact H) | Reading / verdict |
 |---|---|---|---|---|---|---|---|---|
@@ -42,7 +27,7 @@ One row per pair; every cell cites the run that produced it. **Not comparable ac
 
 Notes:
 * "Row n" for Claude v2 = ranking row in `v2_pares_cruzados.csv` (delivered with the project, not in this distribution), counted from the top excluding the header; "line n" = file line number including the header.
-* GPT's self-rotation values for the same character differ between "aligned" and "unshifted" columns (exp-01 (source reference in repo2: `../experiments/exp-01-gpt-pilot-42.md`)).
+* GPT's self-rotation values for the same character differ between "aligned" and "unshifted" columns (exp-01).
 * MiniMax column: exact distances from `rotation_pairs.csv` (5,180 refined pairs). Only the canonical pair is reproduced here; the full ranking is in `rotation_pairs.csv` (not in this distribution) and the grid-metric version in `rotation_pairs_top.csv.gz` (different scale, see [metrics](../methods/metrics-comparison.md)).
 * Pairs not measured anywhere: 杏↔呆, 杳↔杲, 全力↔不屈 (and its characters), 外国↔国外.
 
@@ -51,4 +36,4 @@ Notes:
 - [Results summary](../findings/results-summary.md)
 - [Conflicts and corrections](../findings/conflicts-and-corrections.md)
 - [Metrics comparison](../methods/metrics-comparison.md)
-- EXP-08 — MiniMax rotation graph (source reference in repo2: `../experiments/exp-08-minimax-rotation-graph.md`)
+- [KanjiVG rotation-graph method](../methods/rotgraph-method.md)
