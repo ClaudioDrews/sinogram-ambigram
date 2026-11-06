@@ -1,21 +1,6 @@
----
-title: "Conflicts Between Sources and Corrections Recorded"
-id: conflicts-and-corrections
-type: finding
-status: reviewed
-evidence: [CONFLICT, MEASURED, CLAIM, REPORTED]
-tags: [sinogram, ambigram, rotation-180, control-pair, unverified, review]
-created: 2026-11-01
-updated: 2026-11-05
-language: en
-license: MIT
-translations: {zh: machine-assisted, ja: machine-assisted}
-related: [results-summary, pair-evidence-matrix, exp-08, limitations]
----
-
 # Conflicts Between Sources and Corrections Recorded
 
-IDs are stable references used across the docs. Each entry states the claims, who made them, and the current status. **Nothing here is resolved by the documenter**; where a check was possible it is noted. Labels: see README (source reference in repo2: `../README.md`).
+IDs are stable references used across the docs. Each entry states the claims, who made them, and the current status. **Nothing here is resolved by this publication**; where a check was possible it is noted. Evidence labels are defined in the [repository README](../README.md).
 
 ## A. Pair-level conflicts
 
@@ -41,7 +26,7 @@ IDs are stable references used across the docs. Each entry states the claims, wh
 | C-11 | 全力↔不屈 | RPT-CONSOL/META/DECK: R(力)≈不, R(全)≈屈 (fusing three horizontals of 王 into 尸); source cited: a community post on stroke-density selection · Claude v2 list: 全 only with 手/芋 | Unmeasured; [CLAIM] |
 | C-12 | ⿻ operator | DeepSeek reverses children; GPT `Rterm` and Claude keep order; no test | Open ([algebra doc](../theory/ids-rotation-algebra.md)) |
 | C-13 | Mistral data provenance | Called "derived from KanjiVG/animCJK via Make Me a Hanzi" in one place and as KanjiVG-equivalent in another | Unverified |
-| C-16 | GPT report table header | First table headed "IoU after rotation and alignment" but equals the unshifted ranking; aligned ±3 px is a second table (上↔丁 .680, 王↔玉 .671) | Documented (exp-01 (source reference in repo2: `../experiments/exp-01-gpt-pilot-42.md`)) |
+| C-16 | GPT report table header | First table headed "IoU after rotation and alignment" but equals the unshifted ranking; aligned ±3 px is a second table (上↔丁 .680, 王↔玉 .671) | Documented (exp-01) |
 
 ## C. Corrections made inside the sources (kept for traceability)
 
@@ -50,7 +35,7 @@ IDs are stable references used across the docs. Each entry states the claims, wh
 * Claude: v1 failed its own sanity controls and said so; 土士 "exact" claim refuted (then contested by Kimi); 未末 correction by GLM rejected.
 * Kimi: 土士 .40 → .864/.808 (Source Han).
 * GPT (third turn): ε "iff" needs conditions; IDS algebra must be typed.
-* Gemini: re-framed the contact-sheet reading after the owner's "Nope. 180°" (exp-06 (source reference in repo2: `../experiments/exp-06-visual-reading-of-contact-sheet.md`)).
+* Gemini: re-framed the contact-sheet reading after the owner's "Nope. 180°" (exp-06).
 
 ## D. Referenced-but-missing items
 
@@ -58,13 +43,13 @@ IDs are stable references used across the docs. Each entry states the claims, wh
 * Catalog source index rows #9 "Ambigramas de Sinogramas" and #12 "Ambigramas Jōyō": not files in the folder; the owner says they are **unknown**.
 * Claude's `res_*.npz`, `w1.npz`, `cand.json`, `trees.json` (and CHISE IDS files): **confirmed absent** from `claude-run/` after a re-check of Drive and `sources/`; per the owner all files of Claude's zip are already in `claude-run/`, so these were never part of it. Regenerable.
 * Kimi's code and result files; GLM's `rotation_family_check.py`: absent.
-* Nomura's book: not read by any run; the six laws' text is not online (nomura-sources-and-findings (source reference in repo2: `../research/nomura-sources-and-findings.md`)).
+* Nomura's book: not read by any run; the six laws' text is not online (nomura-sources-and-findings).
 
 ## E. Script/label inconsistency found in a second-pass code read
 
 | ID | Item | Detail |
 |---|---|---|
-| C-17 | `analyze.py` console label vs code | Prints "minimum of the two fonts" / "score=min(gothic,mincho)" but uses the gothic matrix only; the v1 `EXPLORATORIO_*` CSVs are therefore gothic-only (exp-03 (source reference in repo2: `../experiments/exp-03-claude-skeleton-and-profile.md`)). |
+| C-17 | `analyze.py` console label vs code | Prints "minimum of the two fonts" / "score=min(gothic,mincho)" but uses the gothic matrix only; the v1 `EXPLORATORIO_*` CSVs are therefore gothic-only (exp-03). |
 
 ## F. MiniMax internal divergences (X1–X8) — recorded, not corrected
 
@@ -121,11 +106,11 @@ A three-turn conversation between the owner and a model labelled "Claude", deliv
 | CR6 | **Tests that fail in the review itself**: R4 (positives in the normalised top-20) is **FAIL** — 中 is 30th (十 7th, 日 3rd, 田 5th, 口 4th, 目 2nd); R5 passes narrowly (1,390 vs a 1,385 cut) | `validacao_report.md`; no criterion was adjusted after the failure |
 | CR7 | **Incomplete coverage of the normalised score**: estimated recall 0.92 with `--norm-top 30000` | Raising `--norm-top` closes the gap at an unmeasured cost |
 
-The review also lists eleven improvements, each with an acceptance criterion; they are tracked as a roadmap in tool status and roadmap (source reference in repo2: `../project/tool-status-and-roadmap.md`). It is internally inconsistent in three places (degree of 圃 41 vs 58; "reliable graph" up to 0.085–0.09 vs 0.11; per-node median recommended and then discarded) — recorded as they are.
+The review also lists eleven improvements, each with an acceptance criterion; they are tracked as a roadmap in tool status and roadmap. It is internally inconsistent in three places (degree of 圃 41 vs 58; "reliable graph" up to 0.085–0.09 vs 0.11; per-node median recommended and then discarded) — recorded as they are.
 
 ## Related
 
 - [Results summary](../findings/results-summary.md)
 - [Pair evidence matrix](../findings/pair-evidence-matrix.md)
-- EXP-08 — MiniMax rotation graph (source reference in repo2: `../experiments/exp-08-minimax-rotation-graph.md`)
+- [KanjiVG rotation-graph method](../methods/rotgraph-method.md)
 - [Limitations](../findings/limitations.md)
