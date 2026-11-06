@@ -8,12 +8,18 @@
 
 ![甲と由のブラウザー生成例](../../assets/generator-preview.png)
 
+### 回転字形のギャラリー
+
+![4組の候補をそれぞれ0°と180°で示した生成SVG](../../assets/rotation-gallery.png)
+
+*生成器で作成した4組の実験的な候補：甲 ↔ 由、吉 ↔ 阜、目 ↔ 目、回 ↔ 回。回転前後の形と対象文字を見比べてください。*
+
 ## まず試す
 
-- **[アンビグラム生成器](../../generator/index.html)**：漢字を入力して回転後の形が近い候補を検索し、SVGを合成します。生成方式を変更し、180°回転して比較し、SVGを保存できます。意味の近い別の字を試す機能は**少数の手作業で定義した例**のみで、一般的な同義語辞書ではありません。
-- **[Rotation Lab](../../demo/index.html)**：**16例**を使い、複雑な字形、ストロークの重ね合わせ、線の強調、C₂対称性、構成要素の配置を試せます。両方とも英語・中国語・日本語のUIを備えます。
+- **[アンビグラム生成器](https://claudiodrews.github.io/sinogram-ambigram/generator/)**：漢字を入力して回転後の形が近い候補を検索し、SVGを合成します。生成方式を変更し、180°回転して比較し、SVGを保存できます。意味の近い別の字を試す機能は**少数の手作業で定義した例**のみで、一般的な同義語辞書ではありません。
+- **[Rotation Lab](https://claudiodrews.github.io/sinogram-ambigram/demo/)**：**16例**を使い、複雑な字形、ストロークの重ね合わせ、線の強調、C₂対称性、構成要素の配置を試せます。両方とも英語・中国語・日本語のUIを備えます。
 
-GitHub上でHTMLファイルを開くとソースが表示されます。操作するにはファイルをブラウザーで開くか、リポジトリのGitHub Pagesを有効にしてください。
+**[プロジェクトサイト](https://claudiodrews.github.io/sinogram-ambigram/)** と上記の二つのデモは GitHub Pages で公開済みです。ソースコードは [`generator/`](../../generator/) と [`demo/`](../../demo/) にあります。
 
 ## 仕組み
 
@@ -38,4 +44,4 @@ GitHub上でHTMLファイルを開くとソースが表示されます。操作�
 
 ## フィードバックとライセンス
 
-気になる候補や改善案があれば、SVG・画像・文字の組を添えて[作者のGitHub](https://github.com/ClaudioDrews)へお知らせください。独自コードと文章は [MIT](../../LICENSE)、KanjiVG由来のストロークデータと加工した図形は [CC BY-SA 3.0](../../NOTICE.md) です。詳しくは[出典・ライセンス表記](../../NOTICE.md)をご覧ください。
+気になる候補や改善案があれば、文字の組・生成方法・SVGや画像を添えて [GitHub Issueを作成](https://github.com/ClaudioDrews/sinogram-ambigram/issues/new) してください。[Claudio Drewsにメール](mailto:21au6i06R3w55891@proton.me)で連絡することもできます。独自コードと文章は [MIT](../../LICENSE)、KanjiVG由来のストロークデータと加工した図形は [CC BY-SA 3.0](../../NOTICE.md) です。詳しくは[出典・ライセンス表記](../../NOTICE.md)をご覧ください。
