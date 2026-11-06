@@ -63,7 +63,7 @@ def main():
     meta = json.load(open(f"{CACHE}/meta.json"))
     n = len(meta)
     dt = np.load(f"{CACHE}/dt.npy", mmap_mode="r")
-    print(f"{n} glifos", flush=True)
+    print(f"{n} glyphs", flush=True)
 
     # ---------- skeleton IoU for all pairs (BLAS) ----------
     t0 = time.time()
@@ -73,10 +73,8 @@ def main():
     inter = A @ Arot.T                      # inter[a,b] = |A_a ∩ R(B_b)|
     union = counts[:, None] + counts[None, :] - inter
     iou = inter / np.maximum(union, 1.0)
-    print(f"IoU matrix em {time.time()-t0:.1f}s", flush=True)
+    print(f"IoU matrix in {time.time()-t0:.1f}s", flush=True)
     del A, Arot, inter, union
-    iu = np.triu_indices(n, k=0)
-    iou_pairs = iou[iu]
 
     # ---------- chamfer / rms / hausdorff ----------
     blocks = []
@@ -88,9 +86,11 @@ def main():
         parts = []
         for i, r in enumerate(pool.imap_unordered(_chunk, blocks)):
             parts.append(r)
-            print(f"  bloco {i+1}/{len(blocks)} {time.time()-t0:.1f}s", flush=True)
+            print(f"  block {i+1}/{len(blocks)} {time.time()-t0:.1f}s", flush=True)
     res = np.concatenate(parts)
-    res["iou"] = iou_pairs.astype(np.float32)
+    # imap_unordered returns blocks in completion order, not index order.
+    # Look up each metric by its explicit pair indices instead.
+    res["iou"] = iou[res["a"], res["b"]].astype(np.float32)
     np.save(f"{CACHE}/pairs2.npz", res)
     print(f"saved: {len(res)} pairs in {time.time()-t0:.1f}s", flush=True)
 
