@@ -1,21 +1,6 @@
----
-title: "Results Summary (what the evidence supports)"
-id: results-summary
-type: finding
-status: reviewed
-evidence: [MEASURED, DERIVED, PAPER, CLAIM, REPORTED]
-tags: [sinogram, ambigram, rotation-180, c2-class, candidate-pair]
-created: 2026-11-01
-updated: 2026-11-05
-language: en
-license: MIT
-translations: {zh: machine-assisted, ja: machine-assisted}
-related: [pair-evidence-matrix, conflicts-and-corrections, limitations, exp-08]
----
-
 # Results Summary (what the evidence supports)
 
-Strict summary of what was **measured, derived or only claimed**. For details follow the links. Labels: see README (source reference in repo2: `../README.md`).
+Strict summary of what was **measured, derived or only claimed**. For details follow the links. Evidence labels are defined in the [repository README](../README.md).
 
 ## R1. Documented / verified from the paper [PAPER]
 
@@ -30,7 +15,7 @@ Strict summary of what was **measured, derived or only claimed**. For details fo
 * Word lemma `R(c₁…c_n)=R(c_n)…R(c₁)` ([word-level](../theory/word-level-and-lexical.md)).
 * Pair-count arithmetic: 46 hiragana ⇒ 1,081 pairs incl. self.
 
-## R3. Measured (geometric proxies; no human validation) [MEASURED]
+## R3. Measured (geometric proxies; No controlled native-reader validation) [MEASURED]
 
 | ID | Result | Run | Caveat |
 |---|---|---|---|
@@ -41,7 +26,7 @@ Strict summary of what was **measured, derived or only claimed**. For details fo
 | R-CAND | Candidate near-pairs: 士↔干 (.984), 千↔士, 土↔干, 王↔玉, 王↔正, 玉↔正, 上↔丁 (aliasing: needs hook→bar), 旦↔百 | Claude v2, Mistral, GPT | scores are metric-specific (GPT's best pair stays < 0.70); no human check |
 | R-MIRROR | 上↔下 is a mirror pair (H>R) | GLM, Claude v1 | Claude v2 CSV lists it at .793 |
 | R-NEG | 未↔末 and 凹↔凸 behave as negative controls; R(未)≈半 | Claude v1/v2, GLM (凹凸) | GLM's own 未末 reasoning flip-flopped |
-| R-VIS | Visual readings: R(士)=干, R(甲)=由, R(由)=甲, R(田)=田, R(中)=中, R(目)=目 | Claude (+ models) | VLM readers, not humans (exp-06 (source reference in repo2: `../experiments/exp-06-visual-reading-of-contact-sheet.md`)) |
+| R-VIS | Visual readings: R(士)=干, R(甲)=由, R(由)=甲, R(田)=田, R(中)=中, R(目)=目 | Claude (+ models) | VLM readers, not humans (exp-06) |
 | R-PIPE | Pre-filtering with W1 profile + warp-based scoring works as a candidate generator, not as a decision rule | Claude v2 | uncalibrated threshold |
 | R-C2COUNT | Exact Jōyō self-ambigrams ≈ 15–20 (gothic cut ≥0.80) | Kimi (13 ≥.9, 20 ≥.8 in Claude v2) | metric-dependent |
 | R-C2VG | Vector self-rotation orders the C2 core as 目 .0323, 日 .0436, 一 .0504, 田 .0509, 口 .0614, 回 .0697; 23 glyphs at H ≤ 0.085 | MiniMax (exact refinement) | one canonical shape per glyph; frame glyphs over-ranked (CR2) |
@@ -50,15 +35,15 @@ Strict summary of what was **measured, derived or only claimed**. For details fo
 
 ## R4. Claims without measurement [CLAIM/PLAN]
 
-Nomura law formalisations; "3× chance / 70% of work" heuristics; 全力↔不屈 mechanism; 挑戦↔勝利 analysis; ε values; C2 lists with 士/木/品/吕; stroke cost values; all roadmaps; RFB transfer ideas (related work (source reference in repo2: `../research/related-work-and-cross-project.md`)).
+Nomura law formalisations; "3× chance / 70% of work" heuristics; 全力↔不屈 mechanism; 挑戦↔勝利 analysis; ε values; C2 lists with 士/木/品/吕; stroke cost values; all roadmaps; RFB transfer ideas (related work).
 
 ## R5. What is NOT yet known
 
-See [limitations](../findings/limitations.md) and open questions (source reference in repo2: `../open-questions.md`). Most important: no calibrated ε, no human tests, no SVG generator. A full pair search over 2,770 glyphs under a KanjiVG-based geometric metric now exists (exp-08), but its ranking is not validated: it has a density bias and a hub bias, its graph is only reliable below H ≈ 0.09, and an independent review found that several "confirmed" findings of that run do not hold (X3, X4) and that some of its own tests fail (CR6).
+See [limitations](../findings/limitations.md) and open questions. Most important: no calibrated ε, no human tests, no human-validated general-purpose ambigram generator. A full pair search over 2,770 glyphs under a KanjiVG-based geometric metric now exists (exp-08), but its ranking is not validated: it has a density bias and a hub bias, its graph is only reliable below H ≈ 0.09, and an independent review found that several "confirmed" findings of that run do not hold (X3, X4) and that some of its own tests fail (CR6).
 
 ## Related
 
 - [Pair evidence matrix](../findings/pair-evidence-matrix.md)
 - [Conflicts and corrections](../findings/conflicts-and-corrections.md)
 - [Limitations](../findings/limitations.md)
-- EXP-08 — MiniMax rotation graph (source reference in repo2: `../experiments/exp-08-minimax-rotation-graph.md`)
+- [KanjiVG rotation-graph method](../methods/rotgraph-method.md)
