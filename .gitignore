@@ -16,3 +16,6 @@ output/
 Thumbs.db
 .idea/
 .vscode/
+
+# Downloaded KanjiVG source snapshot (re-fetch with scripts/download_kanjivg.sh)
+data/kanjivg/
