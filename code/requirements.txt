@@ -1,0 +1,3 @@
+# Direct third-party imports across recovered scripts. Tested versions below.
+numpy==2.5.4
+Pillow==13.0.0
