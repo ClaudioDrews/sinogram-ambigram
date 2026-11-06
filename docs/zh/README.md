@@ -8,12 +8,18 @@
 
 ![在浏览器中生成 甲 与 由 的示例](../../assets/generator-preview.png)
 
+### 旋转字形示例
+
+![四组候选字形，每组分别展示 0° 与 180° 的同一 SVG](../../assets/rotation-gallery.png)
+
+*由生成器生成的四组实验性字形：甲 ↔ 由、吉 ↔ 阜、目 ↔ 目、回 ↔ 回。请将两个方向与目标字符进行视觉比较。*
+
 ## 立即体验
 
-- **[双读字形生成器](../../generator/index.html)**：输入一个汉字，搜索旋转后几何形状相近的候选字，合成可旋转的 SVG、切换构造方法并下载。仅提供**少量人工整理的语义替代字**，不是完整的同义词词典。
-- **[Rotation Lab](../../demo/index.html)**：探索 **16 个示例**，包括复杂结构、笔画重合、显著性调节、中心对称和构件布局。两种演示均支持英语、中文和日语界面。
+- **[双读字形生成器](https://claudiodrews.github.io/sinogram-ambigram/generator/)**：输入一个汉字，搜索旋转后几何形状相近的候选字，合成可旋转的 SVG、切换构造方法并下载。仅提供**少量人工整理的语义替代字**，不是完整的同义词词典。
+- **[Rotation Lab](https://claudiodrews.github.io/sinogram-ambigram/demo/)**：探索 **16 个示例**，包括复杂结构、笔画重合、显著性调节、中心对称和构件布局。两种演示均支持英语、中文和日语界面。
 
-在 GitHub 上点击 HTML 链接默认看到的是源文件。要交互使用，可在本地浏览器打开 HTML，或者通过仓库设置启用 GitHub Pages。
+**[项目网站](https://claudiodrews.github.io/sinogram-ambigram/)** 和上方两个交互工具已通过 GitHub Pages 发布。也可以从 [`generator/`](../../generator/) 和 [`demo/`](../../demo/) 查看源代码。
 
 ## 基本方法
 
@@ -38,4 +44,4 @@
 
 ## 参与与致谢
 
-欢迎通过[作者的 GitHub 主页](https://github.com/ClaudioDrews)反馈成功或失败的字形、SVG、截图及改进建议。原创代码和文字遵循 [MIT](../../LICENSE)；源自 KanjiVG 的笔画矢量及其改编内容遵循 [CC BY-SA 3.0](../../NOTICE.md)。详见[版权与来源说明](../../NOTICE.md)。
+欢迎[提交 GitHub Issue](https://github.com/ClaudioDrews/sinogram-ambigram/issues/new)，附上字符配对、方法、SVG 或截图与改进建议；也可通过[电子邮件](mailto:21au6i06R3w55891@proton.me)联系作者 Claudio Drews。原创代码和文字遵循 [MIT](../../LICENSE)；源自 KanjiVG 的笔画矢量及其改编内容遵循 [CC BY-SA 3.0](../../NOTICE.md)。详见[版权与来源说明](../../NOTICE.md)。
