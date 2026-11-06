@@ -1,5 +1,4 @@
-"""Renderiza glifos KanjiVG como PNG (traços desenhados a partir das
-polilinhas do path) e monta folhas de contato para os pares do grafo."""
+"""Render KanjiVG stroke polylines as PNG and build comparison contact sheets."""
 from __future__ import annotations
 
 import sys
@@ -11,12 +10,12 @@ from PIL import Image, ImageDraw
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from kvg import load_kanji, svg_file_for  # noqa: E402
 
-from paths import KDIR
+from paths import KDIR, PREVIEW
 
 
 def render_glyph(char: str, px: int = 240, width_units: float = 7.0,
                  pad: float = 4.0, invert: bool = False) -> Image.Image:
-    """Desenha o kanji. invert=True -> rotacao de 180 graus."""
+    """Draw one glyph; invert=True rotates it by 180 degrees."""
     f = svg_file_for(char, KDIR)
     strokes = load_kanji(f)
     scale = (px - 2 * pad) / 109.0
@@ -28,7 +27,7 @@ def render_glyph(char: str, px: int = 240, width_units: float = 7.0,
             pts = [(pad + x * scale, pad + y * scale) for x, y in poly]
             if len(pts) >= 2:
                 dr.line(pts, fill=0, width=w, joint="curve")
-            for x, y in pts:            # tampas/joins redondos
+            for x, y in pts:            # rounded line caps / joins
                 r = w / 2.0
                 dr.ellipse([x - r, y - r, x + r, y + r], fill=0)
     if invert:
@@ -37,7 +36,7 @@ def render_glyph(char: str, px: int = 240, width_units: float = 7.0,
 
 
 def render_pair(a: str, b: str, px: int = 240) -> Image.Image:
-    """[a | R(b)] lado a lado, com um separador."""
+    """Show a and rotated b side by side with a separator."""
     ia = render_glyph(a, px)
     ib = render_glyph(b, px, invert=True)
     out = Image.new("L", (px * 2 + 12, px), 255)
@@ -47,7 +46,7 @@ def render_pair(a: str, b: str, px: int = 240) -> Image.Image:
 
 
 def contact_sheet(items, path, cell=120, cols=8, labels=None):
-    """items: lista de (a,b) -> sheet com pares a | R(b)."""
+    """Make a contact sheet of pairs a | R(b)."""
     rows = (len(items) + cols - 1) // cols
     sheet = Image.new("L", (cols * (cell * 2 + 8), rows * (cell + 18)), 255)
     dr = ImageDraw.Draw(sheet)
@@ -67,22 +66,21 @@ def contact_sheet(items, path, cell=120, cols=8, labels=None):
 
 if __name__ == "__main__":
     out = PREVIEW
-    out.mkdir(exist_ok=True)
+    out.mkdir(parents=True, exist_ok=True)
     chars = sys.argv[1:] or list("一十日田口王申車亜由甲天魔三品呂")
     sheet = Image.new("L", (len(chars) * 150, 160), 255)
     dr = ImageDraw.Draw(sheet)
     for i, ch in enumerate(chars):
         g = render_glyph(ch, 140)
         sheet.paste(g, (i * 150 + 5, 5))
-        dr.text((i * 150 + 5, 150), ch, fill=0)
-        gr = render_glyph(ch, 140, invert=True)
-        # segunda linha: rotacionado
+        dr.text((i * 150 + 5, 150), f"U+{ord(ch):04X}", fill=0)
+    # Second row: rotated glyphs
     sheet2 = Image.new("L", (len(chars) * 150, 160), 255)
     dr2 = ImageDraw.Draw(sheet2)
     for i, ch in enumerate(chars):
         g = render_glyph(ch, 140, invert=True)
         sheet2.paste(g, (i * 150 + 5, 5))
-        dr2.text((i * 150 + 5, 150), ch + " (180)", fill=0)
+        dr2.text((i * 150 + 5, 150), f"U+{ord(ch):04X} (180)", fill=0)
     both = Image.new("L", (max(sheet.width, sheet2.width), sheet.height + sheet2.height), 255)
     both.paste(sheet, (0, 0))
     both.paste(sheet2, (0, sheet.height))
