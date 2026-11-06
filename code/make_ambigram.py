@@ -18,7 +18,7 @@ from PIL import Image, ImageDraw
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from kvg import load_kanji, svg_file_for  # noqa: E402
 
-from paths import KDIR
+from paths import KDIR, PREVIEW
 EM = 109.0
 TAU = 1.6          # tolerance (units) for a "common" stroke
 W_THICK = 11.0     # common-stroke width (units)
@@ -98,9 +98,11 @@ def build_pair_views(a: str, b: str, px: int = 210) -> Image.Image:
 
 
 if __name__ == "__main__":
+    if len(sys.argv) != 3 or any(len(ch) != 1 for ch in sys.argv[1:]):
+        raise SystemExit("Usage: python code/make_ambigram.py <character-A> <character-B>")
     out = PREVIEW
-    out.mkdir(exist_ok=True)
-    pairs = [tuple(sys.argv[1:2] + sys.argv[2:3])] if len(sys.argv) == 2 else []
+    out.mkdir(parents=True, exist_ok=True)
+    pairs = [(sys.argv[1], sys.argv[2])]
     for p in pairs:
         im = build_pair_views(p[0], p[1])
         im.save(out / f"ambigram_{p[0]}_{p[1]}.png")
