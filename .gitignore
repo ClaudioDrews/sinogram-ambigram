@@ -1,0 +1,18 @@
+# Python and environment
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.env
+.env.*
+# Intermediate graph builds (regenerate as needed)
+cache/
+output/
+*.npy
+*.npz
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
