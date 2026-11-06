@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this project, please cite this repository."
+title: "Sinogram Ambigrams: Geometry, Perception, and Rotational Letterforms"
+type: software
+authors:
+  - family-names: Drews
+    given-names: Claudio
+repository-code: "https://github.com/ClaudioDrews/sinogram-ambigram"
+url: "https://claudiodrews.github.io/sinogram-ambigram/"
+license: MIT
+version: 0.1.0
+date-released: 2026-11-06
+keywords:
+  - ambigram
+  - kanji
+  - hanzi
+  - computational geometry
+abstract: "Research algorithms, numerical data and interactive demonstrations for 180-degree rotational ambigram candidates in Chinese hanzi and Japanese kanji. KanjiVG-derived visual data are separately licensed under CC BY-SA 3.0."
