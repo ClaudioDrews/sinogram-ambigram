@@ -11,12 +11,12 @@ Rotation by 180° preserves the *direction line* of a stroke (a line keeps its s
 | Class | Strokes | Under R |
 |---|---|---|
 | **Preserved** | 横 (horizontal), 竖 (vertical) | map to themselves (head/tail swapped) |
-| **Swapped** | 撇 (left-falling) ↔ 提 (rising); 横折 ↔ 竖折 (right-angle turns) | `R(撇)=提`, `R(横折)=竖折` (`LOG-MULTI`: Claude/GLM verified by sources and reasoning) |
+| **Swapped** | 撇 (left-falling) ↔ 提 (rising); 横折 ↔ 竖折 (right-angle turns) | `R(撇)=提`, `R(横折)=竖折` (`comparative discussion`: Claude/GLM verified by sources and reasoning) |
 | **Broken** (need re-typing) | 捺 (right-falling), 点 (dot), hooks (钩, e.g. 亅, 乚), many curves | rotated form is not a standard stroke; must be replaced/hidden |
 
-The 撇↔提 equivalence holds cleanly for **monoline gothic/sans** fonts; in Mincho/brush styles stroke modulation (triangular ends, 捺 tail) makes it inexact — hence the "font regime" split recommended in `LOG-MULTI` (gothic for discovery; Mincho adds a further defect).
+The 撇↔提 equivalence holds cleanly for **monoline gothic/sans** fonts; in Mincho/brush styles stroke modulation (triangular ends, 捺 tail) makes it inexact — hence the "font regime" split recommended in `comparative discussion` (gothic for discovery; Mincho adds a further defect).
 
-## 2. Cost table proposed by DeepSeek (`LOG-DEEPSEEK`; STROKE_TRANSFORM_COST) [PLAN]
+## 2. Cost table proposed by DeepSeek (`structural proposal`; STROKE_TRANSFORM_COST) [PLAN]
 
 | Transformation | Cost |
 |---|---|
