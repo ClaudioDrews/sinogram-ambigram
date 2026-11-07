@@ -65,5 +65,35 @@ class TestCommandLine(unittest.TestCase):
         self.assertGreater(output.stat().st_size, 100)
 
 
+    def test_full_grid_export_has_distinct_metric_names(self):
+        import csv
+        import gzip
+        import json
+        import numpy as np
+
+        cache = self.root / "cache"
+        cache.mkdir()
+        (cache / "meta.json").write_text(
+            json.dumps([{"char": "甲"}, {"char": "由"}], ensure_ascii=False),
+            encoding="utf-8",
+        )
+        dtype = [("a", "i4"), ("b", "i4"), ("haus", "f4"),
+                 ("mean", "f4"), ("rms", "f4"),
+                 ("iou2", "f4"), ("iou3", "f4"), ("iou4", "f4")]
+        rows = np.array([(1, 1, 5, 3, 4, .4, .5, .6),
+                         (0, 1, 11, 7, 8, .7, .8, .9)], dtype=dtype)
+        np.save(cache / "pairs3.npy", rows)
+        self.env["ROTG_CACHE"] = str(cache)
+        result = self.run_cli("export_full_grid.py")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        archive = self.root / "results" / "catalog" / "rotation_pairs_full_grid.csv.gz"
+        with gzip.open(archive, "rt", encoding="utf-8", newline="") as stream:
+            data = list(csv.DictReader(stream))
+        self.assertEqual(len(data), 2)
+        self.assertEqual((data[0]["a"], data[0]["b"]), ("甲", "由"))
+        self.assertAlmostEqual(float(data[0]["hausdorff_grid"]), 11 / 109, places=7)
+        self.assertEqual(data[1]["self"], "True")
+
+
 if __name__ == "__main__":
     unittest.main()
