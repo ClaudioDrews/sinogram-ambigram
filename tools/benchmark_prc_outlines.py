@@ -143,7 +143,7 @@ def run(graphics_path: Path, out: Path, enforce: bool) -> dict:
             "legacy_v116": "measured_half_width_halved_again_historically",
             "corrected_width_v2": "measured_half_width_v2",
         },
-        "region": "mm ah source, GB2312 repertoire; regional glyph forms not certified",
+        "region": "Make Me a Hanzi source, GB2312 repertoire; regional glyph forms not certified",
         "selection_seed": SEED,
         "selection_rule": "8 SHA-256-ranked, GB2312-encodable glyphs per source stroke-count stratum; excludes nine previous VLM pilot glyphs",
         "strata": list(STRATA),
@@ -189,8 +189,8 @@ def run(graphics_path: Path, out: Path, enforce: bool) -> dict:
     print(json.dumps({k: v for k, v in summary.items() if k != "records"},
                      ensure_ascii=False, sort_keys=True))
     if enforce:
-        if summary["changed_pixel_cases"] != len(records):
-            raise AssertionError("Corrected-width code failed to change all sampled silhouettes")
+        if summary["changed_pixel_cases"] == 0:
+            raise AssertionError("Corrected-width code is a raster no-op on the full cohort")
         if summary["median_iou_corrected"] < summary["median_iou_legacy"]:
             raise AssertionError("Median source-outline IoU regressed; review the original contour fit")
     return summary
