@@ -1,7 +1,6 @@
 # Scope
 
-> **Currently scoped to Japanese kanji (Jōyō + Jinmeiyō).** Chinese hanzi expansion is
-> planned. See the expansion plan below.
+> **Two separate experimental geometric tracks:** 2,770 Japanese kanji (KanjiVG) and a 6,763-codepoint Mainland Chinese GB2312 shortlist (Make Me a Hanzi). The Chinese track uses source forms that are not independently certified for each region. Neither track establishes human readability.
 
 This document states exactly what this repository contains today, what it does
 not contain, and why. It exists because the project name refers to *sinograms*
@@ -44,15 +43,14 @@ Two distinct scales appear in the datasets and must not be mixed:
 [`data/README.md`](data/README.md) is the reference for which file uses which
 scale.
 
+## Experimental PRC-source track
+
+The independent [PRC Explorer](prc/) reads a measured shortlist of 6,763 GB2312 characters using Make Me a Hanzi geometry, rather than Japanese KanjiVG vectors. The pinned input includes 9,574 source glyph records and fully covers the GB2312 repertoire. Its 106,347 coarse-screened candidate pairs are **not** fine-grid exact results, not a confirmed Mainland normative form certification, and not validated human-readable ambigrams. Source-derived rendering stays with the Arphic Public License; [the research method](methods/PRC_COARSE_SEARCH.md) and [source audit](LICENSE-AUDIT.md) describe the boundaries. Future regional inventories (including a verified official 2013 TCC transcription) and exact PRC refinement are separate tasks.
+
 ## What is explicitly not here
 
-- **No simplified or traditional Chinese forms.** Every measurement uses the
-  Japanese glyph shape. A Chinese reader looking at a result is seeing a
-  Japanese rendering of the character.
-- **No per-region pairing.** Pairs are formed inside a single inventory. A
-  Japanese form is never compared against a Chinese form, because that
-  comparison would measure the difference between writing systems rather than
-  anything about the characters.
+- **The original Japanese Generator** still uses Japanese forms, even for Chinese text input. **The separate PRC Explorer** uses Make Me a Hanzi source glyphs, which include simplified and traditional forms and are not individually certified against a normative character-form table.
+- **No JP/CN-S mixing.** Pair searches occur separately within each labelled repertoire. The PRC-source GB2312 repertoire is not yet sufficient to certify every source glyph as a particular regional canonical form.
 - **No validated perceptual threshold.** There is no calibrated ε. The
   thresholds in the code are geometric screening cut-offs.
 - **No human validation of any result.** No reading test, no ε calibration, no
