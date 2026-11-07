@@ -2,11 +2,7 @@
 
 **A 180° turn can change more than the shape of a character.**
 
-> **Current scope: Japanese kanji (Jōyō + Jinmeiyō).** The measured dataset covers 2,770
-> Japanese kanji in their Japanese standard forms. Chinese *hanzi* expansion — simplified,
-> traditional and regional variants — is planned but not yet implemented. See [SCOPE.md](SCOPE.md)
-> for exactly what is and is not covered, and [known limitations](#known-limitations--cultural-scope)
-> for the research boundaries.
+> **Current scope:** Japanese KanjiVG research (2,770 Jōyō + Jinmeiyō kanji) and a **separate, experimental Mainland Chinese GB2312 track** (6,763 characters; Make Me a Hanzi source). The Chinese explorer provides coarse geometric candidates, **not verified legible ambigrams**, and source glyphs are not independently certified by region. See [SCOPE.md](SCOPE.md) and [limitations](#known-limitations--cultural-scope).
 
 **Read in:** English · [简体中文](docs/zh/README.md) · [日本語](docs/ja/README.md)
 
@@ -24,15 +20,16 @@ Inspired by the ambigram art of [Issei Nomura](https://x.com/IsseiNomura) and by
 
 ## Explore the project
 
-**[Visit the live project website](https://claudiodrews.github.io/sinogram-ambigram/)** or open either interactive tool directly:
+**[Visit the live project website](https://claudiodrews.github.io/sinogram-ambigram/)** or open the interactive tools:
 
 
 | Interactive experience | What you can do |
 | --- | --- |
 | **[Ambigram Generator](https://claudiodrews.github.io/sinogram-ambigram/generator/)** | Enter a Chinese or Japanese character, inspect ranked rotational neighbors, build a vector candidate, rotate it and save the SVG. Includes a small, explicitly curated semantic-alternative fallback. |
 | **[Rotation Lab](https://claudiodrews.github.io/sinogram-ambigram/demo/)** | Explore **16 examples**, including dense and complex characters; compare geometric overlays, shared strokes, salience, symmetry and component-layout demonstrations. |
+| **[Mainland Chinese Explorer](https://claudiodrews.github.io/sinogram-ambigram/prc/)** | Browse the separate PRC-source GB2312 candidate shortlist, compare 180° rotated source overlays and inspect coarse geometric rankings. English, 简体中文 and 日本語. **No human legibility validation.** |
 
-**Both demonstrations are live on GitHub Pages** and support English, Chinese and Japanese. Their HTML source is available under [`generator/`](generator/) and [`demo/`](demo/).
+The original Generator and Rotation Lab use **Japanese KanjiVG geometry** even when the interface language or input character is Chinese. The new **PRC Explorer** uses separately sourced Chinese geometry and does not mix regional rankings. Source code: [`generator/`](generator/), [`demo/`](demo/), [`prc/`](prc/).
 
 ### A first example: 甲 ↔ 由
 
