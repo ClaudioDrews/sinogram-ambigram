@@ -1,18 +1,3 @@
----
-title: "Inoue & Takahashi (2020) — Hiragana Ambigram Generation (primary paper)"
-id: inoue-takahashi-2020
-type: research
-status: reviewed
-evidence: [PAPER, CLAIM]
-tags: [hiragana, inoue-takahashi, stroke, skeleton, word-level]
-created: 2026-11-01
-updated: 2026-11-05
-language: en
-license: MIT
-translations: {zh: machine-assisted, ja: machine-assisted}
-related: [existence-criterion, related-work-and-cross-project, word-level-and-lexical]
----
-
 # Inoue & Takahashi (2020) — Hiragana Ambigram Generation (primary paper)
 
 Source `PAPER` = [papers/49_301.pdf](https://www.jstage.jst.go.jp/article/iieej/49/4/49_301/_article/-char/ja), DOI [10.11371/iieej.49.301](https://doi.org/10.11371/iieej.49.301). Citation: Kazuki Inoue (井上和輝), Hiroki Takahashi, 「文字構造特徴を用いたひらがなアンビグラムの生成」 (*Generation of Hiragana Ambigram Based on Character Structure Characteristics*), Journal of the Institute of Image Electronics Engineers of Japan **49(4)**, 301–314 (2020), Univ. of Electro-Communications. All statements in this file are [PAPER] (read from the PDF text) unless flagged. The paper is in Japanese. **Re-checked 2026-11-05**: the PDF was downloaded again (2,841,138 bytes) and the figures below were re-read in it — 1,081 pairs, 724/325, 357/93, 246/216, 18 raters, the 3/5 and 2/3 majorities, the 20 px simplification threshold, the 300×300 input, Yu Gothic, ETL8, and reference [1] = Nomura's book. The second author's given-name reading is *not* confirmed here (the J-STAGE page shows the family name only in the metadata used); treat "Hiroki" as unverified.
@@ -67,5 +52,5 @@ KanjiVG vectors instead of thinning; GED with merge/split instead of isomorphism
 ## Related
 
 - [Existence criterion](../theory/existence-criterion.md)
-- Related work (source reference in repo2: `related-work-and-cross-project.md`)
+- Related work
 - [Word-level and lexical](../theory/word-level-and-lexical.md)
