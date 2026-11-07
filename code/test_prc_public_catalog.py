@@ -17,7 +17,7 @@ class TestPublicCatalogue(unittest.TestCase):
         self.csv = self.root / "pairs.csv"
         self.manifest = self.root / "manifest.json"
         pairs = [("一", "乙", .4, 2.0), ("一", "中", .5, 1.5),
-                 ("乙", "中", .7, 3.0), ("一", "一", .1, -.7)]
+                 ("中", "乙", .7, 3.0), ("一", "一", .1, -.7)]
         self.write_pairs(pairs)
         self.manifest.write_text(json.dumps({
             "schema": "prc-presets-v1", "region": "cn-s",
