@@ -1,0 +1,9 @@
+# Make Me a Hanzi graphics snapshot for local PRC-source ingestion.
+# The SHA-256 was already fixed by scripts/download_prc_sources.sh.
+SOURCE=https://github.com/skishore/makemeahanzi
+FILE=graphics.txt
+SHA256=a28c478b5178e98f67f510b2d52fde08a69dc664654ef43498253b9b764d46ee
+LICENSE=Arphic Public License
+# Downloaded via the upstream master URL but checked against the SHA256 above.
+# The corresponding upstream commit has NOT yet been independently verified.
+# This pin does not authorise redistributing the source or derived geometry.

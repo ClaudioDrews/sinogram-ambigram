@@ -1,0 +1,88 @@
+name: PRC source integration (full pinned data)
+
+on:
+  push:
+    branches:
+      - 'integration/prc-median-ingestion'
+  pull_request:
+    paths:
+      - 'code/stage12_prc_ingest.py'
+      - 'code/test_prc_ingest.py'
+      - 'code/prc_inventory.py'
+      - 'scripts/download_prc_sources.sh'
+      - 'data/MMAH_PIN.txt'
+      - '.github/workflows/prc-source-integration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install -r code/requirements.txt
+      - name: Offline ingestion tests
+        run: python -m unittest discover -s code -p 'test_prc_ingest.py' -v
+      - name: Download and verify pinned geometry
+        run: |
+          bash scripts/download_prc_sources.sh
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          import sys
+          sys.path.insert(0, 'code')
+          from stage12_prc_ingest import pinned_sha
+          source = Path('data/prc/graphics.txt')
+          digest = hashlib.sha256(source.read_bytes()).hexdigest()
+          assert digest == pinned_sha(), (digest, pinned_sha())
+          print('PIN VERIFIED', digest, source.stat().st_size, 'bytes')
+          PY
+      - name: Independently compute GB2312 coverage
+        run: |
+          python code/prc_inventory.py --graphics data/prc/graphics.txt --out /tmp/prc-coverage.json
+          python - <<'PY'
+          import json
+          data = json.load(open('/tmp/prc-coverage.json'))
+          print('SOURCE COUNT', data['source_character_count'])
+          print('GB2312', data['cohorts']['gb2312'])
+          assert data['source_character_count'] >= 9000
+          assert data['cohorts']['gb2312']['inventory'] == 6763
+          assert data['cohorts']['gb2312']['covered'] == 6763
+          PY
+      - name: Build complete median cache twice and compare SHA-256
+        run: |
+          set -euo pipefail
+          python code/stage12_prc_ingest.py --graphics data/prc/graphics.txt --out /tmp/prc-run-a | tee /tmp/prc-build-a.json
+          python code/stage12_prc_ingest.py --graphics data/prc/graphics.txt --out /tmp/prc-run-b | tee /tmp/prc-build-b.json
+          cmp /tmp/prc-build-a.json /tmp/prc-build-b.json
+          for name in meta.json points.npy offsets.npy dt.npy; do
+            cmp "/tmp/prc-run-a/$name" "/tmp/prc-run-b/$name"
+            sha256sum "/tmp/prc-run-a/$name"
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import numpy as np
+          base=Path('/tmp/prc-run-a')
+          meta=json.loads((base/'meta.json').read_text())
+          offsets=np.load(base/'offsets.npy')
+          pts=np.load(base/'points.npy',mmap_mode='r')
+          dt=np.load(base/'dt.npy',mmap_mode='r')
+          assert len(meta)==len(offsets)-1==len(dt)
+          assert pts.shape==(int(offsets[-1]),2)
+          assert dt.shape==(len(meta),109,109)
+          assert all(x['region']=='unassigned' for x in meta)
+          assert all(x['source_scope']=='mixed-simplified-traditional' for x in meta)
+          assert len({x['char'] for x in meta})==len(meta)
+          assert [ord(x['char']) for x in meta]==sorted(ord(x['char']) for x in meta)
+          print('FULL SOURCE DOUBLE RUN VERIFIED:',len(meta),'glyphs,',len(pts),'median points')
+          PY
+          echo '## PRC full pinned-source verification' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Source SHA and GB2312 coverage verified. Two full cache rebuilds byte-identical.' >> "$GITHUB_STEP_SUMMARY"

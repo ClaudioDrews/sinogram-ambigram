@@ -55,6 +55,10 @@ Input character
 
 The current prototype is intentionally small: the generator indexes **5,180 refined measurements** over **2,770 characters** (including 2,770 self-pairs); it embeds vectors for **432 characters** and may load further KanjiVG paths on demand. Its fallback is a small set of curated semantic alternatives, **not** a comprehensive Chinese/Japanese synonym dictionary. The Rotation Lab offers 16 selected examples. Neither application requires an LLM or server-side runtime.
 
+### PRC median-skeleton ingestion (experimental)
+
+The next reproducible PRC stage reads the pinned Make Me a Hanzi stroke medians, checks the source SHA-256, and builds a local 109 × 109 point-cloud/distance-transform cache. See the [ingestion specification](docs/prc-ingest-spec.md) and [`code/stage12_prc_ingest.py`](code/stage12_prc_ingest.py). This cache is **not** a Chinese-wide ranking: source forms remain region-unassigned until a verified CN-S preset is applied, and median distances cannot be compared directly with the filled-ink construction scores.
+
 ### Experimental Mainland Chinese construction method
 
 The separate **CN-S (Mainland simplified Chinese)** research track now includes a deterministic, synthetic-tested construction module at [`code/prc_construct.py`](code/prc_construct.py), with [`28 targeted tests`](code/test_prc_construct.py). It explores rotation-centre optimisation, terminal stroke reconciliation, and constrained sector-wise thickness changes. See the [mathematical method](theory/prc-construction-method.md) and [PRC geometric analysis](findings/prc-extremity-analysis.md).
