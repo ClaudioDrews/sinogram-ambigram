@@ -1,23 +1,8 @@
----
-title: "Word-Level Ambigrams and Lexical Filtering"
-id: word-level-and-lexical
-type: research
-status: reviewed
-evidence: [DERIVED, PAPER, PLAN, CLAIM]
-tags: [word-level, sinogram, ambigram, rotation-180]
-created: 2026-11-01
-updated: 2026-11-05
-language: en
-license: MIT
-translations: {zh: machine-assisted, ja: machine-assisted}
-related: [inoue-takahashi-2020, family-rules, methods-and-pipelines-proposed]
----
-
 # Word-Level Ambigrams and Lexical Filtering
 
-Sources: `LOG-MULTI` (DeepSeek lexical filter), `LOG-DEEPSEEK`, `RPT-CONSOL` §2.3, `RPT-META`, `CAT-XLSX`, `PAPER` §6.3. Labels: see README (source reference in repo2: `../README.md`).
+**Evidence basis:** The formulas below are derived from explicit structural assumptions; empirical claims require geometric measurements or recognition tests.
 
-> **Reliability caveat (owner, 2026-11-01):** `RPT-RULES`, `RPT-CONSOL`, `RPT-FACES` and the catalog `CAT-XLSX` were probably produced by Google NotebookLM/Gemini; the owner warns that these tools make many errors. Treat every claim in this file that rests **only** on those four sources as **unverified** ([CLAIM]), even where it is phrased as fact. Claims also backed by the paper `PAPER`, a script run in `sources/`, or Nomura's own interviews (nomura-sources-and-findings (source reference in repo2: `../research/nomura-sources-and-findings.md`)) are stronger.
+> **Evidence boundary:** Earlier synthesis documents suggested some of these rules without testing them. Untested rules remain [CLAIM] or [PLAN], not measured conclusions.
 
 ## 1. Reversal lemma [DERIVED]
 
