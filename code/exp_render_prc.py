@@ -87,6 +87,7 @@ def generate(graphics: Path, out: Path, mode: str,
         "centre": centre,
         "em": em,
         "source_sha256": hashlib.sha256(graphics.read_bytes()).hexdigest(),
+        "geometry_code_sha256": hashlib.sha256(Path(pc.__file__).read_bytes()).hexdigest(),
         "records": records,
         "important": "Keep this manifest hidden during blinded VLM reading."}
     (out / "manifest.json").write_text(
