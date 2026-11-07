@@ -5,10 +5,18 @@ on:
     branches:
       - main
       - fix/prc-audit-2026-11-07
+  pull_request:
+    branches:
+      - main
     paths:
       - tools/replay_prc_v116.py
       - tools/verify_prc_archive.py
       - code/prc_construct.py
+      - code/prc_construct_legacy_v116.py
+      - code/test_prc_geometry_semantics.py
+      - tools/benchmark_prc_outlines.py
+      - methods/PRC_WIDTH_SEMANTICS.md
+      - methods/PRC_WIDTH_SEMANTICS.zh-CN.md
       - code/test_prc_archive_csv.py
       - code/test_prc_archive_replay.py
       - data/prc/archive-v1.16/**
@@ -42,6 +50,28 @@ jobs:
         run: cd code && python -m unittest test_prc_public_catalog.py -v
       - name: Download and verify original pinned MMah geometry
         run: bash scripts/download_prc_sources.sh
+      - name: Verify historical blob and synthetic width semantics
+        run: python -m unittest discover -s code -p 'test_prc_geometry_semantics.py' -v
+      - name: Compare original MMah stroke outlines with both semantic versions
+        run: |
+          python tools/benchmark_prc_outlines.py \
+            --graphics data/prc/graphics.txt \
+            --out /tmp/prc-outline-1 --require-not-worse
+          python tools/benchmark_prc_outlines.py \
+            --graphics data/prc/graphics.txt \
+            --out /tmp/prc-outline-2 --require-not-worse
+          cmp /tmp/prc-outline-1/source-outline-fidelity.json \
+              /tmp/prc-outline-2/source-outline-fidelity.json
+          cmp /tmp/prc-outline-1/source-outline-fidelity.csv \
+              /tmp/prc-outline-2/source-outline-fidelity.csv
+          echo 'Original-outline cohort: 32 GB2312 glyphs in four predeclared stroke-count strata; compare artifact metrics, not human readability.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload per-glyph original-outline fidelity comparisons
+        uses: actions/upload-artifact@v4
+        with:
+          name: prc-source-outline-fidelity
+          path: /tmp/prc-outline-1/source-outline-fidelity.*
+          if-no-files-found: error
+          retention-days: 30
       - name: Recompute all published fixed-cohort metrics from source
         run: |
           python tools/replay_prc_v116.py \
