@@ -2,6 +2,12 @@
 
 **A 180° turn can change more than the shape of a character.**
 
+> **Current scope: Japanese kanji (Jōyō + Jinmeiyō).** The measured dataset covers 2,770
+> Japanese kanji in their Japanese standard forms. Chinese *hanzi* expansion — simplified,
+> traditional and regional variants — is planned but not yet implemented. See [SCOPE.md](SCOPE.md)
+> for exactly what is and is not covered, and [known limitations](#known-limitations--cultural-scope)
+> for the research boundaries.
+
 **Read in:** English · [简体中文](docs/zh/README.md) · [日本語](docs/ja/README.md)
 
 A research and art project by **Claudio Drews** exploring how Chinese *hanzi* and Japanese *kanji* can be transformed into **rotational ambigrams**: a single drawing designed to suggest one character upright and another after a half-turn. It brings together geometric search, stroke-level construction, structural decomposition and visual interpretation.
@@ -53,7 +59,7 @@ The current prototype is intentionally small: the generator indexes **5,180 refi
 
 | Directory | Contents |
 | --- | --- |
-| [`theory/`](theory/) | Rotational algebra, IDS composition, stroke families, word-level rules and the legibility-set formulation. |
+| [`theory/`](theory/) | Rotational algebra, IDS composition, stroke families, word-level rules, the legibility-set formulation and stroke families. |
 | [`methods/`](methods/) | Search algorithms, vector geometry, distance metrics and the Inoue–Takahashi hiragana method. |
 | [`findings/`](findings/) | Experimental results, interesting pairs, disagreements and practical limitations. |
 | [`data/`](data/) | [Documented CSV datasets](data/README.md), character lists and provenance of grid vs exact metrics. |
@@ -87,6 +93,54 @@ Try a character, rotate the output and compare it with both references. If you s
 ## Citation
 
 Use the repository's [CITATION.cff](CITATION.cff) to cite Claudio Drews and this software/data release. The current version remains an exploratory prototype; no controlled native-reader validation has been published.
+
+## Known limitations & cultural scope
+
+Read this section before drawing any conclusion from the numbers. It is
+summarised here and detailed in [`SCOPE.md`](SCOPE.md),
+[`findings/limitations.md`](findings/limitations.md) and
+[`LICENSE-AUDIT.md`](LICENSE-AUDIT.md).
+
+**The data is Japanese.** The inventory is 2,136 Jōyō kanji plus 634 Jinmeiyō
+kanji. Every glyph shape is the **Japanese** standard form, taken from KanjiVG.
+Simplified Chinese, traditional Chinese and other regional forms are **not**
+measured. A Chinese reader is looking at a Japanese rendering of the character.
+
+**A geometric match is a candidate, not an ambigram.** The scores in `data/` are
+distances between stroke centre-lines. They rank how well two drawings align
+after a half-turn. They do **not** measure whether a reader can read the
+result. No reading test, no ε calibration and no native-reader study has been
+published for this project. Every result here is a *candidate*.
+
+**The semantic fallback is tiny.** When a character has no shortlisted
+geometric partner, the browser generator offers a related character from a
+small hand-curated list. It is an example set, not a synonym dictionary, and
+the substitution is shown to the user rather than hidden.
+
+**Known metric biases.** The ranking is not bias-free: dense glyphs score
+better partly because they fill the box, a few glyphs concentrate the top of
+the ranking, and the rotation centre is fixed at the centre of the character
+box. These are documented and quantified in
+[`findings/limitations.md`](findings/limitations.md) and
+[`findings/conflicts-and-corrections.md`](findings/conflicts-and-corrections.md).
+
+**Only the half-turn.** 90° rotation, mirroring and figure–ground inversion
+are out of scope. A mirror pair is *not* a rotational ambigram.
+
+**Single glyphs, one writing mode.** The unit of analysis is one character.
+Word-level composition, vertical writing and mixed-script strings are not
+covered.
+
+**On the cultural claims.** The project works with characters of Chinese
+origin as *graphic forms*. It makes no claim about what a character means to
+anyone, and it does not present its output as culturally authentic. Where a
+traditional concept is discussed — *ma*, *shodō*, *wabi-sabi*, *kotodama* — it
+is cited and defined in [`docs/GLOSSARY.md`](docs/GLOSSARY.md) as a lens, not
+as a claim about the project's own results.
+
+**Inspiration is not endorsement.** The ambigram art of Issei Nomura inspired
+this project. The artist did not author, review or endorse this repository,
+and no artwork of theirs is redistributed here.
 
 ## Credit and licensing
 
