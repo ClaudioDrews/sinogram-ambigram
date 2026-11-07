@@ -18,6 +18,10 @@ on:
       - '.github/workflows/prc-source-integration.yml'
   workflow_dispatch:
 
+concurrency:
+  group: prc-source-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
