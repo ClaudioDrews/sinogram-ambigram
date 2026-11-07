@@ -61,6 +61,30 @@ jobs:
           assert result['regional_forms_certified'] is False
           print("Frozen source-only cohort, five thresholds and zero-match historical anchors: PASS")
           PY
+      - name: Compare committed 34-pair compact dataset with regenerated 170 observations
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          p=Path('/tmp/ab-sweep-1')
+          records=list(csv.DictReader((p/'observations.csv').open(encoding='utf-8')))
+          by_case={}
+          for row in records:
+              by_case.setdefault(row['case'], {})[int(row['threshold'])]=row
+          headers=['arm','case','a','b','source_ink_iou','min_rms',
+                   'match_t2','match_t4','match_t8','match_t12','match_t16',
+                   'pixel_changes_all_thresholds']
+          with Path('/tmp/ab-compact.csv').open('w', encoding='utf-8', newline='') as f:
+              w=csv.writer(f, lineterminator='\n')
+              w.writerow(headers)
+              for case, by_threshold in by_case.items():
+                  r=by_threshold[2]
+                  w.writerow([r['arm'],case,r['a'],r['b'],
+                              r['source_ink_iou'],r['minimum_spine_rms'],
+                              *(by_threshold[t]['matched_strokes'] for t in (2,4,8,12,16)),
+                              sum(int(by_threshold[t]['changed_pixels']) for t in (2,4,8,12,16))])
+          PY
+          cmp /tmp/ab-compact.csv data/prc/ab-fusion-threshold-v1/pair-diagnostics.csv
       - name: Summarize non-reading geometric outcomes
         run: |
           python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
