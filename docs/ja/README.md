@@ -37,9 +37,9 @@
 
 ## 実験中の研究（`main` には未統合）
 
-公開済みのウェブサイトと、現在レビュー中の実験用プルリクエストは区別する必要がある。
+公開済みのウェブサイトと、現在レビュー中の実験用プルリクエストは区別する必要がある。**[PR #19](https://github.com/ClaudioDrews/sinogram-ambigram/pull/19) は `main` に統合済み**である。計測済みの筆画半幅を使用する修正版と、PRC v1.16 の歴史的再現専用に保持した旧実装を分離した。元の輪郭に対する32字の比較では32/32字で IoU が改善した（中央値 **0.4743 → 0.9083**）。これは幾何学的な一致度であり、人間の読字可能性を示すものではない。
 
-- [PR #13](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13)：PRC のストローク半幅の再構成の修正。
+- [PR #13](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13)：元の半幅修正案。**この PR 自体は未統合**であり、歴史的再現を保護した PR #19 を通じて修正内容のみが統合された。
 - [PR #14](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14)：R-ODD による回転後の墨画の局所補償。
 - [PR #15](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15)：C₂ 対称性を満たす滑らかな調和関数のストローク幅場。
 - [PR #16](https://github.com/ClaudioDrews/sinogram-ambigram/pull/16)：異なる二文字間のストローク対応付けと融合。
