@@ -10,7 +10,7 @@ This is the public, self-contained protocol for the KanjiVG-based geometric sear
 - Published refined sample: [`data/rotation_pairs.csv`](../data/rotation_pairs.csv), 5,180 rows = 2,410 distinct + 2,770 self-pairs.
 - Published grid-ranked sample: [`data/rotation_pairs_top5000.csv`](../data/rotation_pairs_top5000.csv). **Grid and exact distance columns must not be treated as the same metric.**
 
-The complete 3,837,835-row grid archive is *not distributed in this repository*. It is recomputable with the scripts below; the existing GitHub release does not contain that archive.
+The complete 3,837,835-row grid archive is *not distributed in this repository*. The optional export script produces `output/catalog/rotation_pairs_full_grid.csv.gz` from recomputed grid results. It uses an explicitly labelled new CSV schema and does not claim byte identity with any earlier archive.
 
 ## Geometry and metrics
 
@@ -37,6 +37,7 @@ python code/compute2.py
 python code/compute3.py
 python code/refine.py 2500
 python code/catalog.py
+python code/export_full_grid.py  # optional complete grid CSV (~3.84M pairs)
 python -m unittest discover -s code -p 'test_*.py' -v
 ```
 
