@@ -68,3 +68,7 @@ Verify artifact identity, pinned source and commit before drawing conclusions fr
 4. Preserve negative results and only then conduct separately blinded model recognition. Human readability and regional source-form certification remain open questions.
 
 **Conclusion:** the two-pair trial exercised an unmodified union, not an active fusion. This explains **this observed geometric null**, not whether A/B fusion can work in general. No tag, release, or merge of PRs #14–#17 follows from this result.
+
+## Subsequent independent cohort (completed after this forensic diagnosis)
+
+The predeclared threshold study was subsequently carried out in [draft PR #21](https://github.com/ClaudioDrews/sinogram-ambigram/pull/21), still **not merged**, using 32 new A/B pairs, thresholds 2/4/8/12/16, and two separate historical anchors. [CI 42415746651](https://github.com/ClaudioDrews/sinogram-ambigram/actions/runs/42415746651) passed and the original source-pinned two-pair result reproduced. At threshold 16, 31/32 new pairs obtained at least one registered stroke, yet **0/32** changed final raster pixels. Thus this report's first-stage no-registration finding remains valid for the historical threshold 4; the independent study exposed a **second failure stage in candidate selection after registration**. See [the frozen-cohort report](https://github.com/ClaudioDrews/sinogram-ambigram/blob/exp/ab-fusion-threshold-sensitivity/experiments/ab-fusion-threshold-v1/RESULTS.md). This addendum does not change the original artifact, numerics, dates or historical diagnosis.
