@@ -26,3 +26,5 @@ data/prc/cache/
 data/prc/coverage.json
 # Preset inventories derived locally from external sources
 data/prc/inventories/
+# Reproducible but unreviewed source-derived coarse PRC rankings
+data/prc/search/
