@@ -38,3 +38,9 @@ python code/stage12_prc_ingest.py --graphics data/prc/graphics.txt --out data/pr
 ```
 
 **Regional safeguard:** MMah itself includes simplified and traditional forms; the unfiltered cache is marked `region: unassigned`. A verified CN-S preset must be applied before ranking. Median-skeleton scores are not directly equivalent to the earlier filled-ink PRC construction experiments. Neither source assets nor generated caches are tracked in Git.
+
+## Verified source and PRC candidate search
+
+The pinned source was independently rebuilt twice with byte-identical results. Its **9,574 records** and 100% GB2312 codepoint coverage are documented in [the reproduction report](../../findings/prc-source-reproduction.md). Earlier internal figures listing 9,534 records do not describe this exact verified snapshot.
+
+The [Stage 13 inventory generator](../../code/stage13_prc_presets.py) creates source-checked GB2312 member/missing lists and an explicit manifest; optional TCC 2013 presets require a separately verified external transcription. [Stage 14](../../code/stage14_prc_search.py) produces coarse 37×37 rotational-IoU candidates and per-glyph null scores, **not** a fine-grid or human-validated ranking. The method is documented in [PRC coarse search](../../methods/PRC_COARSE_SEARCH.md). Derived outputs remain local pending source-license review.

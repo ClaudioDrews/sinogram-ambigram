@@ -32,13 +32,13 @@ graphical data.
 
 ## Sources under evaluation
 
-These are **not yet in the repository**. They are listed because the expansion
+The source assets themselves are **not bundled**. The PRC ingestion and construction tools, and some archived numerical outputs, are staged in draft branches. The following third-party sources are listed because the expansion
 to Chinese characters depends on them, and because their terms differ in ways
 that constrain what may be combined with what.
 
 | Source | Licence | Status | Constraint |
 |---|---|---|---|
-| **Make Me a Hanzi** — `graphics.txt` (stroke paths and medians, derived from the Arphic PL KaitiM GB and Arphic PL UKai fonts) | **Arphic Public License** | Verified | Redistribution permitted with the licence text. Arphic PL is a permissive, attribution-style licence. `graphics.txt` may be redistributed and modified. |
+| **Make Me a Hanzi** — `graphics.txt` (stroke paths and medians, derived from the Arphic PL KaitiM GB and Arphic PL UKai fonts) | **Arphic Public License (APL)** | Text verified; scope of each derived numeric dataset requires review | APL is **not merely an attribution-only permissive licence**. It requires retaining the unaltered licence when distributing the Font, and for modifications to the Font it requires prominent notices of changes and making modifications freely available under APL. See [`licenses/ARPHICPL.TXT`](licenses/ARPHICPL.TXT), §§1–2. Source or modified glyph assets must not be relabelled as MIT. |
 | **Make Me a Hanzi** — `dictionary.txt` (decompositions, etymology, definitions; derived from Unihan and CJKlib) | **GNU LGPL v3 or later** | Verified | Copyleft. Permits use and redistribution with attribution; derivative works of the *data file* remain under LGPL. |
 | **Make Me a Hanzi** — `svgs.tar.gz` | **Arphic Public License** | Verified | Same terms as `graphics.txt`. |
 | **animCJK** — files prefixed `graphics*`, and the kanji/hanzi SVG sets | **Arphic Public License** | Verified | Same redistribution terms. |
@@ -100,3 +100,6 @@ the provenance per row.
 - [`NOTICE.md`](NOTICE.md) — attribution for what is already shipped
 - [`LICENSE`](LICENSE) — MIT licence for original code and prose
 - [`SCOPE.md`](SCOPE.md) — what the project covers and what it does not
+## PRC geometry obligations reviewed on 2026-11-07
+
+The exact [Arphic Public License](licenses/ARPHICPL.TXT) from the pinned MMah upstream commit was inspected. Sections 1–2 require an unaltered licence file with distributed font material, and for modified fonts require prominent notices of what changed and when, as well as offering those modifications under the same licence. This goes beyond attribution alone. Whether a particular statistical CSV of geometric measurements constitutes a protected adaptation is a fact- and jurisdiction-dependent question; **do not assert it is automatically MIT**. Keep raw/modified MMah outlines, median coordinate lists and renderings outside the public MIT core until that classification and the corresponding notices are verified. Code that implements algorithms without copying source-derived glyph data remains independently MIT where authorship permits. No legal conclusion is asserted here.

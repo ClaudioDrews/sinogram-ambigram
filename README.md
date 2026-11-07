@@ -59,6 +59,12 @@ The current prototype is intentionally small: the generator indexes **5,180 refi
 
 The next reproducible PRC stage reads the pinned Make Me a Hanzi stroke medians, checks the source SHA-256, and builds a local 109 × 109 point-cloud/distance-transform cache. See the [ingestion specification](docs/prc-ingest-spec.md) and [`code/stage12_prc_ingest.py`](code/stage12_prc_ingest.py). This cache is **not** a Chinese-wide ranking: source forms remain region-unassigned until a verified CN-S preset is applied, and median distances cannot be compared directly with the filled-ink construction scores.
 
+### Mainland Chinese: reproducible research stages
+
+The independent [pinned-source reproduction](findings/prc-source-reproduction.md) verified **9,574** Make Me a Hanzi glyph records, **6,763/6,763** GB2312 characters covered, and two byte-identical full median-skeleton cache builds. The 9,534 figure in an earlier internal roadmap is not the count of this pinned source.
+
+The [PRC ingestion stage](code/stage12_prc_ingest.py), [inventory preset builder](code/stage13_prc_presets.py) and [coarse rotation search](code/stage14_prc_search.py) can produce locally auditable candidates. The [coarse search method](methods/PRC_COARSE_SEARCH.md) documents its 37×37 IoU and full-cohort null model. **These are not yet a public PRC ambigram generator or a human-validated ranking**: source-derived outputs remain local; precise pair refinement, regional form checks and recognition studies are separate outstanding tasks.
+
 ### Experimental Mainland Chinese construction method
 
 The separate **CN-S (Mainland simplified Chinese)** research track now includes a deterministic, synthetic-tested construction module at [`code/prc_construct.py`](code/prc_construct.py), with [`28 targeted tests`](code/test_prc_construct.py). It explores rotation-centre optimisation, terminal stroke reconciliation, and constrained sector-wise thickness changes. See the [mathematical method](theory/prc-construction-method.md) and [PRC geometric analysis](findings/prc-extremity-analysis.md).

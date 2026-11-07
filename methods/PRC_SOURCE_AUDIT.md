@@ -28,7 +28,9 @@ from centre optimisation, modest effects from terminal reconciliation, and
 stronger gains from 3×3 sector thickness control. **These are source
 reports, not independently reproduced claims in this branch.**
 
-Before integrating the construction module, check the numerical results
+The source-ingestion branch has now independently reproduced two identical full median caches, with 9,574 input records and 100% GB2312 inventory coverage; see [the reproduction report](../findings/prc-source-reproduction.md). This establishes preprocessing reproducibility, **not** the archived construction gains.
+
+To validate the archived construction gains, check the numerical results
 against pinned geometry, test retention >= 0.90 and ink growth <= 1.30,
 compare identical cohorts at every stage, and publish a script-derived
 table with measurements and checksums. No claim of perceptual legibility
