@@ -41,9 +41,9 @@
 
 ## 实验分支状态（尚未合并至 main）
 
-当前公开网站与 `main` 中已经发布的功能，应和仍处于草稿阶段的实验性 PR 区分开来：
+当前公开网站与 `main` 中已经发布的功能，应和仍处于草稿阶段的实验性 PR 区分开来。**[PR #19](https://github.com/ClaudioDrews/sinogram-ambigram/pull/19) 已合并至 `main`**：修正了测得半笔画宽度的使用方式，同时将 PRC v1.16 的历史实现原样保留，用于独立复现历史结果。与原始轮廓相比，固定样本中 **32/32** 个字形的 IoU 均有改善（中位数 **0.4743 → 0.9083**）。这只验证几何轮廓一致性，不证明人类可读性：
 
-- [PR #13](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13)：PRC 笔画半宽重建修正。
+- [PR #13](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13)：原始笔画半宽修正草案。**此 PR 未直接合并**；修正内容通过保留历史复现能力的 PR #19 进入 `main`。
 - [PR #14](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14)：R-ODD 局部旋转墨迹补偿。
 - [PR #15](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15)：C₂ 对称的平滑谐波笔画厚度场。
 - [PR #16](https://github.com/ClaudioDrews/sinogram-ambigram/pull/16)：针对两个不同字符的笔画匹配和融合实验。
