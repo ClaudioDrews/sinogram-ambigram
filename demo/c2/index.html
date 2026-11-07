@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Interactive C2 half-turn decomposition, moving rotation centre, stroke-width correction and A/B fusion research results.">
+<title>C₂ Visual Research Lab | Sinogram Ambigrams</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body><main>
+<nav class="topbar" aria-label="Research navigation">
+ <div class="links"><a href="../../" data-i18n="home">Project home</a><a href="../" data-i18n="rotationLab">Rotation Lab</a><a href="../../prc/" data-i18n="prcExplorer">Mainland Chinese Explorer</a></div>
+ <label><span data-i18n="language">Language</span> <select id="lang" aria-label="Interface language"><option value="en">English</option><option value="zh">简体中文</option><option value="ja">日本語</option></select></label>
+</nav>
+<header>
+ <div class="eyebrow" data-i18n="eyebrow">Geometry · perception · reproducible experiments</div>
+ <h1>C₂ <span data-i18n="title">Visual Research Lab</span></h1>
+ <p class="lead" data-i18n="intro">Turn one drawing by 180°, separate what stays invariant from what changes, and inspect why geometric similarity does not guarantee two readable characters.</p>
+ <div class="chips"><span class="chip" data-i18n="scopeJapanese">KanjiVG stroke paths · Japanese source</span><span class="chip" data-i18n="scopeMath">Exact C₂ algebra · finite-grid rendering</span><span class="chip" data-i18n="scopeNoReading">No human readability claim</span></div>
+</header>
+<section class="panel" id="c2">
+ <div class="panel-head"><div class="eyebrow">01 / C₂</div><h2 data-i18n="c2Heading">What survives a half-turn?</h2>
+  <p class="muted" data-i18n="c2Intro">The same actual KanjiVG path drawing appears in three synchronized views. Move the rotation centre or interpolate between its original, C₂-even and 180°-rotated forms.</p></div>
+ <div class="controls">
+  <div class="control"><label for="glyph" data-i18n="glyph">Source character</label><select id="glyph"><option>回</option><option>田</option><option>目</option><option>甲</option><option>由</option><option>国</option><option>上</option><option>下</option><option>昌</option><option>吉</option><option>王</option><option>玉</option></select></div>
+  <div class="control"><label for="cx" data-i18n="cx">Centre offset X</label><input id="cx" type="range" min="-6" max="6" step="1" value="0"><output id="cxOut">0</output></div>
+  <div class="control"><label for="cy" data-i18n="cy">Centre offset Y</label><input id="cy" type="range" min="-6" max="6" step="1" value="0"><output id="cyOut">0</output></div>
+  <div class="control"><label for="balance" data-i18n="balance">Shape interpolation (−1 → +1)</label><input id="balance" type="range" min="-1" max="1" step="0.05" value="1"><output id="balanceOut">+1.00 · original</output></div>
+ </div>
+ <div class="actions"><button class="primary" id="halfTurn" data-i18n="halfTurn">Half-turn 180°</button><button id="play" data-i18n="play">Animate</button><button id="reset" data-i18n="reset">Reset geometry</button></div>
+ <div class="three" style="margin-top:20px">
+  <figure class="raster"><figcaption data-i18n="live">Interpolated single drawing</figcaption><canvas id="liveCanvas" width="145" height="145" role="img" aria-label="Single drawing under half-turn interpolation"></canvas><p class="hint" data-i18n="liveNote">+1 = source; 0 = even component; −1 = 180° rotation.</p></figure>
+  <figure class="raster"><figcaption data-i18n="even">Even component · C₂ invariant</figcaption><canvas id="evenCanvas" width="145" height="145" role="img" aria-label="Half-turn invariant even component"></canvas><p class="hint" data-i18n="evenNote">Half the sum of the source and its half-turn.</p></figure>
+  <figure class="raster"><figcaption data-i18n="odd">Odd component · changes sign</figcaption><canvas id="oddCanvas" width="145" height="145" role="img" aria-label="Signed half-turn anti-invariant component"></canvas><p class="hint" data-i18n="oddNote">Warm = positive; blue = negative differences.</p><div class="legend"><span><i class="swatch warm"></i><span data-i18n="positive">Positive</span></span><span><i class="swatch cool"></i><span data-i18n="negative">Negative</span></span></div></figure>
+ </div>
+ <div class="metric-row" aria-live="polite"><div class="metric"><b id="iou">—</b><small data-i18n="iou">Binary rotational IoU (source vs turned)</small></div><div class="metric"><b id="difference">—</b><small data-i18n="difference">Normalized asymmetric ink</small></div><div class="metric"><b id="clipping">—</b><small data-i18n="clipping">Ink clipped by canvas</small></div></div>
+ <p class="formula" aria-label="Half-turn even and odd decomposition">R²g = g &nbsp; | &nbsp; g₊ = (g + Rg)/2 &nbsp; | &nbsp; g₋ = (g − Rg)/2 &nbsp; | &nbsp; g = g₊ + g₋ &nbsp; | &nbsp; Rg = g₊ − g₋</p>
+ <p class="hint" data-i18n="c2Precision">The algebra is exact on the unbounded plane; the interactive image uses a padded 145×145 sampled raster. Rotation and pixel coverage are finite-grid approximations. Moving the centre may change overlap or clip edge ink. The even field is not a proof of a readable ambigram.</p>
+</section>
+<section class="panel" id="width">
+ <div class="eyebrow">02 / PRC geometry</div><h2 data-i18n="widthHeading">Why preserving the historical renderer matters</h2>
+ <p class="muted" data-i18n="widthIntro">Move a *synthetic* measured median-to-contour radius. The historical v1.16 renderer divided that radius by two again; the corrected constructor uses the measured half-width. This schematic is not a licensed original outline.</p>
+ <div class="control"><label for="halfWidth" data-i18n="halfWidth">Measured half-width (illustrative units)</label><input id="halfWidth" type="range" min="4" max="17" step="1" value="11"><output id="halfWidthOut">11</output></div>
+ <canvas id="widthCanvas" class="width-canvas" width="570" height="235" role="img" aria-label="Synthetic source, historical thin and corrected stroke-width comparison"></canvas>
+ <div class="metric-row"><div class="metric"><b>0.4743</b><small data-i18n="oldIoU">Historical median source-outline IoU</small></div><div class="metric"><b>0.9083</b><small data-i18n="newIoU">Corrected median source-outline IoU</small></div><div class="metric"><b>32/32</b><small data-i18n="improvements">Source-outline cases improved</small></div></div>
+ <p class="hint" data-i18n="widthCaveat">Values are published geometric results from 32 pinned cases (PR #19), not values computed from the synthetic bands above and not measures of reading. The historical v1.16 code and reproduction remain unchanged.</p>
+ <p><a href="../../methods/PRC_WIDTH_SEMANTICS.md" data-i18n="widthMethod">Original method and replay safeguards</a></p>
+</section>
+<section class="panel" id="ab">
+ <div class="eyebrow">03 / A/B fusion</div><h2 data-i18n="abHeading">Matching strokes is not the same as changing a drawing</h2>
+ <p class="muted" data-i18n="abIntro">In a frozen experiment of 32 new character pairs, relaxing the registration threshold found more candidate matches but no final accepted pixel changes. The bars show observed pairs with at least one stroke match, not numbers of readable ambigrams.</p>
+ <div class="control"><label for="threshold" data-i18n="threshold">Maximum stroke-spine RMS threshold</label><select id="threshold"><option value="2">2</option><option value="4" selected>4</option><option value="8">8</option><option value="12">12</option><option value="16">16</option></select></div>
+ <div class="graph">
+  <div class="bar-row"><span data-i18n="nearPairs">Overlap-enriched pairs</span><div class="track"><div class="fill" id="nearBar"></div></div><output id="nearOut">—</output></div>
+  <div class="bar-row"><span data-i18n="controlPairs">Hash-selected controls</span><div class="track"><div class="fill orange" id="controlBar"></div></div><output id="controlOut">—</output></div>
+ </div>
+ <div class="metric-row"><div class="metric"><b id="matched">—</b><small data-i18n="matched">New pairs with at least one match</small></div><div class="metric"><b>0/32</b><small data-i18n="changed">New pairs with changed raster pixels</small></div></div>
+ <p class="callout" data-i18n="abCaveat">This is a documented negative result, not a working A/B ambigram generator. At threshold 16, 31/32 new pairs had a stroke match but 0/32 produced changed output. The original acceptance rule returned the union baseline. Human readability was not tested.</p>
+ <p><a href="../../findings/prc-ab-fusion-null-diagnosis.md" data-i18n="abForensic">Original two-pair forensic diagnosis</a> · <a href="https://github.com/ClaudioDrews/sinogram-ambigram/pull/21" data-i18n="abStudy">Independent 32-pair study (draft PR #21)</a></p>
+</section>
+<section class="panel" id="fields">
+ <div class="eyebrow">04 / research hypotheses</div><h2 data-i18n="fieldHeading">Local compensation and even harmonic fields</h2>
+ <p class="muted" data-i18n="fieldIntro">Two mathematical sketches of spatial thickness fields, not outputs of the R-ODD or harmonic construction algorithms. They illustrate the difference between a localized adjustment and a field deliberately invariant under 180° rotation.</p>
+ <div class="control"><label for="fieldStrength" data-i18n="fieldStrength">Illustrative field intensity</label><input id="fieldStrength" type="range" min="0" max="1" step="0.05" value="0.65"><output id="fieldStrengthOut">0.65</output></div>
+ <div class="two fields">
+  <article><h3 data-i18n="localTitle">Local response (concept only)</h3><canvas id="localField" width="181" height="181" role="img" aria-label="Localized thickness adjustment heatmap"></canvas><p class="hint" data-i18n="localNote">A single localized Gaussian patch: not necessarily C₂ symmetric, and not the R-ODD operator.</p></article>
+  <article><h3 data-i18n="harmonicTitle">C₂-even harmonic field (concept only)</h3><canvas id="harmonicField" width="181" height="181" role="img" aria-label="Half-turn invariant harmonic field heatmap"></canvas><p class="hint" data-i18n="harmonicNote">An even cosine-product field, f(−x,−y)=f(x,y). Not an optimized stroke result.</p></article>
+ </div>
+ <p class="hint" data-i18n="fieldCaveat">PRs #14 (R-ODD) and #15 (harmonic) are separate, unmerged experiments. This visualization demonstrates an underlying distinction without claiming that either operator was experimentally superior.</p>
+</section>
+<section class="panel" id="interpretation"><div class="eyebrow">05 / perception</div><h2 data-i18n="readingHeading">A geometric match is a candidate, not a readable ambigram</h2><p data-i18n="readingIntro">There are three separate observations: source shapes can be close under half-turn, a constructor can change the drawing, and human readers may or may not identify both intended characters. The measurements on this page demonstrate geometry; they never substitute for a blinded reading study.</p><div class="links"><a href="../" data-i18n="existingLab">Explore 16 existing Rotation Lab examples</a><a href="../../prc/" data-i18n="browsePRC">Browse PRC coarse source candidates</a><a href="../../README.md" data-i18n="researchDocs">Research documentation</a></div></section>
+<footer class="footer"><span data-i18n="footer">Original interactive code is MIT. Shared Japanese stroke paths: KanjiVG CC BY-SA 3.0. PRC source glyphs: Make Me a Hanzi / Arphic Public License. The diagrammatic heatmaps and bands are synthetic illustrations. No personal data or model API is required.</span> · <a href="../../NOTICE.md" data-i18n="attribution">Attribution and licenses</a></footer>
+</main>
+<script src="../kanjivg-geometry.js"></script>
+<script src="../c2-core.js"></script>
+<script src="app.js"></script>
+</body></html>

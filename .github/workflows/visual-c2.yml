@@ -1,0 +1,92 @@
+name: C2 visual research demo checks
+
+on:
+  push:
+    branches:
+      - feat/visual-research-c2-lab
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "demo/**"
+      - "tests/c2-visual.test.cjs"
+      - ".github/workflows/visual-c2.yml"
+      - "index.html"
+      - "README.md"
+      - "docs/zh/README.md"
+      - "docs/ja/README.md"
+  workflow_dispatch:
+
+jobs:
+  c2-visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Parse all visualization scripts
+        run: |
+          node --check demo/kanjivg-geometry.js
+          node --check demo/c2-core.js
+          node --check demo/c2/app.js
+      - name: Run C2 and static integration tests (without network or dependencies)
+        run: node --test tests/c2-visual.test.cjs
+      - name: Install CJK system fonts for readable browser QA (never committed)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-match "Noto Sans CJK JP"
+      - name: Smoke-test rendered C2 canvases in headless Chrome (EN, Chinese, Japanese)
+        run: |
+          set -euo pipefail
+          CHROME="$(command -v google-chrome || command -v chromium)"
+          test -n "$CHROME"
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/c2-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server" || true' EXIT
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8765/demo/c2/ > /dev/null; then break; fi
+            sleep 0.2
+          done
+          mkdir -p /tmp/c2-browser
+          for lang in en zh ja; do
+            "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
+              --hide-scrollbars --window-size=1280,3500 --virtual-time-budget=2500 \
+              --dump-dom --screenshot="/tmp/c2-browser/c2-$lang.png" \
+              "http://127.0.0.1:8765/demo/c2/?lang=$lang&glyph=%E7%94%B2" \
+              > "/tmp/c2-browser/c2-$lang.html" \
+              2> "/tmp/c2-browser/c2-$lang.log"
+            grep -q 'data-visual-c2-ready="true"' "/tmp/c2-browser/c2-$lang.html"
+            grep -Eq 'id="iou">[0-9]' "/tmp/c2-browser/c2-$lang.html"
+            test -s "/tmp/c2-browser/c2-$lang.png"
+          done
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
+            --window-size=1280,950 --virtual-time-budget=2200 --dump-dom \
+            --screenshot="/tmp/c2-browser/existing-rotation-lab.png" \
+            "http://127.0.0.1:8765/demo/" \
+            > /tmp/c2-browser/existing-rotation-lab.html \
+            2> /tmp/c2-browser/existing-rotation-lab.log
+          grep -Eq 'id="pairTitle">[^<]+' /tmp/c2-browser/existing-rotation-lab.html
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
+            --virtual-time-budget=1400 --dump-dom \
+            "http://127.0.0.1:8765/" \
+            > /tmp/c2-browser/home.html 2> /tmp/c2-browser/home.log
+          grep -q 'id="heroTurn"' /tmp/c2-browser/home.html
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
+            --window-size=430,1000 --virtual-time-budget=1800 --dump-dom \
+            --screenshot="/tmp/c2-browser/c2-mobile-en.png" \
+            "http://127.0.0.1:8765/demo/c2/?lang=en&glyph=%E7%94%B2" \
+            > /tmp/c2-browser/c2-mobile-en.html \
+            2> /tmp/c2-browser/c2-mobile-en.log
+          grep -q 'data-visual-c2-ready="true"' /tmp/c2-browser/c2-mobile-en.html
+          test -s /tmp/c2-browser/c2-mobile-en.png
+      - name: Retain three browser smoke screenshots for manual QA (not git assets)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: c2-visual-browser-qa
+          path: /tmp/c2-browser/
+          retention-days: 7
+          if-no-files-found: warn
