@@ -1,0 +1,35 @@
+name: C2 visual research demo checks
+
+on:
+  push:
+    branches:
+      - feat/visual-research-c2-lab
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "demo/**"
+      - "tests/c2-visual.test.cjs"
+      - ".github/workflows/visual-c2.yml"
+      - "index.html"
+      - "README.md"
+      - "docs/zh/README.md"
+      - "docs/ja/README.md"
+  workflow_dispatch:
+
+jobs:
+  c2-visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Parse all visualization scripts
+        run: |
+          node --check demo/kanjivg-geometry.js
+          node --check demo/c2-core.js
+          node --check demo/c2/app.js
+      - name: Run C2 and static integration tests (without network or dependencies)
+        run: node --test tests/c2-visual.test.cjs
