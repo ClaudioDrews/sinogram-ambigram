@@ -102,7 +102,7 @@ def construct(a: list[pc.Stroke], b: list[pc.Stroke],
         # Both readings must be at least as good as the baseline
         # geometrically; no wins by sacrificing one reading for the other.
         if (ms["minimum_f1"] >= metrics["minimum_f1"] - 1e-12 and
-                ms["joint_f1"] > metrics["joint_f1"] + 1e-12):
+                (ms["joint_f1"] > metrics["joint_f1"] + 1e-12 or\n                 (ms["joint_f1"] >= metrics["joint_f1"] - 1e-12 and\n                  ms["stroke_count"] < metrics["stroke_count"]))):
             best, metrics = joined, ms
     return best, {"metrics": metrics, "matched_strokes": len(matches),
                   "total_a": len(a), "total_b": len(b),
