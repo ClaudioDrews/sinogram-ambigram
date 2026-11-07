@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Explore experimentally shortlisted Mainland Chinese rotational character pairs. No human legibility validation is claimed.">
+<title>PRC Rotation Explorer | Sinogram Ambigrams</title>
+<style>
+:root{color-scheme:light;--paper:#f6f4ef;--ink:#203832;--green:#155f51;--line:#d7e3dc;--muted:#52645f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Noto Sans CJK SC","Noto Sans CJK JP",sans-serif}
+main{max-width:1060px;padding:30px 20px 75px;margin:auto}
+a{color:var(--green)}nav{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+nav a{text-decoration:none;font-weight:600}.lang{display:flex;gap:7px}
+h1{font-size:clamp(30px,5vw,52px);letter-spacing:-.035em;line-height:1.12;margin:35px 0 15px;max-width:800px}
+h2{font-size:21px;margin:0 0 12px}.lead{font-size:18px;color:var(--muted);max-width:770px}
+.pill{font-size:12px;font-weight:700;letter-spacing:.04em;color:#14594c;background:#e3f2e8;border:1px solid #c2dfce;border-radius:999px;padding:5px 11px;display:inline-block}
+.warn{padding:12px 16px;border-left:4px solid #b67d43;background:#fff9ef;border-radius:9px;max-width:960px;margin:18px 0}
+.panel{background:white;border:1px solid var(--line);border-radius:15px;padding:22px;margin-top:18px}
+.metrics{display:flex;gap:20px;flex-wrap:wrap;color:var(--muted);margin:12px 0}
+.metrics strong{color:var(--ink)}.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+label{font-weight:600}input[type=text]{font:inherit;font-size:25px;width:92px;padding:6px 12px;border:1px solid #90a99d;border-radius:10px;text-align:center}
+button{background:white;color:var(--ink);border:1px solid #9db7a9;border-radius:9px;padding:8px 13px;font:inherit;cursor:pointer}
+button.primary,button.active{background:var(--green);border-color:var(--green);color:white}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #8bc9a9;outline-offset:3px}
+button:disabled{opacity:.5;cursor:default}
+#candidates{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.choice{min-width:77px;padding:12px 10px;text-align:center}
+.choice .han{display:block;font-size:28px;font-weight:500;line-height:1.4}
+.choice small{display:block;font-size:11px;opacity:.8}
+.viewer{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;margin-top:15px}
+.stage{background:#f9fbf8;border:1px solid var(--line);border-radius:14px;aspect-ratio:1;position:relative;overflow:hidden}
+.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+#overlay{transition:transform .35s ease}
+#overlay.flipped{transform:rotate(180deg)}
+#imageB{transform:rotate(180deg);opacity:.48}
+.references{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ref{border:1px solid var(--line);background:#f9fbf8;border-radius:12px;text-align:center;padding:9px}
+.ref img{width:100%;aspect-ratio:1;object-fit:contain;max-height:190px}
+.ref .han{font-size:22px}
+.controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+.controls label{font-size:13px}
+input[type=range]{accent-color:var(--green)}
+.note{font-size:13px;color:var(--muted)}
+#status[role=alert]{color:#8d431a}
+footer{border-top:1px solid var(--line);margin-top:42px;padding-top:24px;color:var(--muted);font-size:14px}
+@media(max-width:700px){.viewer{grid-template-columns:1fr}.panel{padding:15px}main{padding:18px 14px 40px}}
+</style>
+</head>
+<body>
+<main>
+<nav><a href="../" id="home">← Sinogram Ambigrams</a><div class="lang" aria-label="Interface language"><button type="button" data-language="en">EN</button><button type="button" data-language="zh">简体中文</button><button type="button" data-language="ja">日本語</button></div></nav>
+<h1 id="title">Mainland Chinese rotation explorer</h1>
+<p class="lead" id="intro">Explore candidate character pairs ranked by geometric similarity after a 180° turn, from a reproducible Chinese-source dataset.</p>
+<p class="pill" id="statusPill">Geometric experiment · Not human-validated</p>
+<p class="warn" id="warning">Important: these are screening candidates, not demonstrated readable ambigrams. The overlay combines two source glyphs; it is not an optimized or validated construction. Simplified/traditional source-form certification is pending.</p>
+<div class="metrics"><span id="glyphCount">Loading...</span><span id="pairCount"></span><span id="sourceLabel"></span></div>
+<section class="panel">
+<h2 id="findHeading">Find rotational partners</h2>
+<form id="form" class="row"><label id="charLabel" for="character">Character</label><input id="character" type="text" value="甲" aria-label="Chinese character" autocomplete="off"><button class="primary" type="submit" id="findBtn">Find candidates</button></form>
+<p class="note" id="hint">Enter one Han character from the GB2312 repertoire. Results are sorted by a full-cohort, coarse geometric rank; a higher score is not a probability of readability.</p>
+<div id="status" aria-live="polite"></div>
+<div id="candidates" aria-label="Candidate partners"></div>
+</section>
+<section class="panel">
+<h2 id="previewHeading">Experimental source-overlay preview</h2>
+<div class="viewer">
+<div><div class="stage" id="overlay"><img id="imageA" alt="Character A source form"><img id="imageB" alt="Half-turned character B source form"></div>
+<div class="controls"><button type="button" id="rotate">Rotate 180°</button><label id="blendLabel" for="blend">Partner opacity</label><input type="range" id="blend" min="0" max="100" value="48"><span id="blendValue">48%</span></div>
+</div>
+<div><div class="references">
+<div class="ref"><div class="han" id="referenceA">A</div><img id="refA" alt="Original character A"></div>
+<div class="ref"><div class="han" id="referenceB">B</div><img id="refB" alt="Original character B"></div>
+</div><p class="note" id="score"></p><p class="note" id="graphicsNote">Images load directly from the pinned upstream Make Me a Hanzi SVG archive; a network connection is required. The source uses the Arphic Public License.</p>
+</div>
+</div>
+</section>
+<footer><span id="footerText">Research preview only. No recognition study has been performed.</span> <a href="README.md" id="methodsLink">Methods, limits and reproduction</a> · <a href="../licenses/ARPHICPL.TXT">Arphic Public License</a> · <a href="../NOTICE.md">Attribution</a></footer>
+</main>
+<script>
+"use strict";
+(function(){
+  const UPSTREAM="https://raw.githubusercontent.com/skishore/makemeahanzi/bddc96d41bef78427ed0e034e9f7e31d71fd1b92/svgs/";
+  const TXT={
+    en:{title:"Mainland Chinese rotation explorer",intro:"Explore candidate character pairs ranked by geometric similarity after a 180° turn, from a reproducible Chinese-source dataset.",pill:"Geometric experiment · Not human-validated",warning:"Important: these are screening candidates, not demonstrated readable ambigrams. The overlay combines two source glyphs; it is not an optimized or validated construction. Simplified/traditional source-form certification is pending.",findHeading:"Find rotational partners",charLabel:"Character",findBtn:"Find candidates",hint:"Enter one Han character from the GB2312 repertoire. Higher geometric scores are not probabilities of readability.",previewHeading:"Experimental source-overlay preview",rotate:"Rotate 180°",blendLabel:"Partner opacity",graphicsNote:"Reference images load from the pinned upstream Make Me a Hanzi SVG archive and need an internet connection. Source glyphs use the Arphic Public License.",footerText:"Research preview only. No recognition study has been performed.",methodsLink:"Methods, limits and reproduction",loading:"Loading source-checked catalogue...",notFound:"Character is not in the available GB2312 catalogue.",invalid:"Enter exactly one character.",failed:"The catalogue could not be loaded. Check network access or try again.",glyphs:"indexed characters",pairs:"shortlisted pairs",metric:"Coarse 37×37 IoU",score:"Coarse z-score",choose:"Choose a candidate",missing:"A source glyph image could not be loaded. Preview may be incomplete."},
+    zh:{title:"简体中文旋转候选字探索",intro:"探索基于中文数据源的实验性候选字对，按旋转 180° 后的几何相似度排序。",pill:"几何实验 · 尚无人类辨识验证",warning:"注意：这些只是几何筛选出的候选字对，并不代表已经证明可辨识的旋转合字。叠加图是两个原始字形的组合，不是已优化或验证的作品。简繁字形的逐字规范验证仍未完成。",findHeading:"查找旋转候选字",charLabel:"汉字",findBtn:"查找候选",hint:"输入 GB2312 字集中的一个汉字。较高的几何分数不代表更高的可读概率。",previewHeading:"实验性原始字形叠加预览",rotate:"旋转 180°",blendLabel:"另一字形透明度",graphicsNote:"参考字形从固定版本的 Make Me a Hanzi 原始 SVG 存档加载，需联网。原始字形受 Arphic Public License 约束。",footerText:"仅供研究预览。尚未完成人类辨识实验。",methodsLink:"方法、限制和复现",loading:"正在加载经过来源校验的目录……",notFound:"该字不在当前 GB2312 候选目录中。",invalid:"请只输入一个汉字。",failed:"目录加载失败，请检查网络后重试。",glyphs:"个索引汉字",pairs:"组候选字对",metric:"37×37 粗略 IoU",score:"几何 z 分数",choose:"选择候选字",missing:"无法加载某个原始字形，预览可能不完整。"},
+    ja:{title:"中国簡体字の回転候補探索",intro:"180°回転後の幾何学的類似度で並べた、中国語資料由来の実験的な文字ペアを探索します。",pill:"幾何学的実験 · 人による読字検証なし",warning:"注意：これらは幾何学的に選んだ候補であり、読めるアンビグラムと証明されたものではありません。重ね合わせは原字形の合成表示で、最適化・検証済みの作品ではありません。簡体字・繁体字の字形認証も未完了です。",findHeading:"回転候補を探す",charLabel:"文字",findBtn:"候補を探す",hint:"GB2312収録の漢字を1文字入力してください。幾何スコアは可読確率ではありません。",previewHeading:"原字形の重ね合わせ（実験）",rotate:"180°回転",blendLabel:"相手字形の不透明度",graphicsNote:"原字形の画像は、版を固定した Make Me a Hanzi の SVG アーカイブから読み込みます。接続が必要です。Arphic Public License が適用されます。",footerText:"研究用プレビューです。人による読字実験は未実施です。",methodsLink:"手法・制限・再現",loading:"出典確認済みカタログを読み込み中…",notFound:"この文字は現在のGB2312候補集にありません。",invalid:"漢字1文字を入力してください。",failed:"カタログを読み込めませんでした。通信環境をご確認ください。",glyphs:"収録文字",pairs:"候補ペア",metric:"粗い37×37 IoU",score:"幾何 z 値",choose:"候補を選択",missing:"原字形を取得できませんでした。表示が不完全な可能性があります。"}
+  };
+  const $=id=>document.getElementById(id);
+  let data=null, current="甲", partner=null, lang="en", rotated=false;
+  const textIds=["title","intro","findHeading","charLabel","findBtn","hint","previewHeading","rotate","blendLabel","graphicsNote","footerText","methodsLink"];
+  function setLang(next){
+    lang=TXT[next]?next:"en";
+    document.documentElement.lang=lang==="zh"?"zh-Hans":lang;
+    for(const id of textIds) $(id).textContent=TXT[lang][id];
+    $("statusPill").textContent=TXT[lang].pill;
+    $("warning").textContent=TXT[lang].warning;
+    document.querySelectorAll("[data-language]").forEach(btn=>{
+      btn.classList.toggle("active",btn.dataset.language===lang);
+      btn.setAttribute("aria-pressed",String(btn.dataset.language===lang));
+    });
+    if(data)showStats();
+    if(data)lookUp(current);
+  }
+  function showStats(){
+    $("glyphCount").textContent=data.glyphs.toLocaleString(lang)+" "+TXT[lang].glyphs;
+    $("pairCount").textContent=data.shortlisted_pairs.toLocaleString(lang)+" "+TXT[lang].pairs;
+    $("sourceLabel").textContent=TXT[lang].metric+" · GB2312";
+  }
+  function src(ch){return UPSTREAM+ch.codePointAt(0)+".svg";}
+  function choose(a,b,score,iou){
+    partner=b; current=a;
+    $("referenceA").textContent=a;
+    $("referenceB").textContent=b;
+    $("imageA").src=src(a);$("imageB").src=src(b);
+    $("refA").src=src(a);$("refB").src=src(b);
+    $("score").textContent=TXT[lang].score+": "+score.toFixed(3)+" · IoU: "+iou.toFixed(3);
+    $("overlay").classList.toggle("flipped",rotated);
+    document.querySelectorAll(".choice").forEach(button=>button.classList.toggle("active",button.dataset.partner===b));
+  }
+  function lookUp(ch){
+    if(!data)return;
+    const entries=data.partners[ch];
+    const area=$("candidates");area.replaceChildren();
+    $("status").textContent="";
+    if(!entries){$("status").textContent=TXT[lang].notFound;return;}
+    const selected=entries.find(v=>v[0]===partner) || entries[0];
+    entries.forEach(([candidate,score,iou])=>{
+      const btn=document.createElement("button"); btn.type="button";
+      btn.className="choice"; btn.dataset.partner=candidate;
+      const a=document.createElement("span");a.className="han";a.textContent=candidate;
+      const b=document.createElement("small");b.textContent="z="+score.toFixed(2);
+      btn.append(a,b);btn.addEventListener("click",()=>choose(ch,candidate,score,iou));
+      area.appendChild(btn);
+    });
+    choose(ch,...selected);
+  }
+  $("form").addEventListener("submit",event=>{
+    event.preventDefault();
+    const chars=Array.from($("character").value.trim());
+    if(chars.length!==1){$("status").textContent=TXT[lang].invalid;return;}
+    current=chars[0];partner=null;lookUp(current);
+  });
+  $("rotate").addEventListener("click",()=>{$("overlay").classList.toggle("flipped");rotated=!rotated;});
+  $("blend").addEventListener("input",()=>{
+    const value=Number($("blend").value);
+    $("imageB").style.opacity=String(value/100);
+    $("blendValue").textContent=value+"%";
+  });
+  $("imageA").addEventListener("error",()=>{$("status").textContent=TXT[lang].missing;});
+  $("imageB").addEventListener("error",()=>{$("status").textContent=TXT[lang].missing;});
+  document.querySelectorAll("[data-language]").forEach(btn=>btn.addEventListener("click",()=>setLang(btn.dataset.language)));
+  $("status").textContent=TXT.en.loading;
+  setLang(new URLSearchParams(location.search).get("lang")||"en");
+  fetch("./catalog.json").then(r=>{if(!r.ok)throw Error(String(r.status));return r.json()}).then(j=>{
+    if(j.schema!=="prc-public-coarse-catalog-v1"||j.region!=="cn-s"||
+       j.human_readability_validated!==false||j.source_forms_certified!==false||
+       !j.partners||j.glyphs!==Object.keys(j.partners).length)throw Error("Invalid catalog");
+    data=j;showStats();lookUp(current);
+  }).catch(()=>{$("status").setAttribute("role","alert");$("status").textContent=TXT[lang].failed});
+})();
+</script>
+</body></html>
