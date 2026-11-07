@@ -52,21 +52,37 @@ Input character
 
 The current prototype is intentionally small: the generator indexes **5,180 refined measurements** over **2,770 characters** (including 2,770 self-pairs); it embeds vectors for **432 characters** and may load further KanjiVG paths on demand. Its fallback is a small set of curated semantic alternatives, **not** a comprehensive Chinese/Japanese synonym dictionary. The Rotation Lab offers 16 selected examples. Neither application requires an LLM or server-side runtime.
 
-### PRC median-skeleton ingestion (experimental)
+### PRC median-skeleton ingestion (implemented)
 
-The next reproducible PRC stage reads the pinned Make Me a Hanzi stroke medians, checks the source SHA-256, and builds a local 109 × 109 point-cloud/distance-transform cache. See the [ingestion specification](docs/prc-ingest-spec.md) and [`code/stage12_prc_ingest.py`](code/stage12_prc_ingest.py). This cache is **not** a Chinese-wide ranking: source forms remain region-unassigned until a verified CN-S preset is applied, and median distances cannot be compared directly with the filled-ink construction scores.
+The implemented reproducible PRC stage reads the pinned Make Me a Hanzi stroke medians, checks the source SHA-256, and builds a local 109 × 109 point-cloud/distance-transform cache. See the [ingestion specification](docs/prc-ingest-spec.md) and [`code/stage12_prc_ingest.py`](code/stage12_prc_ingest.py). The intermediate cache is **not itself** a Chinese-wide ranking. The subsequent GB2312 repertoire preset and coarse search are implemented; however, the source forms have not been certified individually as normative Mainland simplified variants. Median distances must not be compared directly with filled-ink construction scores.
 
 ### Mainland Chinese: reproducible research stages
 
 The independent [pinned-source reproduction](findings/prc-source-reproduction.md) verified **9,574** Make Me a Hanzi glyph records, **6,763/6,763** GB2312 characters covered, and two byte-identical full median-skeleton cache builds. The 9,534 figure in an earlier internal roadmap is not the count of this pinned source.
 
-The [PRC ingestion stage](code/stage12_prc_ingest.py), [inventory preset builder](code/stage13_prc_presets.py) and [coarse rotation search](code/stage14_prc_search.py) can produce locally auditable candidates. The [coarse search method](methods/PRC_COARSE_SEARCH.md) documents its 37×37 IoU and full-cohort null model. **These are not a complete PRC ambigram generator or a human-validated ranking**: the licensed source geometry and intermediate caches remain local, while the public PRC Explorer distributes a compact numerical shortlist. Precise pair refinement, regional glyph-form checks and recognition studies remain separate research tasks. The archived 120/53 construction-cohort measurements have been [independently reproduced from pinned source geometry](methods/PRC_V116_REPRODUCTION.md).
+The [PRC ingestion stage](code/stage12_prc_ingest.py), [inventory preset builder](code/stage13_prc_presets.py) and [coarse rotation search](code/stage14_prc_search.py) can produce locally auditable candidates. The [coarse search method](methods/PRC_COARSE_SEARCH.md) documents its 37×37 IoU and full-cohort null model. **These are not a complete PRC ambigram generator or a human-validated ranking**: the licensed source geometry and intermediate caches remain local, while the public PRC Explorer distributes a compact numerical shortlist. Precise pair refinement and regional glyph-form certification remain separate research tasks. A small, controlled image-only VLM recognition **pilot has been completed on a draft branch**; it is not a human-reader validation (see the research-status section below). The archived 120/53 construction-cohort measurements have been [independently reproduced from pinned source geometry](methods/PRC_V116_REPRODUCTION.md).
 
 ### Experimental Mainland Chinese construction method
 
 The separate **CN-S (Mainland simplified Chinese)** research track now includes a deterministic, synthetic-tested construction module at [`code/prc_construct.py`](code/prc_construct.py), with [`28 targeted tests`](code/test_prc_construct.py). It explores rotation-centre optimisation, terminal stroke reconciliation, and constrained sector-wise thickness changes. See the [mathematical method](theory/prc-construction-method.md) and [PRC geometric analysis](findings/prc-extremity-analysis.md).
 
-**Scope boundary:** this is an experimental *construction method*, not a published Chinese-wide ranked dataset and not a verified legibility result. The reported numerical experiments are documented for inspection; independent reproduction from the pinned PRC source and human-reader studies remain outstanding. The Japanese and CN-S inventories must not be mixed in rankings.
+**Integrated geometric correction:** [PR #19](https://github.com/ClaudioDrews/sinogram-ambigram/pull/19) merged the measured half-width fix into `code/prc_construct.py` while preserving the exact historical v1.16 implementation in `code/prc_construct_legacy_v116.py` for archived replay. Against 32 pinned source-outline cases, corrected original-outline IoU improved in **32/32** (median **0.4743 → 0.9083**). This is a geometric reconstruction result, **not** evidence of human readability. See the [width-semantics method](methods/PRC_WIDTH_SEMANTICS.md) and [fidelity findings](findings/prc-width-contour-fidelity.md).
+
+**Scope boundary:** this remains an experimental *construction method*, not a Chinese-wide generator or a human-validated legibility result. The archived PRC construction-cohort measurements have a separate pinned-source reproduction documented above; that does **not** validate the still-draft R-ODD, harmonic-field, or A/B fusion experiments or the readability of their outputs. Native-reader studies and certified regional forms remain outstanding. Japanese and PRC-source inventories must not be mixed in rankings.
+
+### Research currently in draft branches (not released on `main`)
+
+The public website and the source on `main` are distinct from proposed changes in open experimental pull requests. **Do not interpret a draft PR as an integrated release.**
+
+| Draft work | Status and evidence |
+| --- | --- |
+| [PR #13](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13) — original thickness draft | **Not merged directly.** Its geometric fix was integrated safely by PR #19 with historical replay preserved; #13 remains an open draft for provenance. |
+| [PR #14](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14) — R-ODD | Local rotated-ink thickness-compensation experiment; not a validated ambigram generator. |
+| [PR #15](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15) — harmonic field | C₂-even smooth thickness field; geometric invariance is not evidence of readability. |
+| [PR #16](https://github.com/ClaudioDrews/sinogram-ambigram/pull/16) — A/B fusion | Experimental stroke registration and fusion; neither tested distinct-character pair was recognized in the pilot. |
+| [PR #17](https://github.com/ClaudioDrews/sinogram-ambigram/pull/17) — [blind VLM pilot](https://github.com/ClaudioDrews/sinogram-ambigram/tree/exp/vlm-reading-benchmark/experiments/vlm-reading-pilot-01) | Sanitized English/Chinese protocol, 52 image stimuli, 208 automated recognition responses, reproducible scoring and source-pinned image reconstruction. **Draft, not merged.** |
+
+In the small, preselected self-rotation pilot, correct recognition of both orientations occurred in **10/20** model-by-glyph observations for the historical geometry, **14/20** for corrected thickness, **13/20** for R-ODD and **15/20** for harmonic construction. The two A/B pairs had **zero correct dual readings** across methods; A/B fusion produced the same images as the corrected simple-union control for those pairs. These are **exploratory VLM observations**, not a calibrated perceptual success threshold, independent native-reader study or evidence of robust generalization.
 
 ## Research and implementation
 
@@ -114,26 +130,16 @@ summarised here and detailed in [`SCOPE.md`](SCOPE.md),
 [`findings/limitations.md`](findings/limitations.md) and
 [`LICENSE-AUDIT.md`](LICENSE-AUDIT.md).
 
-**The data is Japanese.** The inventory is 2,136 Jōyō kanji plus 634 Jinmeiyō
-kanji. Every glyph shape is the **Japanese** standard form, taken from KanjiVG.
-Simplified Chinese, traditional Chinese and other regional forms are **not**
-measured. A Chinese reader is looking at a Japanese rendering of the character.
+**Two separate geometric sources, not one culturally neutral alphabet.** The Japanese research inventory contains 2,136 Jōyō plus 634 Jinmeiyō kanji, represented with **Japanese KanjiVG forms**. The independent PRC-source track covers all 6,763 GB2312 codepoints from **Make Me a Hanzi** and generated 106,347 coarse-screened candidate pairs. The original browser Generator still uses Japanese forms even for Chinese-character input; the separate PRC Explorer uses Chinese-source geometry. These sources are **never mixed** in the same ranking. GB2312 coverage certifies a *codepoint repertoire*, **not** normative simplified/traditional glyph shapes: the PRC source contains both forms and has not been independently audited against region-specific standards.
 
-**A geometric match is a candidate, not an ambigram.** The scores in `data/` are
-distances between stroke centre-lines. They rank how well two drawings align
-after a half-turn. They do **not** measure whether a reader can read the
-result. No reading test, no ε calibration and no native-reader study has been
-published for this project. Every result here is a *candidate*.
+**A geometric match is a candidate, not a demonstrated ambigram.** Japanese ranking files measure geometric relations between stroke centre-lines; the separate PRC shortlist uses coarse 37×37 ink-overlap screening. Neither directly measures whether a person can read the resulting drawing. A [small blind automated VLM recognition pilot](https://github.com/ClaudioDrews/sinogram-ambigram/pull/17) exists on a **draft branch only**, but there is still **no controlled native-reader study, calibrated ε criterion or human-validated general-purpose recognizer**. Every proposed construction remains a candidate.
 
 **The semantic fallback is tiny.** When a character has no shortlisted
 geometric partner, the browser generator offers a related character from a
 small hand-curated list. It is an example set, not a synonym dictionary, and
 the substitution is shown to the user rather than hidden.
 
-**Known metric biases.** The ranking is not bias-free: dense glyphs score
-better partly because they fill the box, a few glyphs concentrate the top of
-the ranking, and the rotation centre is fixed at the centre of the character
-box. These are documented and quantified in
+**Known metric biases.** The historical Japanese rotation graph has density and hub biases, and its baseline uses a fixed box-centre rotation; these observations do **not** imply that every newer PRC construction operator fixes the rotation centre. Distinct PRC metrics require separate calibration. Details are documented in
 [`findings/limitations.md`](findings/limitations.md) and
 [`findings/conflicts-and-corrections.md`](findings/conflicts-and-corrections.md).
 
