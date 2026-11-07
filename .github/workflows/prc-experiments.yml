@@ -55,6 +55,8 @@ jobs:
             exp/ab-fusion)
               python code/exp_render_prc.py --graphics "$GFX" --mode ab-fusion --pairs '甲:由,韦:芈' --out outputs/method-pairs ;;
           esac
+      - name: Include upstream source licence with derived stimuli
+        run: cp licenses/ARPHICPL.TXT outputs/ARPHICPL.TXT
       - name: Upload exploratory stimuli (not blinded evaluations)
         uses: actions/upload-artifact@v4
         with:
