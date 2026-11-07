@@ -1,0 +1,24 @@
+name: PRC experimental regression
+
+on:
+  push:
+    branches:
+      - "exp/thickness-fix"
+      - "exp/r-odd"
+      - "exp/harmonic"
+      - "exp/ab-fusion"
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python dependencies
+        run: python -m pip install -r code/requirements.txt
+      - name: PRC core and branch-specific regressions
+        run: python -m unittest discover -s code -p 'test_prc*.py' -v
