@@ -290,4 +290,4 @@ if __name__ == "__main__":
         f = svg_file_for(ch, kd)
         st = load_kanji(f)
         npts = sum(len(p) for s in st for p in s["polys"])
-        print(f"{ch} {f}: {len(st)} strokes, {npts} points, tipos={[s['type'] for s in st]}")
+        print(f"{ch} {f}: {len(st)} strokes, {npts} points, stroke_types={[s['type'] for s in st]}")
