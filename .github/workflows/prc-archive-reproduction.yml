@@ -5,6 +5,20 @@ on:
     branches:
       - main
       - fix/prc-audit-2026-11-07
+    paths:
+      - tools/replay_prc_v116.py
+      - tools/verify_prc_archive.py
+      - code/prc_construct.py
+      - code/prc_construct_legacy_v116.py
+      - code/test_prc_geometry_semantics.py
+      - tools/benchmark_prc_outlines.py
+      - methods/PRC_WIDTH_SEMANTICS.md
+      - methods/PRC_WIDTH_SEMANTICS.zh-CN.md
+      - code/test_prc_archive_csv.py
+      - code/test_prc_archive_replay.py
+      - data/prc/archive-v1.16/**
+      - scripts/download_prc_sources.sh
+      - .github/workflows/prc-archive-reproduction.yml
   pull_request:
     branches:
       - main
