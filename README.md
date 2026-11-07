@@ -66,7 +66,9 @@ The [PRC ingestion stage](code/stage12_prc_ingest.py), [inventory preset builder
 
 The separate **CN-S (Mainland simplified Chinese)** research track now includes a deterministic, synthetic-tested construction module at [`code/prc_construct.py`](code/prc_construct.py), with [`28 targeted tests`](code/test_prc_construct.py). It explores rotation-centre optimisation, terminal stroke reconciliation, and constrained sector-wise thickness changes. See the [mathematical method](theory/prc-construction-method.md) and [PRC geometric analysis](findings/prc-extremity-analysis.md).
 
-**Scope boundary:** this remains an experimental *construction method*, not a Chinese-wide generator or a human-validated legibility result. The archived PRC construction-cohort measurements have a separate pinned-source reproduction documented above; that does **not** independently validate the newer, draft-only stroke-width ablations or the readability of their outputs. Native-reader studies and certified regional forms remain outstanding. Japanese and PRC-source inventories must not be mixed in rankings.
+**Integrated geometric correction:** [PR #19](https://github.com/ClaudioDrews/sinogram-ambigram/pull/19) merged the measured half-width fix into `code/prc_construct.py` while preserving the exact historical v1.16 implementation in `code/prc_construct_legacy_v116.py` for archived replay. Against 32 pinned source-outline cases, corrected original-outline IoU improved in **32/32** (median **0.4743 → 0.9083**). This is a geometric reconstruction result, **not** evidence of human readability. See the [width-semantics method](methods/PRC_WIDTH_SEMANTICS.md) and [fidelity findings](findings/prc-width-contour-fidelity.md).
+
+**Scope boundary:** this remains an experimental *construction method*, not a Chinese-wide generator or a human-validated legibility result. The archived PRC construction-cohort measurements have a separate pinned-source reproduction documented above; that does **not** validate the still-draft R-ODD, harmonic-field, or A/B fusion experiments or the readability of their outputs. Native-reader studies and certified regional forms remain outstanding. Japanese and PRC-source inventories must not be mixed in rankings.
 
 ### Research currently in draft branches (not released on `main`)
 
@@ -74,7 +76,7 @@ The public website and the source on `main` are distinct from proposed changes i
 
 | Draft work | Status and evidence |
 | --- | --- |
-| [PR #13](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13) — thickness reconstruction | Corrects the median-to-outline half-width convention in experimental PRC construction; geometric regression tests pass. |
+| [PR #13](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13) — original thickness draft | **Not merged directly.** Its geometric fix was integrated safely by PR #19 with historical replay preserved; #13 remains an open draft for provenance. |
 | [PR #14](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14) — R-ODD | Local rotated-ink thickness-compensation experiment; not a validated ambigram generator. |
 | [PR #15](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15) — harmonic field | C₂-even smooth thickness field; geometric invariance is not evidence of readability. |
 | [PR #16](https://github.com/ClaudioDrews/sinogram-ambigram/pull/16) — A/B fusion | Experimental stroke registration and fusion; neither tested distinct-character pair was recognized in the pilot. |
