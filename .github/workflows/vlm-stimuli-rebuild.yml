@@ -1,0 +1,48 @@
+name: Rebuild pinned blind VLM image package
+
+on:
+  push:
+    branches:
+      - exp/vlm-reading-benchmark
+    paths:
+      - "experiments/vlm-reading-pilot-01/**"
+      - ".github/workflows/vlm-stimuli-rebuild.yml"
+  pull_request:
+    branches:
+      - exp/thickness-fix
+    paths:
+      - "experiments/vlm-reading-pilot-01/**"
+      - ".github/workflows/vlm-stimuli-rebuild.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Fetch complete Git history for all pinned experiments
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned numerical and PNG dependencies
+        run: python -m pip install -r code/requirements.txt
+      - name: Download strictly pinned source
+        run: bash scripts/download_prc_sources.sh
+      - name: Reconstruct and SHA-256 verify every original image
+        run: |
+          python experiments/vlm-reading-pilot-01/scripts/rebuild_stimuli.py \
+            --graphics data/prc/graphics.txt \
+            --out "$RUNNER_TEMP/prc-vlm-blind-pilot-01.zip"
+      - name: Upload separately licensed and unlabelled experimental stimuli
+        uses: actions/upload-artifact@v4
+        with:
+          name: prc-vlm-blind-pilot-01
+          path: ${{ runner.temp }}/prc-vlm-blind-pilot-01.zip
+          if-no-files-found: error
+          retention-days: 30
