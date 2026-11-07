@@ -19,3 +19,8 @@ Thumbs.db
 
 # Downloaded KanjiVG source snapshot (re-fetch with scripts/download_kanjivg.sh)
 data/kanjivg/
+
+# Locally downloaded PRC source and generated cache (source-specific licence)
+data/prc/graphics.txt
+data/prc/cache/
+data/prc/coverage.json
