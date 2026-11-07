@@ -39,11 +39,11 @@ Generate 180° rotational (inverted-image) ambigrams for **pairs of the 46 hirag
 
 | Claim | Where | Status |
 |---|---|---|
-| "When IDS top-level operators match (both ⿰ or both ⿱) chance is 3× higher / matching is more stable" | `META-DECK` slide 7, `LOG-META`, `RPT-CONSOL` | Not in the paper (searched PDF text); no experiment in the folder. **[CLAIM]** |
-| "724 pairs suggested feasible" read as the algorithm's output | abstract translations in `LOG-MULTI` | Full text: 724 are the designer's book pairs; the abstract wording "suggested feasible" is ambiguous. [PAPER] resolves it as above. |
-| 324/724 readable | `RPT-META` | Paper says **325**. |
-| Paper provides a closed formula "a→b" | `LOG-MULTI` (Claude) | Correct: it provides a procedure, not a formula. |
-| Early AI analyses (`RPT-RULES`, `LOG-MULTI`) | | Based only on the abstract (full text could not be opened); statements about internals there were "inference marked as such". This file supersedes them. |
+| "When IDS top-level operators match (both ⿰ or both ⿱) chance is 3× higher / matching is more stable" | `earlier planning outline` slide 7, `earlier hypothesis note`, `earlier synthesis` | Not in the paper (searched PDF text); no experiment in the folder. **[CLAIM]** |
+| "724 pairs suggested feasible" read as the algorithm's output | abstract translations in `comparative discussion` | Full text: 724 are the designer's book pairs; the abstract wording "suggested feasible" is ambiguous. [PAPER] resolves it as above. |
+| 324/724 readable | `earlier exploratory summary` | Paper says **325**. |
+| Paper provides a closed formula "a→b" | `comparative discussion` (Claude) | Correct: it provides a procedure, not a formula. |
+| Early AI analyses (`earlier rule synthesis`, `comparative discussion`) | | Based only on the abstract (full text could not be opened); statements about internals there were "inference marked as such". This file supersedes them. |
 
 ## 6. Generalisation proposals (not executed) — see [methods](../methods/methods-and-pipelines-proposed.md)
 
