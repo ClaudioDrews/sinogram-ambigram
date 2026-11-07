@@ -1,32 +1,17 @@
----
-title: "Metrics Used Across Runs"
-id: metrics-comparison
-type: methodology
-status: reviewed
-evidence: [MEASURED, DERIVED]
-tags: [sinogram, ambigram, rotation-180, raster-iou, skeleton-f1, chamfer, hausdorff]
-created: 2026-11-01
-updated: 2026-11-05
-language: en
-license: MIT
-translations: {zh: machine-assisted, ja: machine-assisted}
-related: [methodology-readme, experiments-index, results-summary, rotgraph-method]
----
-
 # Metrics Used Across Runs
 
-Different runs measured different things on different glyph sets, so **scores are not comparable across rows**. Labels: see README (source reference in repo2: `../README.md`).
+Different runs measured different things on different glyph sets, so **scores are not comparable across rows**. Evidence labels are defined in the [repository README](../README.md).
 
 | Run | Metric | Raw definition (from code/log) | Tolerance / alignment | What it is blind to |
 |---|---|---|---|---|
-| GPT (exp-01 (source reference in repo2: `../experiments/exp-01-gpt-pilot-42.md`)) | Raster IoU of R(A) vs B, 128 px, threshold 96 | ink mask intersection over union | none ("unshifted") or ±3 px ("aligned") | stroke identity; weights ink mass; font optics |
-| GLM (exp-02 (source reference in repo2: `../experiments/exp-02-glm-mini-29.md`)) | max-IoU over translation | same, ±40 px | ±40 px | same; discovery-oriented; hypersensitive for thin strokes (per Claude) |
-| Claude v1 (exp-03 (source reference in repo2: `../experiments/exp-03-claude-skeleton-and-profile.md`)) | skeleton F-score @ τ=8 px, S=160, chance-corrected | tolerance-band precision/recall of skeletons | 8 px | failed controls (inner-bar offset ~5% em) |
+| GPT (exp-01) | Raster IoU of R(A) vs B, 128 px, threshold 96 | ink mask intersection over union | none ("unshifted") or ±3 px ("aligned") | stroke identity; weights ink mass; font optics |
+| GLM (exp-02) | max-IoU over translation | same, ±40 px | ±40 px | same; discovery-oriented; hypersensitive for thin strokes (per Claude) |
+| Claude v1 (exp-03) | skeleton F-score @ τ=8 px, S=160, chance-corrected | tolerance-band precision/recall of skeletons | 8 px | failed controls (inner-bar offset ~5% em) |
 | Claude v2 | W1 on projection profiles (filter) → quantile warp + branch-wise skeleton score (τ=5, K=80), symmetric min | stroke-length profiles; monotone warps | up to warp | rare structures never pre-filtered in; 申 not self-recovered |
-| Kimi (exp-04 (source reference in repo2: `../experiments/exp-04-kimi-joyo-self-rotation.md`)) | FFT max-IoU (±52 px), 2 fonts | raster | ±52 px | ink-mass blindness (甲); taper in Mincho |
-| Mistral (exp-05 (source reference in repo2: `../experiments/exp-05-mistral-medians-graph.md`)) | chamfer/point-cloud distance + greedy stroke matching on medians (lower = better; d_bb) | geometry of median polylines | bbox centring | stroke width/ends; data quirk (verticals leak) |
-| Visual reading (exp-06 (source reference in repo2: `../experiments/exp-06-visual-reading-of-contact-sheet.md`)) | model reading of A, R(A), B | qualitative | n/a | not human; label priming |
-| MiniMax (exp-08 (source reference in repo2: `../experiments/exp-08-minimax-rotation-graph.md`)) | chamfer, RMS, symmetric Hausdorff and dilated IoU (r = 2,3,4) between KanjiVG stroke centrelines; values divided by the 109-unit box | point clouds resampled at 0.45 u from SVG paths; no raster | none (box centre, fixed scale) | stroke type and ink mass; one shape per glyph; frame glyphs favoured |
+| Kimi (exp-04) | FFT max-IoU (±52 px), 2 fonts | raster | ±52 px | ink-mass blindness (甲); taper in Mincho |
+| Mistral (exp-05) | chamfer/point-cloud distance + greedy stroke matching on medians (lower = better; d_bb) | geometry of median polylines | bbox centring | stroke width/ends; data quirk (verticals leak) |
+| Visual reading (exp-06) | model reading of A, R(A), B | qualitative | n/a | not human; label priming |
+| MiniMax (exp-08) | chamfer, RMS, symmetric Hausdorff and dilated IoU (r = 2,3,4) between KanjiVG stroke centrelines; values divided by the 109-unit box | point clouds resampled at 0.45 u from SVG paths; no raster | none (box centre, fixed scale) | stroke type and ink mass; one shape per glyph; frame glyphs favoured |
 | IDS algebra (GPT, Claude) | exact tree equality after `R` | symbolic | none | typography/slot conventions; atomic characters (甲, 未) |
 
 ## Two H scales inside the MiniMax output (X8)
@@ -48,7 +33,7 @@ Chance-corrected tolerant F1 (run only in Claude); W1 (Claude only); symmetric C
 
 ## Related
 
-- Methodology (source reference in repo2: `README.md`)
-- Experiments index (source reference in repo2: `../experiments/README.md`)
+- Methodology
+- Experiments index
 - [Results summary](../findings/results-summary.md)
 - [Rotation-graph method (MiniMax)](../methods/rotgraph-method.md)
