@@ -24,7 +24,7 @@ For DeepSeek and HY4 a reasoning-disabled field was transmitted; for MiniMax and
 
 The literal text content was concatenated in provider event order, then **only surrounding whitespace was stripped** for parsed output. Exactly one CJK unified or compatibility ideograph is `valid`; the literal `UNKNOWN` is `unknown`; otherwise `invalid`. Network failure is `error`. No Chinese variant normalization or guess-filling is allowed.
 
-The public compact responses matrix preserves all 183 single-character raw outputs and one literal UNKNOWN. There were 23 empty invalid responses and one empty transport error, represented by reserved status tokens `INVALID` and `ERROR`. For new model submissions use the full-schema CSV format supported by `scripts/score.py` to retain actual raw text and status separately.
+The public compact responses matrix preserves all 183 single-character raw outputs and one literal UNKNOWN. `data/finish_reasons.csv` separately records the per-trial stop, length-cap or transport-error outcome. There were 23 empty invalid responses and one empty transport error, represented by reserved status tokens `INVALID` and `ERROR`. For new model submissions use the full-schema CSV format supported by `scripts/score.py` to retain actual raw text and status separately.
 
 Of 208 scheduled requests, 207 received HTTP 200 and one failed in transport. **23 responses ended at length cap**. These observations remain in the denominator for the primary accuracy endpoint.
 
