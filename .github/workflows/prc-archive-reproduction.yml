@@ -1,0 +1,84 @@
+name: PRC v1.16 source-level fixed-cohort reproduction
+
+on:
+  push:
+    branches:
+      - main
+      - fix/prc-audit-2026-11-07
+    paths:
+      - tools/replay_prc_v116.py
+      - tools/verify_prc_archive.py
+      - code/prc_construct.py
+      - code/test_prc_archive_csv.py
+      - code/test_prc_archive_replay.py
+      - data/prc/archive-v1.16/**
+      - scripts/download_prc_sources.sh
+      - .github/workflows/prc-archive-reproduction.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prc-v116-source-replay
+  cancel-in-progress: true
+
+jobs:
+  source-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: python -m pip install -r code/requirements.txt
+      - name: Offline data and reproduction tests
+        run: python -m unittest discover -s code -p 'test_prc_archive*.py' -v
+      - name: Test catalog import from inside code directory
+        run: cd code && python -m unittest test_prc_public_catalog.py -v
+      - name: Download and verify original pinned MMah geometry
+        run: bash scripts/download_prc_sources.sh
+      - name: Recompute all published fixed-cohort metrics from source
+        run: |
+          python tools/replay_prc_v116.py \
+            --graphics data/prc/graphics.txt \
+            --archive data/prc/archive-v1.16 \
+            --out /tmp/prc-v116-replay
+          python tools/verify_prc_archive.py /tmp/prc-v116-replay \
+            --out /tmp/prc-v116-verified
+      - name: Compare source-derived statistics with historical summary
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          from math import isclose
+          old=json.loads(Path('data/prc/archive-v1.16/prc-archive-summary.json').read_text())
+          new=json.loads(Path('/tmp/prc-v116-verified/prc-archive-summary.json').read_text())
+          for field in ('construction_n','sector_n','sector_improved_n'):
+              assert old[field]==new[field],(field,old[field],new[field])
+          fields=(
+              'centre_gain_mean','centre_gain_median','extremity_gain_mean',
+              'sector_delta_median','sector_delta_mean','sector_baseline_median',
+              'sector_edited_median')
+          for field in fields:
+              assert isclose(old[field],new[field],rel_tol=0,abs_tol=2e-12),(
+                  field,old[field],new[field])
+          assert old['construction_n']==120 and old['sector_n']==53
+          print('SOURCE-REPLAY VERIFIED: 120 centre cases, 53 sector cases, 6 reps')
+          print('ARCHIVED INPUT HASHES (historical serialization):',old['input_sha256'])
+          print('NEW INPUT HASHES (replay serialization):',new['input_sha256'])
+          PY
+          echo '## PRC v1.16 source reproduction' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Pinned MMah source verified by SHA-256. Recomputed all 120 rotation-centre cases and 53 sector-generalisation cases with matching numeric results (absolute tolerance 2e-12). Six representatives independently replayed; historical summary metrics match.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Original cohort selection is NOT part of this fixed-cohort replay. No human legibility claims.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload independent numeric summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: prc-v116-source-replay-summary
+          path: /tmp/prc-v116-verified/prc-archive-summary.json
+          if-no-files-found: error
+          retention-days: 30

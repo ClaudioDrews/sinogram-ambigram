@@ -2,11 +2,13 @@
 from __future__ import annotations
 import csv
 import json
+import sys
 from pathlib import Path
 import tempfile
 import unittest
 
-from prc.build_catalog import build
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from prc.build_catalog import build  # noqa: E402
 
 
 class TestPublicCatalogue(unittest.TestCase):
