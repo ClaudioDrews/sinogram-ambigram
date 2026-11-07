@@ -19,3 +19,9 @@ Stroke data are transformed for this project through geometric rotation, flatten
 The ambigram art of [Issei Nomura](https://x.com/IsseiNomura) inspired the project. The artist did not author, review or endorse this repository, and no artwork from his profile is redistributed here.
 
 The project discusses the research of Inoue and Takahashi (2020); the original paper is cited, not redistributed. Other source material should be consulted at the cited upstream links.
+
+## Experimental PRC geometry (Make Me a Hanzi / Arphic)
+
+The PRC code optionally downloads the exact `graphics.txt` file from [Make Me a Hanzi](https://github.com/skishore/makemeahanzi) (pinned upstream commit `bddc96d41bef78427ed0e034e9f7e31d71fd1b92`, SHA-256 `a28c478b5178e98f67f510b2d52fde08a69dc664654ef43498253b9b764d46ee`). The source graphics are derived from Arphic fonts and subject to the **Arphic Public License**, whose unaltered English text is included at [`licenses/ARPHICPL.TXT`](licenses/ARPHICPL.TXT). It is not MIT-licensed solely because project scripts are MIT.
+
+The APL requires keeping the licence with redistributed font material; distributing modified font/glyph material entails further modification notices and availability obligations (see sections 1–2). The repository does **not** ship the 30 MB source graphics file, and Stage 12–14 cache/preset/search outputs remain local pending classification. Numerical summaries from the prior PRC archive are research measurements; the status of any derived-asset rights must be reviewed before declaring them MIT. All PRC figures in this project are experimental geometry, **not human-validated ambigrams**.
