@@ -8,7 +8,7 @@
 
 For a block of n characters in left-to-right layout, a half-turn reverses the **spatial order** of the sequence:
 `R_block(c₁c₂…c_n) = R(c_n)…R(c₁)`.
-So a word-ambigram needs a *lexical* partner: `w′ = reverse(map_R(w))` must be a real word. Implementation sketch (`LOG-DEEPSEEK`, `reverse_word_ambigram`): for each position take the list of near-R-partners of `c_i` (from the character rotation graph), take the Cartesian product, reverse, and look up in hash sets built from **JMdict** (Japanese) and **CC-CEDICT** (Chinese). Not run anywhere ([PLAN]).
+So a word-ambigram needs a *lexical* partner: `w′ = reverse(map_R(w))` must be a real word. Implementation sketch (`structural proposal`, `reverse_word_ambigram`): for each position take the list of near-R-partners of `c_i` (from the character rotation graph), take the Cartesian product, reverse, and look up in hash sets built from **JMdict** (Japanese) and **CC-CEDICT** (Chinese). Not run anywhere ([PLAN]).
 
 Caveats the sources mention or imply:
 * Layout: horizontal (yokogaki) vs vertical (tategaki) writing changes which axis reverses; not analysed.
@@ -20,15 +20,15 @@ Caveats the sources mention or imply:
 
 | Pair | Claimed mechanism | Status |
 |---|---|---|
-| 全力 ↔ 不屈 | R(力)≈不 (central cross), R(全)≈屈 (three horizontals of 王 fuse into 尸 enclosure); 8 vs 12 strokes | **[CLAIM]** (`LOG-META`, `RPT-CONSOL`, `RPT-META`); the stroke-level correspondences are stated, not measured, in the folder ([conflicts C-11](../findings/conflicts-and-corrections.md)) |
+| 全力 ↔ 不屈 | R(力)≈不 (central cross), R(全)≈屈 (three horizontals of 王 fuse into 尸 enclosure); 8 vs 12 strokes | **[CLAIM]** (`earlier hypothesis note`, `earlier synthesis`, `earlier exploratory summary`); the stroke-level correspondences are stated, not measured, in the folder ([conflicts C-11](../findings/conflicts-and-corrections.md)) |
 | 外国 ↔ 国外, 外人 ↔ 人外 | semordnilap with R(外)=外, R(国)=国 | [DERIVED], R(外) not measured; 国 missing from Mistral dataset |
 | 挑戦 ↔ 勝利 (Nomura poster) | left–right anti-automorphism; GED | cited as Nomura's work; no analysis |
-| 天使 ↔ 悪魔 (KSK ONE), 陰 ↔ 陽 (Nomura) | the problem the criterion is meant to solve | cited in `META-DECK`/`RPT-RULES` |
+| 天使 ↔ 悪魔 (KSK ONE), 陰 ↔ 陽 (Nomura) | the problem the criterion is meant to solve | cited in `earlier planning outline`/`earlier rule synthesis` |
 | 平成 ↔ 令和, 努力 ↔ 才能, 短所 ↔ 長所 | semantic-contrast pair selection (N4) | proposals |
 
 ## 3. Semantic scoring [PLAN]
 
-`Q(A,B)=η₁G+η₂M+η₃P` (geometric compatibility, semantic/narrative interest, predicted legibility) with an LLM for M — `LOG-GPT1` N4. Two-stage filtering (shape filter then semantic classification) in `LOG-QWEN`.
+`Q(A,B)=η₁G+η₂M+η₃P` (geometric compatibility, semantic/narrative interest, predicted legibility) with an LLM for M — `initial geometric analysis` N4. Two-stage filtering (shape filter then semantic classification) in `alternative-method proposal`.
 
 ## Related
 
