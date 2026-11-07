@@ -33,3 +33,35 @@ jobs:
           node --check demo/c2/app.js
       - name: Run C2 and static integration tests (without network or dependencies)
         run: node --test tests/c2-visual.test.cjs
+      - name: Smoke-test rendered C2 canvases in headless Chrome (EN, Chinese, Japanese)
+        run: |
+          set -euo pipefail
+          CHROME="$(command -v google-chrome || command -v chromium)"
+          test -n "$CHROME"
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/c2-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server" || true' EXIT
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8765/demo/c2/ > /dev/null; then break; fi
+            sleep 0.2
+          done
+          mkdir -p /tmp/c2-browser
+          for lang in en zh ja; do
+            "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
+              --hide-scrollbars --window-size=1280,1800 --virtual-time-budget=2500 \
+              --dump-dom --screenshot="/tmp/c2-browser/c2-$lang.png" \
+              "http://127.0.0.1:8765/demo/c2/?lang=$lang&glyph=%E7%94%B2" \
+              > "/tmp/c2-browser/c2-$lang.html" \
+              2> "/tmp/c2-browser/c2-$lang.log"
+            grep -q 'data-visual-c2-ready="true"' "/tmp/c2-browser/c2-$lang.html"
+            grep -Eq 'id="iou">[0-9]' "/tmp/c2-browser/c2-$lang.html"
+            test -s "/tmp/c2-browser/c2-$lang.png"
+          done
+      - name: Retain three browser smoke screenshots for manual QA (not git assets)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: c2-visual-browser-qa
+          path: /tmp/c2-browser/
+          retention-days: 7
+          if-no-files-found: warn
