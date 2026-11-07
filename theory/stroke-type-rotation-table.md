@@ -1,23 +1,8 @@
----
-title: "Stroke-Type Behaviour Under 180° Rotation"
-id: stroke-type-rotation-table
-type: research
-status: reviewed
-evidence: [DERIVED, CLAIM, PLAN]
-tags: [sinogram, stroke, rotation-180, algebra]
-created: 2026-11-01
-updated: 2026-11-05
-language: en
-license: MIT
-translations: {zh: machine-assisted, ja: machine-assisted}
-related: [ids-rotation-algebra, family-rules, glossary-and-notation]
----
-
 # Stroke-Type Behaviour Under 180° Rotation
 
-Sources: `LOG-MULTI` (Claude critique → GLM table; DeepSeek round), `LOG-DEEPSEEK` (cost table), `CAT-XLSX` rows ("Stroke Re-typing Mapping", "Stroke Class Inversion"). Labels: see README (source reference in repo2: `../README.md`).
+**Evidence basis:** The formulas below are derived from explicit structural assumptions; empirical claims require geometric measurements or recognition tests.
 
-> **Reliability caveat (owner, 2026-11-01):** `RPT-RULES`, `RPT-CONSOL`, `RPT-FACES` and the catalog `CAT-XLSX` were probably produced by Google NotebookLM/Gemini; the owner warns that these tools make many errors. Treat every claim in this file that rests **only** on those four sources as **unverified** ([CLAIM]), even where it is phrased as fact. Claims also backed by the paper `PAPER`, a script run in `sources/`, or Nomura's own interviews (nomura-sources-and-findings (source reference in repo2: `../research/nomura-sources-and-findings.md`)) are stronger.
+> **Evidence boundary:** Earlier synthesis documents suggested some of these rules without testing them. Untested rules remain [CLAIM] or [PLAN], not measured conclusions.
 
 ## 1. Principle [DERIVED]
 
@@ -46,7 +31,7 @@ Stroke classes listed: 一, 丨, 丿, 丶, ㇀, 乙, 亅, 乚, ㇉. A pairwise `
 
 * 上↔丁 needs "hook → short stroke" re-typing (Claude v2: 0.81, "approximate, requires swapping the hook for a short stroke"; GPT aligned IoU 0.680).
 * 王↔玉 needs the dot (丶) hidden/attenuated in ink mass (GPT 0.644/0.671).
-* The visual-reading experiment found R(丁) keeps the hook at the top (ends up as 丄-like), confirming the re-typing need (exp-06 (source reference in repo2: `../experiments/exp-06-visual-reading-of-contact-sheet.md`)).
+* The visual-reading experiment found R(丁) keeps the hook at the top (ends up as 丄-like), confirming the re-typing need (exp-06).
 * Errors fixed on the way: GLM's first claims about which stroke "goes up/left" under R were corrected (Claude/DeepSeek rounds); the claim about 未/末 flipped within the log: GLM first said R(未)≠末, then "corrected" itself to R(未)=H(未)=末, and Claude rejected that correction (stroke legs of 未 end up on top; 末 differs from 未 only in bar lengths) — see [conflicts C-02](../findings/conflicts-and-corrections.md).
 
 ## 4. Open
@@ -58,4 +43,4 @@ Stroke classes listed: 一, 丨, 丿, 丶, ㇀, 乙, 亅, 乚, ㇉. A pairwise `
 
 - [IDS rotation algebra](../theory/ids-rotation-algebra.md)
 - [Family rules](../theory/family-rules.md)
-- Glossary and notation (source reference in repo2: `../project/glossary-and-notation.md`)
+- Glossary and notation
