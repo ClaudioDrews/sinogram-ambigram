@@ -1,0 +1,10 @@
+{
+  "seed": 20261107,
+  "null_partners": 30,
+  "glyphs": 2770,
+  "pairs": 3837835,
+  "refined_rows": 5180,
+  "z_definition": "z_pair(a,b) = max(z(a,b), z(b,a)); z(a,b) = (d - mu_a)/sigma_a",
+  "scale": "grid distance-transform approximation, normalised by 109",
+  "distinct_pairs": 3835065
+}

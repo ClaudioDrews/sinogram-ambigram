@@ -1,0 +1,9 @@
+{
+  "pairs": 5180,
+  "offset_grid": "9x9 centres, step 1.5, max 6.0",
+  "padded_canvas": 125,
+  "scale": "grid distance-transform approximation, normalised by 109",
+  "nonzero_offsets": 3646,
+  "mean_improvement_grid": 0.01820044171851955,
+  "pairs_improved": 2886
+}
