@@ -1,0 +1,66 @@
+name: PRC experimental regression
+
+on:
+  push:
+    branches:
+      - "exp/thickness-fix"
+      - "exp/r-odd"
+      - "exp/harmonic"
+      - "exp/ab-fusion"
+  pull_request:
+    branches:
+      - main
+      - "exp/thickness-fix"
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Python dependencies
+        run: python -m pip install -r code/requirements.txt
+      - name: PRC core and branch-specific regressions
+        run: python -m unittest discover -s code -p 'test_prc*.py' -v
+      - name: Fetch checksum-pinned PRC source
+        run: bash scripts/download_prc_sources.sh
+      - name: Render immutable main geometry baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          MAIN_SHA=a9ddfabbdfe32d781c816ffbd6c93fc194d12e30
+          git fetch origin "$MAIN_SHA" --depth=1
+          mkdir -p /tmp/prc-main-baseline
+          git show "$MAIN_SHA:code/prc_construct.py" > /tmp/prc-main-baseline/prc_construct.py
+          cp code/exp_render_prc.py /tmp/prc-main-baseline/exp_render_prc.py
+          python /tmp/prc-main-baseline/exp_render_prc.py --graphics data/prc/graphics.txt --mode baseline --characters '田,中,口,日,目' --out outputs/original-main-self
+          python /tmp/prc-main-baseline/exp_render_prc.py --graphics data/prc/graphics.txt --mode baseline --pairs '甲:由,韦:芈' --out outputs/original-main-pairs
+      - name: Render frozen exploratory stimuli
+        shell: bash
+        run: |
+          set -euo pipefail
+          GFX=data/prc/graphics.txt
+          python code/exp_render_prc.py --graphics "$GFX" --mode baseline --characters '田,中,口,日,目' --out outputs/fixed-self
+          python code/exp_render_prc.py --graphics "$GFX" --mode baseline --pairs '甲:由,韦:芈' --out outputs/fixed-pairs
+          BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+          case "$BRANCH" in
+            exp/r-odd)
+              python code/exp_render_prc.py --graphics "$GFX" --mode r-odd --characters '田,中,口,日,目' --out outputs/method-self ;;
+            exp/harmonic)
+              python code/exp_render_prc.py --graphics "$GFX" --mode harmonic --characters '田,中,口,日,目' --out outputs/method-self ;;
+            exp/ab-fusion)
+              python code/exp_render_prc.py --graphics "$GFX" --mode ab-fusion --pairs '甲:由,韦:芈' --out outputs/method-pairs ;;
+          esac
+      - name: Include upstream source licence with derived stimuli
+        run: cp licenses/ARPHICPL.TXT outputs/ARPHICPL.TXT
+      - name: Upload exploratory stimuli (not blinded evaluations)
+        uses: actions/upload-artifact@v4
+        with:
+          name: prc-experiment-stimuli
+          path: outputs/
+          retention-days: 30
+          if-no-files-found: error

@@ -128,7 +128,12 @@ def retarget(median: np.ndarray, half_width: np.ndarray) -> np.ndarray:
 
 
 def stroke_polygon(median: np.ndarray, half_width: np.ndarray) -> np.ndarray:
-    """Outline of a tapered stroke: the spine offset by half the width."""
+    """Outline of a tapered stroke, offset by the measured half-width.
+
+    ``load_glyph`` computes ``half_width`` as the median-to-outline
+    distance.  Offsetting by half that value again would produce a stroke
+    approximately half as thick as the source geometry.
+    """
     if len(median) < 2:
         return np.zeros((0, 2))
     tang = np.gradient(median, axis=0)
@@ -136,8 +141,8 @@ def stroke_polygon(median: np.ndarray, half_width: np.ndarray) -> np.ndarray:
     norm[norm == 0] = 1.0
     tang = tang / norm
     normal = np.column_stack([-tang[:, 1], tang[:, 0]])
-    left = median + normal * (half_width / 2)[:, None]
-    right = median - normal * (half_width / 2)[:, None]
+    left = median + normal * half_width[:, None]
+    right = median - normal * half_width[:, None]
     return np.vstack([left, right[::-1]])
 
 

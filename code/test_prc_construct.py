@@ -147,6 +147,22 @@ class TestLegibility(unittest.TestCase):
         self.assertLess(pc.symmetric_ink(half, (c, c), ref),
                         pc.symmetric_ink(strokes, (c, c), ref))
 
+    def test_stroke_polygon_offsets_by_measured_half_width(self):
+        # load_glyph measures the distance from the spine to the outline,
+        # not the full stroke width. The renderer must not halve it again.
+        mid = np.array([[20.0, 50.0], [80.0, 50.0]])
+        half_width = np.array([3.0, 3.0])
+        poly = pc.stroke_polygon(mid, half_width)
+        self.assertAlmostEqual(float(poly[:, 1].min()), 47.0)
+        self.assertAlmostEqual(float(poly[:, 1].max()), 53.0)
+
+    def test_rasterisation_preserves_known_stroke_width(self):
+        # Axis-aligned rectangle: 20 units long and 6 units wide.
+        # Its rasterised area is exactly 120 pixels on the 109x109 grid.
+        stroke = _stroke([[30.0, 50.0], [50.0, 50.0]], [3.0, 3.0])
+        grid = pc.raster([stroke])
+        self.assertEqual(int(grid.sum()), 120)
+
     def test_retention_falls_when_ink_is_removed(self):
         c = EM / 2
         strokes = [_stroke([[20.0, c], [88.0, c]], [1.0, 1.0])]
@@ -165,7 +181,9 @@ class TestLegibility(unittest.TestCase):
 
     def test_a_bar_is_symmetric_about_its_own_centre(self):
         c = EM / 2
-        strokes = [_stroke([[20.0, c], [88.0, c]], [1.0, 1.0])]
+        strokes = [_stroke([[20.0, c], [88.0, c]], [1.5, 1.5])]
+        # Avoid half-integer polygon edges coinciding with pixel centres:
+        # exact border ties can break binary-raster rotational symmetry.
         out = pc.legibility(strokes, (c, c))
         self.assertGreater(out["mu"], 0.8)
 

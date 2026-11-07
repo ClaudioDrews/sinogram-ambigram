@@ -79,10 +79,23 @@ are **not interchangeable**. The replay implements the archived mask
 convention explicitly rather than silently measuring the old published
 numbers with the new estimator.
 
-The new replay uses the current module's geometry primitives and checks
-the resulting numbers against historical tables; it is not a source snapshot
-of all original analysis scripts. If a later edit to the geometry core
-changes values, CI should fail rather than rewrite historical data.
+The fixed-cohort replay now imports **only**
+[`code/prc_construct_legacy_v116.py`](../code/prc_construct_legacy_v116.py),
+which is byte-for-byte identical to `code/prc_construct.py` at historical
+`main` commit `a9ddfabbdfe32d781c816ffbd6c93fc194d12e30` (Git blob
+`87d02ef641f879dae41275551546a671381b9fb9`). Its geometric width
+convention deliberately offsets the median by `half_width / 2` even though
+the value was already a median-to-outline distance. This is an **historical
+method**, not the corrected reconstruction.
+
+The corrected version remains in
+[`code/prc_construct.py`](../code/prc_construct.py) on the separate draft
+integration branch. It offsets by `half_width`, and is evaluated against
+source outlines separately under
+[`PRC_WIDTH_SEMANTICS.md`](PRC_WIDTH_SEMANTICS.md).
+Neither version overwrites archived JSON/CSV data, and their scores must not
+be pooled. The historical code freeze is checked as a Git blob hash in the
+unit tests. The replay still does **not** reproduce original cohort selection.
 
 ## CSV repair: numeric agreement vs byte equality
 
