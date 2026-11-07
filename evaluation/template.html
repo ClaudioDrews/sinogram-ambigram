@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reading evaluation — Sinogram Ambigrams</title>
+<style>
+:root{--bg:#f6f6f2;--ink:#18332e;--line:#dbe3dd;--green:#175f51;--light:#edf4ef;--muted:#61746d;--warm:#b96a3e}
+*{box-sizing:border-box}
+body{font:15px/1.55 system-ui,'Noto Sans CJK JP','Noto Sans CJK SC',sans-serif;background:var(--bg);margin:0;color:var(--ink)}
+main{max-width:880px;margin:auto;padding:26px 18px 70px}
+h1{font-size:clamp(24px,4vw,34px);line-height:1.2;margin:6px 0 10px}
+h2{font-size:18px;margin:26px 0 10px}
+p{margin:8px 0 12px}
+.eyebrow{color:var(--green);font-size:11px;letter-spacing:.16em;font-weight:750;text-transform:uppercase}
+.muted{color:var(--muted)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin-top:16px}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+button{font:inherit;background:#fff;color:var(--ink);border:1px solid #b5c7bd;border-radius:9px;padding:9px 13px;cursor:pointer}
+button.primary{background:var(--green);color:#fff;border-color:var(--green)}
+button:hover{border-color:var(--green)}
+button:disabled{opacity:.45;cursor:default}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #a4d7bf;outline-offset:2px}
+select,input{font:inherit;padding:8px 10px;border:1px solid #b9cac0;border-radius:8px;background:#fff;color:var(--ink)}
+.item{border:1px solid var(--line);border-radius:14px;background:#fff;padding:18px;margin-top:14px}
+.stage{display:grid;place-items:center;background:#fafcf9;border:1px solid var(--line);border-radius:12px;min-height:250px;padding:12px}
+.stage svg{width:min(100%,260px);aspect-ratio:1;transition:transform .35s ease}
+.stage svg.flipped{transform:rotate(180deg)}
+.scale{display:grid;grid-template-columns:1fr;gap:6px;margin-top:14px}
+.scale label{display:flex;justify-content:space-between;align-items:baseline;font-weight:600;font-size:14px}
+.scale .hint{font-weight:400;font-size:12px;color:var(--muted)}
+.scale input[type=range]{width:100%;accent-color:var(--green)}
+.ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.char{font-size:30px;font-weight:650}
+textarea{font:inherit;width:100%;min-height:64px;padding:9px;border:1px solid #b9cac0;border-radius:8px}
+.progress{font-size:13px;color:var(--muted)}
+.warn{background:#fff5ea;border-left:3px solid var(--warm);padding:10px 12px;border-radius:7px;font-size:13px}
+table.consent{border-collapse:collapse;width:100%;font-size:14px}
+table.consent td,table.consent th{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.badge{display:inline-block;font-size:11px;border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:var(--muted)}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<main>
+
+<div id="consentScreen">
+  <div class="eyebrow" id="eyebrow">Reading evaluation</div>
+  <h1 id="title">Do these drawings read?</h1>
+  <p class="muted" id="intro"></p>
+
+  <div class="panel">
+    <h2 id="consentHeading" style="margin-top:0"></h2>
+    <p id="consentText"></p>
+    <table class="consent">
+      <thead><tr><th id="thWhat"></th><th id="thData"></th><th id="thChoice"></th></tr></thead>
+      <tbody>
+        <tr><td id="tdWhat"></td><td id="tdData"></td><td id="tdChoice"></td></tr>
+      </tbody>
+    </table>
+    <div class="row" style="margin-top:14px">
+      <button class="primary" id="acceptBtn" type="button"></button>
+      <button id="declineBtn" type="button"></button>
+    </div>
+  </div>
+</div>
+
+<div id="appScreen" class="hidden">
+  <div class="eyebrow" id="eyebrow2">Reading evaluation</div>
+  <h1 id="title2">Do these drawings read?</h1>
+
+  <div class="panel" id="profilePanel">
+    <h2 style="margin-top:0" id="profileHeading"></h2>
+    <div class="row">
+      <label for="nativeLang" id="lblNative"></label>
+      <select id="nativeLang"></select>
+      <label for="proficiency" id="lblProf"></label>
+      <select id="proficiency"></select>
+      <label for="ageBand" id="lblAge"></label>
+      <select id="ageBand"></select>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="row" style="justify-content:space-between">
+      <span class="progress" id="progress"></span>
+      <span class="badge" id="itemBadge"></span>
+    </div>
+    <p class="muted small" id="instructions"></p>
+  </div>
+
+  <div id="items"></div>
+
+  <div class="panel">
+    <h2 style="margin-top:0" id="finishHeading"></h2>
+    <p class="muted" id="finishText"></p>
+    <div class="row">
+      <button class="primary" id="downloadJson" type="button"></button>
+      <button id="downloadCsv" type="button"></button>
+    </div>
+    <p class="muted small" id="exportNote"></p>
+  </div>
+</div>
+
+</main>
+
+<script id="evaluation-items" type="application/json">{"items":[]}</script>
+<script id="evaluation-text" type="application/json">{}</script>
+<script>
+(function () {
+  "use strict";
+  const ITEMS = JSON.parse(document.getElementById("evaluation-items").textContent);
+  const TEXT = JSON.parse(document.getElementById("evaluation-text").textContent);
+  const LANG = (location.hash || "").replace("#", "") || "en";
+  const T = TEXT[LANG] || TEXT.en;
+  const NS = "http://www.w3.org/2000/svg";
+
+  // ---- seeded shuffle: stable per respondent, different for each respondent ----
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function getSeed() {
+    let s = localStorage.getItem("sineval.seed");
+    if (!s) {
+      const buf = new Uint32Array(1);
+      (window.crypto || window.msCrypto).getRandomValues(buf);
+      s = String(buf[0]);
+      localStorage.setItem("sineval.seed", s);
+    }
+    return Number(s);
+  }
+  const SEED = getSeed();
+  const order = ITEMS.items.map((it, i) => i);
+  const rand = mulberry32(SEED);
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    const tmp = order[i]; order[i] = order[j]; order[j] = tmp;
+  }
+
+  // ---- state ----
+  const responses = {};
+  const meta = { nativeLang: "", proficiency: "", ageBand: "" };
+  let flipped = {};
+
+  const $ = (id) => document.getElementById(id);
+  function setText(id, value) { const el = $(id); if (el) el.textContent = value; }
+  // Text entries may carry {placeholders}; fill them in.
+  function fmt(key, vars) {
+    let out = String(T[key] == null ? "" : T[key]);
+    Object.keys(vars || {}).forEach(function (name) {
+      out = out.split("{" + name + "}").join(String(vars[name]));
+    });
+    return out;
+  }
+  function fillSelect(el, entries, label) {
+    el.innerHTML = "";
+    const blank = document.createElement("option");
+    blank.value = ""; blank.textContent = label; el.appendChild(blank);
+    entries.forEach(function (e) {
+      const o = document.createElement("option");
+      o.value = e; o.textContent = e; el.appendChild(o);
+    });
+  }
+
+  function applyText() {
+    setText("eyebrow", T.eyebrow); setText("eyebrow2", T.eyebrow);
+    setText("title", T.title); setText("title2", T.title);
+    setText("intro", T.intro);
+    setText("consentHeading", T.consentHeading);
+    setText("consentText", T.consentText);
+    setText("thWhat", T.thWhat); setText("thData", T.thData); setText("thChoice", T.thChoice);
+    setText("tdWhat", T.tdWhat); setText("tdData", T.tdData); setText("tdChoice", T.tdChoice);
+    setText("acceptBtn", T.accept); setText("declineBtn", T.decline);
+    setText("profileHeading", T.profileHeading);
+    setText("lblNative", T.nativeLang); setText("lblProf", T.proficiency); setText("lblAge", T.ageBand);
+    setText("instructions", T.instructions);
+    setText("finishHeading", T.finishHeading); setText("finishText", T.finishText);
+    setText("downloadJson", T.downloadJson); setText("downloadCsv", T.downloadCsv);
+    setText("exportNote", T.exportNote);
+    fillSelect($("nativeLang"), T.langs, T.choose);
+    fillSelect($("proficiency"), T.proficiencyLevels, T.choose);
+    fillSelect($("ageBand"), T.ageBands, T.choose);
+  }
+
+  function renderItems() {
+    const host = $("items");
+    host.innerHTML = "";
+    order.forEach(function (index, position) {
+      const item = ITEMS.items[index];
+      const wrap = document.createElement("section");
+      wrap.className = "item";
+      wrap.setAttribute("data-item", item.id);
+
+      const head = document.createElement("div");
+      head.className = "row";
+      head.style.justifyContent = "space-between";
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = fmt("itemNumber", {n: position + 1, total: ITEMS.items.length});
+      const flip = document.createElement("button");
+      flip.type = "button"; flip.textContent = T.rotate;
+      flip.addEventListener("click", function () {
+        flipped[item.id] = !flipped[item.id];
+        wrap.querySelector("svg").classList.toggle("flipped", !!flipped[item.id]);
+      });
+      head.appendChild(badge); head.appendChild(flip);
+      wrap.appendChild(head);
+
+      const stage = document.createElement("div");
+      stage.className = "stage";
+      // The construction is an SVG document, so it is parsed as one and the
+      // root is imported: assigning the markup to innerHTML would create
+      // unknown HTML elements instead of drawing anything.
+      stage.replaceChildren();
+      const parsed = new DOMParser().parseFromString(
+        item.construction_svg, "image/svg+xml");
+      if (parsed.querySelector("parsererror")) {
+        stage.textContent = T.drawingLabel;
+      } else {
+        const art = document.importNode(parsed.documentElement, true);
+        art.setAttribute("role", "img");
+        art.setAttribute("aria-label", T.drawingLabel);
+        stage.appendChild(art);
+      }
+      wrap.appendChild(stage);
+
+      [["a", item.label_a], ["b", item.label_b]].forEach(function (pair) {
+        const box = document.createElement("div");
+        box.className = "scale";
+        const label = document.createElement("label");
+        const span = document.createElement("span");
+        span.className = "char"; span.textContent = pair[1];
+        const hint = document.createElement("span");
+        hint.className = "hint"; hint.textContent = T.legibilityOf;
+        label.appendChild(span); label.appendChild(hint);
+        const range = document.createElement("input");
+        range.type = "range"; range.min = "1"; range.max = "7"; range.step = "1";
+        range.value = "4";
+        range.setAttribute("aria-label", fmt("ariaFor", {ch: pair[1]}));
+        range.addEventListener("input", function () {
+          responses[item.id] = responses[item.id] || {};
+          responses[item.id]["legibility_" + pair[0]] = Number(range.value);
+          updateProgress();
+        });
+        const ticks = document.createElement("div");
+        ticks.className = "ticks";
+        ticks.innerHTML = "<span>1 " + T.notReadable + "</span><span>7 " + T.immediately + "</span>";
+        box.appendChild(label); box.appendChild(range); box.appendChild(ticks);
+        wrap.appendChild(box);
+      });
+
+      const aes = document.createElement("div");
+      aes.className = "scale";
+      const alabel = document.createElement("label");
+      alabel.innerHTML = "<span>" + T.aesthetic + "</span><span class='hint'>1–7</span>";
+      const arange = document.createElement("input");
+      arange.type = "range"; arange.min = "1"; arange.max = "7"; arange.step = "1"; arange.value = "4";
+      arange.setAttribute("aria-label", T.aesthetic);
+      arange.addEventListener("input", function () {
+        responses[item.id] = responses[item.id] || {};
+        responses[item.id].aesthetic = Number(arange.value);
+        updateProgress();
+      });
+      aes.appendChild(alabel); aes.appendChild(arange);
+      wrap.appendChild(aes);
+
+      const note = document.createElement("textarea");
+      note.placeholder = T.commentPlaceholder;
+      note.setAttribute("aria-label", T.commentPlaceholder);
+      note.addEventListener("input", function () {
+        responses[item.id] = responses[item.id] || {};
+        responses[item.id].comment = note.value;
+      });
+      wrap.appendChild(note);
+
+      host.appendChild(wrap);
+    });
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const answered = Object.keys(responses).filter(function (id) {
+      const r = responses[id];
+      return r && r.legibility_a && r.legibility_b;
+    }).length;
+    setText("progress", fmt("progress", {answered: answered, total: ITEMS.items.length}));
+  }
+
+  function collect() {
+    return {
+      version: ITEMS.version || "1.0",
+      language: LANG,
+      seed: SEED,
+      respondent: meta,
+      items: order.map(function (index) {
+        const item = ITEMS.items[index];
+        const r = responses[item.id] || {};
+        return {
+          id: item.id,
+          legibility_a: r.legibility_a ?? null,
+          legibility_b: r.legibility_b ?? null,
+          aesthetic: r.aesthetic ?? null,
+          comment: r.comment || ""
+        };
+      })
+    };
+  }
+
+  function download(name, mime, text) {
+    const blob = new Blob([text], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  $("downloadJson").addEventListener("click", function () {
+    download("responses-" + SEED + ".json", "application/json",
+             JSON.stringify(collect(), null, 2));
+  });
+  $("downloadCsv").addEventListener("click", function () {
+    const data = collect();
+    const head = ["item_id", "legibility_a", "legibility_b", "aesthetic", "comment"];
+    const rows = data.items.map(function (it) {
+      return [it.id, it.legibility_a, it.legibility_b, it.aesthetic,
+              JSON.stringify(it.comment)].join(",");
+    });
+    download("responses-" + SEED + ".csv", "text/csv",
+             [head.join(",")].concat(rows).join("\n"));
+  });
+
+  $("acceptBtn").addEventListener("click", function () {
+    $("consentScreen").classList.add("hidden");
+    $("appScreen").classList.remove("hidden");
+    renderItems();
+  });
+  $("declineBtn").addEventListener("click", function () {
+    document.body.innerHTML = "<main><p>" + T.declined + "</p></main>";
+  });
+  ["nativeLang", "proficiency", "ageBand"].forEach(function (key) {
+    $(key).addEventListener("change", function (e) { meta[key] = e.target.value; });
+  });
+
+  applyText();
+})();
+</script>
+</body>
+</html>
