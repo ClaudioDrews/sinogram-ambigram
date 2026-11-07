@@ -1,60 +1,57 @@
-# Proposed Methods, Algorithms and Roadmaps (not yet implemented unless stated)
+# Candidate discovery, construction and evaluation
 
-**Evidence basis:** Geometric experiments, explicit derivations and published methods are distinguished below; proposals are not presented as validated results.
+This page describes a **descending research workflow**: test inexpensive hypotheses first, keep successful mechanisms, and apply more expensive transformations only when necessary. Methods below are proposals unless marked **implemented**; they should not be interpreted as demonstrated human-readable ambigrams.
 
-> **Evidence boundary:** Proposals inferred from unverified summaries are hypotheses. Only measured results and explicitly derived claims are described as established.
+## 1. Discover rotational candidates
 
-## 1. Candidate-generation methods
+| Method | What to compute | State |
+| --- | --- | --- |
+| **180° geometric rotation graph** | Rank glyph pairs by distance between the first glyph's stroke skeleton and the rotated second skeleton, using grid screening followed by exact refinement. | **Implemented:** 2,770-character KanjiVG inventory and 5,180 refined pairs |
+| **Rotational self-symmetry C₂** | Rank `A` against its own 180°-rotated structure; look for stable strokes and distinctive exceptions. | **Implemented:** 2,770 self-pairs |
+| **IDS decomposition** | Parse character component trees; reverse the order of components under rotation and apply enclosure-specific transformations. | Algebra explored; corpus-level verified rewrite not implemented |
+| **Alternative geometric descriptors** | Combine local stroke relationships, boundary profiles, skeleton topology and coarse ink distribution. | Proposed; earlier pilots tested several incompatible metrics |
+| **Semantic alternatives** | When no direct candidate succeeds, replace the intended meaning with a related character, with explicit sense and language. | Small manually curated browser fallback; dictionary-wide lookup not implemented |
 
-| Method | Description | Source | Status |
-|---|---|---|---|
-| Rotation graph (Approach 1) | compute `d(F(a), R·F(b))` for all Jōyō pairs (C(2,136,2) = 2,280,180 unordered pairs, i.e. ≈2.3 M; brute force viable; indexes only needed for full Unicode CJK); rank pairs below ε₀ | `RPT-RULES`, `META-DECK`, `LOG-MULTI` | **run** with raster/skeleton/profile/median metrics (experiments); KanjiVG-based version done at 2,770-glyph scale in exp-08 |
-| Coarse-to-fine screening | packed-bitmap IoU at zero translation for all pairs → bounded top-k heap → ±3 px refinement of top 2,000 | `PKG-GPT` (`score_glyphs_large`) | coded, **never run** (needs full Jōyō list + font) |
-| Cloud-based nearest neighbour | signature indices (Fourier descriptors, skeleton graph, ink distribution, Betti numbers) + ANN search; two-stage shape then semantic filter | `LOG-QWEN`, `CAT-XLSX` | proposal |
-| Optimal-transport "distance maps between kanji" mining | hierarchical OT distance over nested components (Schuhmacher 2023, arXiv:2304.02493) + IDS filter → top 1,000 candidates. *Source note: `RPT-META` cites the distance maps and "Yencken & Baldwin" together; Yencken & Baldwin's work is rendered-image / radical-vector kanji similarity (ECAI 2008, COLING 2008), a different method, so the attribution is recorded as unverified* | `RPT-META` | proposal; paper not read |
-| Procrustes / Hausdorff on stroke point clouds | per-stroke normalised clouds | `META-DECK`, `LOG-DEEPSEEK` | Mistral ran a chamfer + greedy stroke matching variant on 113 chars |
-| IDS exact pairs | enumerate IDS trees, rewrite with R, look for exact matches (τ=0) | `LOG-DEEPSEEK`, `PKG-GPT` | operator rules unit-tested; no corpus run |
+A low distance is **evidence of geometric proximity**, not proof of legibility. Grid and refined distances are not interchangeable; see [dataset guide](../data/README.md).
 
-## 2. Construction methods (making `g`)
+## 2. Construct a shared drawing
 
-| Method | Description | Source |
-|---|---|---|
-| Generalised Inoue–Takahashi | KanjiVG strokes (no thinning) → graph (nodes = feature points) → **GED with merge/split** instead of isomorphism → **TPS/CPD smooth warp** instead of affine → OCR/CNN as ρ proxy; hierarchical graphs `H=(V,E,C,R,A)` over stroke/component/character; Jacobian bound `‖J−I‖<δ` to avoid folding | `RPT-RULES` §3, `RPT-META` §3.2, `LOG-GPT1` §4 |
-| Component permutation search | choose σ∈S_n minimising `Σ D(c_i, R c_σ(i)) + L_layout` for repeated components (品, 晶, 森) | `LOG-GPT1` |
-| Enclosure preservation | decompose `Enclose(O,I)`; keep outer boundary fixed and optimise interior (回 困 問) | `LOG-GPT1`, `CAT-XLSX` |
-| Continuous ink-density model | Bézier/B-spline strokes `γ_i(t)`; `F_S = 1−exp(−Σ∫a_i K(·−γ_i)dt)`; gradient descent | `LOG-GPT1` §7, `CAT-XLSX` |
-| Variational scalar field | minimise fidelity to A and R·B + smoothness + topological persistence + grammar/semantic terms (level sets, PDE) | `LOG-QWEN`, `CAT-XLSX` |
-| Differentiable SDF + dual classifier | `L = −log P(A|X) − log P(B|R X)` + topology/deformation/complexity regularisers; related to VecFontSDF and AmbiGen | `LOG-GPT1` §8, `RPT-META` §5 |
-| Genetic algorithm / evolutionary | amateur precedent (note.com/eku GA kanji ambigram, per `RPT-RULES` sources) | `RPT-RULES` |
-| Rotation-equivariant latent space | encode glyphs in manifold such that rotating G lands near H; decode midpoint | `LOG-QWEN` |
-| Program synthesis | DSL of stroke operations (move, scale, curve, reconnect, permute, thickness); search minimum-complexity program T=O_k∘…∘O₁; cluster programs into family rules F_k | `LOG-GPT1` §9, `LOG-QWEN`, `CAT-XLSX` |
-| Brush/calligraphic rendering | variable-pressure brush (paper's model; Expresii "Quarter Mode" suggested for 4-quadrant stroke rendering) | `PAPER`, `RPT-META` |
+Let `A` and `B` be stroke representations and `R(B)` the second rotated by 180°. Explore a shared drawing `g`:
 
-## 3. Evaluation methods proposed
+1. **Stroke-salience fusion (implemented experimentally):** overlay `A` and `R(B)`; increase weight of nearby/shared strokes while reducing the prominence of unmatched ones. See [Python implementation](../code/make_ambigram.py) and [browser prototype](../generator/).
+2. **Component assignment (proposed):** minimise a cost such as `Σ D(cᵢ, R(c_{σ(i)})) + λ L_layout` over component correspondences, especially for repeated subcomponents.
+3. **Enclosure-preserving edits (proposed):** keep robust outer frames stable and modify internal components, with topology and legibility constraints.
+4. **Bounded deformation (proposed):** use differentiable Bézier curves, thin-plate splines or a signed-distance field to minimise fidelity error to both views while penalising curvature, self-crossing and changes to stroke grammar.
+5. **Program synthesis (proposed):** search short sequences of interpretable operations (move, bend, merge, split, resize, thicken, reconnect) and cluster successful sequences into character-family rules.
 
-* Independent OCR/CNN in both orientations (the paper's ETL8 recogniser proved unrelated to human readability — [paper summary](../methods/inoue-takahashi-2020.md); so use as a weak proxy only).
-* **Blind human tests** (`LOG-MULTI` Gemini/Claude): tachistoscopic exposure; contextual sentences (high/low predictability); fixation latency; 100–200-pair calibration sample judged by the owner; with and without context.
-* ε calibration experiments: "how much deformation before it stops being read?" (`META-DECK` slide 12).
-* Composite distance with distinctiveness and style terms ([existence-criterion §6](../theory/existence-criterion.md)).
+The work of [Inoue and Takahashi (2020)](inoue-takahashi-2020.md) offers a peer-reviewed hiragana-specific structural method; its results cannot simply be transferred to complex kanji without additional component-level matching.
 
-## 4. Roadmaps proposed (all unexecuted as plans)
+## 3. Rank and validate
 
-| Roadmap | Steps (abridged) | Source |
-|---|---|---|
-| Consensus order (Claude, after GLM/DeepSeek rounds) | (0) freeze font (gothic) + IDS-15.1 data; (1) stroke-R table by font regime; (2) IDS rewrite with total duals and native ⿾⿿; (3) exact pairs on Jōyō; (4) bounded-deformation score + edit script; (5) lexical filter; (6) human calibration | `LOG-MULTI` |
-| GPT 9-stage protocol (stages 0–8) | operationalise phenomenon → representation (KanjiVG-first) → natural transformations → families → mechanisms → induce laws (program synthesis) → validate generalisation/perception → explanatory model → generative algorithms; feedback loops; later "audit & reproduce experiments before new laws" | `LOG-GPT1`/`LOG-GPT2` |
-| Qwen 10 phases | formalisation; corpus & indices; natural pairs; reproduce I–T; Nomura constraints; functional/variational; family specialisation; human+computational+semantic validation; rule discovery; final product (assisted generator, validated-ambigram bank, extension to words/ideas) | `LOG-QWEN` |
-| Meta 4-phase pipeline | OT mining + IDS filter → SDF morph with saliency weights → OCR/human validation → calligraphic refinement | `RPT-META` §7 |
-| `META-DECK` next steps | rotation graph catalogue (2–4 weeks, "high return") → replicate I–T on kanji → Nomura corpus coding (#アンビグラム as (pair, correspondence, widths)) → calibrate ε → dual-reading generator | `META-DECK` slide 12 |
-| GPT's final recommendation (`LOG-GPT2`) | consolidate GPT/Kimi results under one protocol; run the full Jōyō inventory with corrected structural metrics keeping four evaluations separate (raster, vector skeleton, IDS algebra, distinctiveness); keep controls 甲/由, 土/士, 未/末 **without presuming** they are valid; then induce family rules and test on unseen characters | `LOG-GPT2` |
+Evaluation must separate three properties:
 
-## 5. Data/tool needs identified
+- **Shape proximity:** geometric metrics (Hausdorff, Chamfer, dilated IoU), with density and enclosure-bias diagnostics.
+- **Readable meaning:** independent human judgments in both orientations, with the intended reading hidden. A controlled native-reader study remains unperformed.
+- **Visual quality:** stroke continuity, type style, deformation cost and subjective visual appeal.
 
-KanjiVG (all sources), CHISE or UCD IDS, Jōyō+Jinmeiyō lists, JMdict/CC-CEDICT, a calibrated recogniser or human panel, a vector rendering path to SVG. Details and what was actually used: data-sources-and-tools. What the final tool needs: tool-requirements-and-status.
+The proposed next empirical study is to choose a balanced set of candidates and negative controls, obtain blinded readings from native Chinese/Japanese readers, then estimate reading accuracy and confidence by character pair and rendering method. A recogniser can help shortlist candidates but should not substitute for human testing.
 
-## Related
+## 4. Iterative research order
 
-- [Existence criterion](../theory/existence-criterion.md)
-- Tool status and roadmap
-- [KanjiVG rotation-graph method](rotgraph-method.md)
-- exp-05
+```text
+Pinned glyph inventory and reproducible geometry
+    ↓
+Geometric and C₂ candidates (implemented)
+    ↓
+IDS/component filters and known character-family rules
+    ↓
+Stroke-salience composite (experimental implementation)
+    ↓
+Bounded deformation and program synthesis (proposed)
+    ↓
+Blind perception study and error analysis (not yet performed)
+    ↓
+Calibrated, generalisable generation model (long-term goal)
+```
+
+Preserve negative results and contradictory measurements; do not merge score scales across fonts or experimental setups. For the reproducible geometric core, see [rotation-graph method](rotgraph-method.md); for limitations, see [findings](../findings/limitations.md).
