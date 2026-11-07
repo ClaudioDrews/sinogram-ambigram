@@ -74,6 +74,14 @@ jobs:
             "http://127.0.0.1:8765/" \
             > /tmp/c2-browser/home.html 2> /tmp/c2-browser/home.log
           grep -q 'id="heroTurn"' /tmp/c2-browser/home.html
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
+            --window-size=430,1000 --virtual-time-budget=1800 --dump-dom \
+            --screenshot="/tmp/c2-browser/c2-mobile-en.png" \
+            "http://127.0.0.1:8765/demo/c2/?lang=en&glyph=%E7%94%B2" \
+            > /tmp/c2-browser/c2-mobile-en.html \
+            2> /tmp/c2-browser/c2-mobile-en.log
+          grep -q 'data-visual-c2-ready="true"' /tmp/c2-browser/c2-mobile-en.html
+          test -s /tmp/c2-browser/c2-mobile-en.png
       - name: Retain three browser smoke screenshots for manual QA (not git assets)
         if: always()
         uses: actions/upload-artifact@v4
