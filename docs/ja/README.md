@@ -22,6 +22,7 @@
 
 - **[アンビグラム生成器](https://claudiodrews.github.io/sinogram-ambigram/generator/)**：漢字を入力して回転後の形が近い候補を検索し、SVGを合成します。生成方式を変更し、180°回転して比較し、SVGを保存できます。意味の近い別の字を試す機能は**少数の手作業で定義した例**のみで、一般的な同義語辞書ではありません。
 - **[Rotation Lab](https://claudiodrews.github.io/sinogram-ambigram/demo/)**：**16例**を使い、複雑な字形、ストロークの重ね合わせ、線の強調、C₂対称性、構成要素の配置を試せます。両方とも英語・中国語・日本語のUIを備えます。
+- **[C₂ ビジュアル研究ラボ](https://claudiodrews.github.io/sinogram-ambigram/demo/c2/?lang=ja)**：同一KanjiVG字形の厳密なC₂偶・奇成分、可動回転中心、PRC半幅修正とA/B融合の実測幾何結果を表示。局所場と調和場は模式図であり、読めるアンビグラムを証明するものではありません。英語・中国語・日本語のUIに対応。
 
 **[プロジェクトサイト](https://claudiodrews.github.io/sinogram-ambigram/)** と上記の二つのデモは GitHub Pages で公開済みです。ソースコードは [`generator/`](../../generator/) と [`demo/`](../../demo/) にあります。
 
