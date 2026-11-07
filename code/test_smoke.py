@@ -128,7 +128,7 @@ class TestImports(unittest.TestCase):
             importlib.import_module(name)
 
     def test_compile_all_scripts_exist(self):
-        # repo3 retains the core algorithms, not the report/site builders.
+        # The public repository retains the core algorithms, not report builders.
         expected = {"paths.py", "kvg.py", "build.py", "compute2.py",
                     "compute3.py", "refine.py", "catalog.py",
                     "make_ambigram.py"}
