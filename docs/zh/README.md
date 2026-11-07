@@ -22,6 +22,7 @@
 
 - **[双读字形生成器](https://claudiodrews.github.io/sinogram-ambigram/generator/)**：输入一个汉字，搜索旋转后几何形状相近的候选字，合成可旋转的 SVG、切换构造方法并下载。仅提供**少量人工整理的语义替代字**，不是完整的同义词词典。
 - **[Rotation Lab](https://claudiodrews.github.io/sinogram-ambigram/demo/)**：探索 **16 个示例**，包括复杂结构、笔画重合、显著性调节、中心对称和构件布局。两种演示均支持英语、中文和日语界面。
+- **[C₂ 可视化研究实验室](https://claudiodrews.github.io/sinogram-ambigram/demo/c2/?lang=zh)**：用同一 KanjiVG 字形演示严格的 C₂ 偶/奇分量、可移动旋转中心，以及 PRC 半宽修正与 A/B 融合的真实几何结果。局部场和谐波场为概念示意，并非已证实可读的合字。支持英语、中文和日语。
 
 **[项目网站](https://claudiodrews.github.io/sinogram-ambigram/)** 和上方两个交互工具已通过 GitHub Pages 发布。也可以从 [`generator/`](../../generator/) 和 [`demo/`](../../demo/) 查看源代码。
 
