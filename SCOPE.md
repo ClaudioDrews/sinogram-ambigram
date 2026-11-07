@@ -46,9 +46,13 @@ scale.
 
 The independent [PRC Explorer](prc/) reads a measured shortlist of 6,763 GB2312 characters using Make Me a Hanzi geometry, rather than Japanese KanjiVG vectors. The pinned input includes 9,574 source glyph records and fully covers the GB2312 repertoire. Its 106,347 coarse-screened candidate pairs are **not** fine-grid exact results, not a confirmed Mainland normative form certification, and not validated human-readable ambigrams. Source-derived rendering stays with the Arphic Public License; [the research method](methods/PRC_COARSE_SEARCH.md) and [source audit](LICENSE-AUDIT.md) describe the boundaries. Future regional inventories (including a verified official 2013 TCC transcription) and exact PRC refinement are separate tasks.
 
+## Integrated geometry correction
+
+[PR #19](https://github.com/ClaudioDrews/sinogram-ambigram/pull/19) incorporated measured half-width rendering on `main` while retaining byte-identical v1.16 geometry for historical replay. On a separate 32-glyph pinned contour benchmark, original-outline fidelity improved for **32/32** samples (median IoU **0.4743 → 0.9083**). This is not certified regional shape fidelity or human reading validation; see [method](methods/PRC_WIDTH_SEMANTICS.md) and [findings](findings/prc-width-contour-fidelity.md).
+
 ## Experimental work in open draft pull requests
 
-- [#13 — PRC thickness correction](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13), [#14 — R-ODD](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14), [#15 — harmonic field](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15), and [#16 — A/B stroke fusion](https://github.com/ClaudioDrews/sinogram-ambigram/pull/16) are **not on `main`**.
+- [#13 — original PRC thickness draft](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13) was **not merged directly**. Its correction reached `main` through protected PR #19; #13 remains open for provenance. [#14 — R-ODD](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14), [#15 — harmonic field](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15), and [#16 — A/B stroke fusion](https://github.com/ClaudioDrews/sinogram-ambigram/pull/16) remain separate, unmerged drafts.
 - [#17 — blind VLM-reading pilot](https://github.com/ClaudioDrews/sinogram-ambigram/pull/17) is **draft**. It documents a preselected 52-image, 208-observation automated-reading experiment, with reproducible scoring and a source-pinned generator. Its self-rotation dual-reading counts range from 10/20 (historical) to 15/20 (harmonic); both tested distinct-character pairs failed dual recognition. Model recognition is not human validation.
 - The pilot's unlabelled images are distributed through a reproducible, separately licensed workflow artifact rather than being silently relicensed under MIT.
 
