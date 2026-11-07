@@ -1,6 +1,6 @@
 # Sinogram Ambigram Generator — Browser PoC
 
-A self-contained HTML proof of concept for exploring 180° rotational ambigrams of Japanese kanji and Chinese hanzi. It works locally by opening `index.html` and can be deployed without a build step on GitHub Pages.
+A self-contained HTML proof of concept for 180° rotational ambigrams drawn from **Japanese KanjiVG geometry**. Although its interface accepts Chinese characters, its ranking and source glyphs are Japanese forms; use the separate [Mainland Chinese Explorer](../prc/) for PRC-source rankings. It works locally by opening `index.html` and can be deployed without a build step on GitHub Pages.
 
 ## Try it
 
