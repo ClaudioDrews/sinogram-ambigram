@@ -67,7 +67,7 @@ class TestPilot01(unittest.TestCase):
         cols = ["trial_id", "pair_id", "task", "arm", "orientation",
                 "expected_character", "character_a", "character_b", "sha256"]
         def digest(rows, keys):
-            body = "\\n".join(",".join(x[k] for k in keys) for x in rows)
+            body = "\n".join(",".join(x[k] for k in keys) for x in rows)
             return hashlib.sha256(body.encode("utf-8")).hexdigest()
         self.assertEqual(
             digest(self.key, cols),
