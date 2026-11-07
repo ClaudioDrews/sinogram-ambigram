@@ -7,6 +7,10 @@ on:
       - "exp/r-odd"
       - "exp/harmonic"
       - "exp/ab-fusion"
+  pull_request:
+    branches:
+      - main
+      - "exp/thickness-fix"
   workflow_dispatch:
 
 jobs:
