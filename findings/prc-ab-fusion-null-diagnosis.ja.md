@@ -14,3 +14,7 @@
 この結果を別の文字や閾値、人間の読字可能性へ一般化してはならない。次の段階では、既存の二組を除いた独立標本を先に固定し、最近傍の中心線距離、対応数、実際に変わった画素、両方向の F1 を閾値別に記録する必要がある。元の画像ハッシュと再現手順は[英語版の報告](prc-ab-fusion-null-diagnosis.md)を参照。
 
 文字画像は Make Me a Hanzi 由来であり、コードの MIT ライセンスとは異なる Arphic Public License に従う。PR #14–#17 のマージやリベースは行わない。
+
+## 本報告後に実施した独立標本の追試
+
+[未統合の PR #21](https://github.com/ClaudioDrews/sinogram-ambigram/pull/21) では、事前に固定した新規異字ペア32組と従来の確認用2組を使い、RMS閾値2、4、8、12、16を比較した。[CI 42415746651](https://github.com/ClaudioDrews/sinogram-ambigram/actions/runs/42415746651) は成功した。閾値16では新規ペア31/32組で筆画の対応付けが生じたものの、最終的に画素が変化したペアは **0/32** 組だった。よって、本報告の閾値4における「対応付けなし」という歴史的診断は引き続き正しい。一方、追試では**対応付け後に候補が採択されない第二の問題**が明らかになった。詳細は[追試結果](https://github.com/ClaudioDrews/sinogram-ambigram/blob/exp/ab-fusion-threshold-sensitivity/experiments/ab-fusion-threshold-v1/RESULTS.ja.md)。ここでは過去のデータと結論を変更しない。
