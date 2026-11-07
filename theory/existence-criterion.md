@@ -1,23 +1,8 @@
----
-title: "The Existence Criterion (ε-theorem), Legibility Sets, Parity Decomposition"
-id: existence-criterion
-type: research
-status: reviewed
-evidence: [DERIVED, CLAIM, PAPER, PLAN]
-tags: [sinogram, ambigram, rotation-180, algebra]
-created: 2026-11-01
-updated: 2026-11-05
-language: en
-license: MIT
-translations: {zh: machine-assisted, ja: machine-assisted}
-related: [family-rules, glossary-and-notation, methods-and-pipelines-proposed, inoue-takahashi-2020]
----
-
 # The Existence Criterion (ε-theorem), Legibility Sets, Parity Decomposition
 
-Sources: `RPT-RULES` §1, `META-DECK` slides 3–4, `RPT-CONSOL` §1, `RPT-META` §1, `LOG-GPT2` (critique), `LOG-MULTI`, `CAT-XLSX`, `RPT-FACES`. Labels: see README (source reference in repo2: `../README.md`).
+**Evidence basis:** The formulas below are derived from explicit structural assumptions; empirical claims require geometric measurements or recognition tests.
 
-> **Reliability caveat (owner, 2026-11-01):** `RPT-RULES`, `RPT-CONSOL`, `RPT-FACES` and the catalog `CAT-XLSX` were probably produced by Google NotebookLM/Gemini; the owner warns that these tools make many errors. Treat every claim in this file that rests **only** on those four sources as **unverified** ([CLAIM]), even where it is phrased as fact. Claims also backed by the paper `PAPER`, a script run in `sources/`, or Nomura's own interviews (nomura-sources-and-findings (source reference in repo2: `../research/nomura-sources-and-findings.md`)) are stronger.
+> **Evidence boundary:** Earlier synthesis documents suggested some of these rules without testing them. Untested rules remain [CLAIM] or [PLAN], not measured conclusions.
 
 ## 1. Model as stated in the sources [DERIVED / model]
 
@@ -41,7 +26,7 @@ Consequences claimed: (i) **ε is the resource that pays for the ambigram** (exa
 
 ## 3. Legibility-set formulation (alternative) [PLAN]
 
-`LOG-GPT1` §7.3 (and `CAT-XLSX` "Legibility Set Intersection Theorem"): define manifolds `M_A = {X : P(A|X) ≥ τ_A}`, `M_B` likewise (classifier confidence thresholds). Ambigram exists iff `M_A ∩ R_π(M_B) ≠ ∅`. An "ambigramability" score E(A,B) can be estimated (compare AmbiFusion's notion, related work (source reference in repo2: `related-work-and-cross-project.md`)). If the intersection is empty there is no solution under those recognition criteria; if non-empty, its extent gives the cost of the best solution.
+`LOG-GPT1` §7.3 (and `CAT-XLSX` "Legibility Set Intersection Theorem"): define manifolds `M_A = {X : P(A|X) ≥ τ_A}`, `M_B` likewise (classifier confidence thresholds). Ambigram exists iff `M_A ∩ R_π(M_B) ≠ ∅`. An "ambigramability" score E(A,B) can be estimated (compare AmbiFusion's notion, related work). If the intersection is empty there is no solution under those recognition criteria; if non-empty, its extent gives the cost of the best solution.
 
 ## 4. Midpoint and SDF rule (Nomura law 3 formalisation) [PLAN]
 
@@ -64,11 +49,11 @@ Consequences claimed: (i) **ε is the resource that pays for the ambigram** (exa
 
 ## 7. Status
 
-The criterion is **unvalidated**. No source computed ε. The main measurable surrogate used so far is geometric overlap of rotated glyphs (see experiments (source reference in repo2: `../experiments/README.md`)).
+The criterion is **unvalidated**. No source computed ε. The main measurable surrogate used so far is geometric overlap of rotated glyphs (see experiments).
 
 ## Related
 
 - [Family rules](../theory/family-rules.md)
-- Glossary and notation (source reference in repo2: `../project/glossary-and-notation.md`)
+- Glossary and notation
 - [Proposed methods](../methods/methods-and-pipelines-proposed.md)
 - [Inoue & Takahashi (2020)](../methods/inoue-takahashi-2020.md)
