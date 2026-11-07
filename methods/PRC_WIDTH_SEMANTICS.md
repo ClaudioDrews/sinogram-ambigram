@@ -97,9 +97,14 @@ python tools/benchmark_prc_outlines.py --graphics data/prc/graphics.txt \
 ```
 
 The PR GitHub Actions workflow records the source-level replay and two
-deterministic benchmark executions. Inspect the Actions run and its
-`prc-source-outline-fidelity` artifact for measured outcomes; do not
-infer a passing benchmark merely because these commands are documented.
+deterministic benchmark executions and **fails if the regenerated CSV differs
+from the checked-in 32-glyph numerical table**. The source-derived results,
+including negative cases and limitations, are published in
+[`findings/prc-width-contour-fidelity.md`](../findings/prc-width-contour-fidelity.md)
+and its [Chinese version](../findings/prc-width-contour-fidelity.zh-CN.md).
+Inspect the Actions run and its `prc-source-outline-fidelity` artifact for
+full machine-readable metrics; never assume a benchmark passed because the
+command is documented.
 
 **Merge decision:** requires explicit maintainer review. Geometry may be
 published experimentally without human-reader evidence, but must remain
