@@ -1,8 +1,6 @@
 # PRC stroke-width correction: original-outline fidelity results
 
-**Status:** fixed-cohort geometric experiment, draft PR #19, 2026-11-07.
-The corrected constructor is **not yet merged into main**. No human-reader
-validation or regional glyph-form certification is claimed.
+**Status (2026-11-07):** fixed-cohort geometric study integrated via [PR #19](https://github.com/ClaudioDrews/sinogram-ambigram/pull/19) at `ec6e406686f785c9be804d4cd193dd2c62fde7ad`. The corrected constructor is on `main`; the historical v1.16 module remains unchanged for archive replay. No human-reader validation or regional glyph-form certification is claimed.
 
 ## Experimental contract
 
@@ -88,6 +86,4 @@ or PNG-derived glyph assets; their Arphic Public License remains separate
 from the MIT license for the code. `human_readability_validated=false`
 and `source_forms_certified=false`.
 
-**Decision for maintainer:** corrected half-width semantics are supported
-on geometric fidelity in the fixed, source-pinned sample; acceptance of
-the draft integration PR remains a separate review decision.
+**Decision record:** corrected half-width semantics were approved and merged through replay-safe PR #19 after passing independent source-outline fidelity checks and fixed-cohort historical replay. This is a geometry decision, **not** a determination of ambigram readability.
