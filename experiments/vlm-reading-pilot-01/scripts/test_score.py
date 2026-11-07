@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import csv
+import hashlib
+import collections
 import sys
 import unittest
 from pathlib import Path
@@ -58,6 +60,48 @@ class TestPilot01(unittest.TestCase):
         altered[0]["expected_character"] = "田"
         with self.assertRaisesRegex(ValueError, "target mismatch"):
             benchmark.validate_ground_truth(altered)
+
+    def test_source_response_and_reference_content_digests(self):
+        # Canonical hashes of sanitized tables checked independently against
+        # the original trial-order and scoring data before publication.
+        cols = ["trial_id", "pair_id", "task", "arm", "orientation",
+                "expected_character", "character_a", "character_b", "sha256"]
+        def digest(rows, keys):
+            body = "\\n".join(",".join(x[k] for k in keys) for x in rows)
+            return hashlib.sha256(body.encode("utf-8")).hexdigest()
+        self.assertEqual(
+            digest(self.key, cols),
+            "2a355591eb35bcf83ecbf9474e82cb77b1ebbd968f584e566092a77123079930")
+        self.assertEqual(
+            digest(self.responses, ["trial_id", "MM", "DS", "HY", "GLM"]),
+            "faf15e0d80b3dde437daf8d81dcd4188c0090d99b91f5d845e7e989427a574e7")
+
+    def test_completion_metadata_preserved_and_coherent(self):
+        finish = benchmark.read_csv(BASE / "data/finish_reasons.csv")
+        self.assertEqual(
+            [x["trial_id"] for x in finish],
+            [x["trial_id"] for x in self.responses])
+        counts = collections.Counter(value for x in finish
+                                     for k in ("MM", "DS", "HY", "GLM")
+                                     for value in (x[k],))
+        self.assertEqual(counts, {"S": 184, "L": 23, "E": 1})
+        by_trial = {x["trial_id"]: x for x in self.responses}
+        for x in finish:
+            y = by_trial[x["trial_id"]]
+            for name in ("MM", "DS", "HY", "GLM"):
+                self.assertEqual(x[name] == "E", y[name] == "ERROR")
+                if x[name] == "L":
+                    self.assertEqual(y[name], "INVALID")
+
+    def test_fusion_does_not_modify_both_test_pairs(self):
+        lookup = {(x["task"], x["arm"], x["character_a"],
+                   x["character_b"], x["orientation"]): x["sha256"]
+                  for x in self.key}
+        for a, b in (("甲", "由"), ("韦", "芈")):
+            for orientation in ("upright", "rotated"):
+                self.assertEqual(
+                    lookup[("pair", "ab-fusion", a, b, orientation)],
+                    lookup[("pair", "thickness-fixed", a, b, orientation)])
 
     def test_pair_vs_self_not_pooled(self):
         result = benchmark.score(self.key, self.responses)
