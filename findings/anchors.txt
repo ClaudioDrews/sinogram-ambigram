@@ -1,0 +1,99 @@
+ANCHOR SET — frozen before the v2 results were computed
+==========================================================
+
+Frozen: 2026-11-07
+Frozen in commit: (this file, committed before stage7_normalise.py was run)
+Status: PRE-REGISTERED. The anchor list and the decision rule below are fixed
+        before any z-score or optimal-centre result existed.
+
+Purpose
+-------
+The decision rule in T1.0.3 asks whether the de-biased metric (per-glyph
+z-score plus optimal rotation centre) still identifies the pairs that are
+genuinely good. It does so with a fixed list of anchors, so that the answer
+cannot be reached by choosing anchors after seeing the result.
+
+Scale of the v1 values quoted below: EXACT point-cloud Hausdorff, normalised
+by 109. Source: data/rotation_pairs.csv (5,180 refined rows).
+
+
+A. DECISION ANCHORS (7) — these enter the binary rule
+-----------------------------------------------------
+
+Selected as: the two canonical pairs named in the roadmap, the next three
+distinct pairs from the v1 top-20, and two auto-rotation (C2) pairs.
+
+  #  pair          v1 H (exact)  v1 rank (distinct)  strokes
+  1  吉 ↔ 阜       0.06823       1                   6 / 8
+  2  由 ↔ 甲       0.07510       2                   5 / 5
+  3  圃 ↔ 園       0.07770       3                   10 / 13
+  4  圃 ↔ 鬱       0.07870       4                   10 / 29
+  5  圏 ↔ 鰯       0.07893       5                   12 / 21
+  6  目 ↔ 目       0.03229       — (self-rotation)  5 / 5
+  7  回 ↔ 回       0.06971       — (self-rotation)  6 / 6
+
+Note that anchors 3, 4, 5 and 7 involve frame-heavy glyphs (囗-family) or very
+dense glyphs. That is deliberate: they are the pairs the density and hub
+biases affect most, so they are the ones most likely to move under
+normalisation.
+
+
+B. DIAGNOSTIC SET (2) — reported, but NOT part of the binary rule
+------------------------------------------------------------------
+
+These two are reported in findings/debias-report.md but are deliberately
+excluded from the pass/fail rule in section C. They are the cases the
+independent review (CR3) identified as being penalised by the fixed rotation
+centre:
+
+  #  pair          v1 H (exact)  CR3 note
+  8  十 ↔ 十       0.11498       centroid alignment reported as 0.115 → 0.070
+  9  中 ↔ 中       0.10988       centroid alignment reported as 0.110 → 0.084
+
+Why they are kept out of the rule: the rule in section C was fixed as a
+pass/fail gate over 7 anchors, with the threshold "<= 3 of 7 in the top 5%".
+Adding two anchors that the v1 metric ranks poorly would change the
+denominator and the semantics of a threshold that was pre-registered before
+the results existed. Reporting them separately keeps the rule's meaning
+intact while still recording the evidence that the de-biasing works where it
+is expected to.
+
+Their interpretation is fixed in advance as well:
+  - If both are promoted into the top 5% of their stratum, that is consistent
+    with the optimal-centre stage doing what CR3 predicted.
+  - If neither moves, that is evidence the optimal-centre search is not
+    recovering the improvement CR3 measured, and it must be investigated
+    before Gate A.
+  - One moving and one not is a partial result, to be reported as such.
+
+
+C. DECISION RULE (fixed before the results; D17)
+--------------------------------------------------
+
+Applied to the 7 anchors in section A, after z-score normalisation and the
+optimal rotation centre:
+
+  1. ESCALATED if fewer than 50% of the 7 anchors (i.e. 3 or fewer) are in
+     the top 5% of their complexity stratum (percentile-z >= 95).
+     Interpretation: suspicion that the distance model itself is at fault,
+     not only the ranking.
+
+  2. Any anchor outside the top 5% requires a written explanation in
+     findings/debias-report.md. The explanation is approved by the
+     maintainer, not by the agent (G11: no self-certification).
+
+  3. Otherwise: GO.
+
+Stratum definition: the rounded mean of the two characters' stroke counts.
+Percentile: the rank of the pair's z within that stratum, over the full
+unordered pair space including self-pairs.
+
+
+D. WHAT THIS FILE DOES NOT CLAIM
+---------------------------------
+
+These anchors are pairs the geometry ranks highly. They are not established
+as readable ambigrams. No native-reader validation has been published for
+this project, and a high percentile-z says nothing about legibility. The
+threshold in section C is a decision about whether the metric change
+preserved what the geometry already found, not about perceptual validity.
