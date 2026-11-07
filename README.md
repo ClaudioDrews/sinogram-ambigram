@@ -74,7 +74,7 @@ bash scripts/download_kanjivg.sh  # pinned source + checksum verification
 python -m unittest discover -s code -p 'test_*.py' -v
 ```
 
-The tests include real CLI execution on synthetic SVG glyphs. Paths default to repository-relative directories, with optional `ROTG_*` environment overrides. For the full numerical pipeline and computational requirements, see the [reproduction protocol](methods/rotgraph-method.md). The [dataset guide](data/README.md) distinguishes exact point-cloud distances from grid-screening approximations.
+The tests include real CLI execution on synthetic SVG glyphs. Paths default to repository-relative directories, with optional `ROTG_*` environment overrides. For the full numerical pipeline and computational requirements, see the [reproduction protocol](methods/rotgraph-method.md). The [dataset guide](data/README.md) distinguishes exact point-cloud distances from grid-screening approximations. After recomputing the grid pipeline, `python code/export_full_grid.py` optionally creates a complete, labelled CSV archive without adding it to the Git repository.
 
 ## Run the demonstrations
 
