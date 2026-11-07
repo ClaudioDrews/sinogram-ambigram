@@ -325,4 +325,5 @@
   source = rasterizeGlyph($("glyph").value);
   setLanguage(qs.get("lang") || "en");
   drawAB();drawFields();
+  document.documentElement.dataset.visualC2Ready = "true";
 })();
