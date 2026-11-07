@@ -1,0 +1,85 @@
+name: PRC A/B frozen threshold sensitivity
+
+on:
+  push:
+    branches:
+      - exp/ab-fusion-threshold-sensitivity
+  pull_request:
+    branches:
+      - exp/ab-fusion
+    paths:
+      - tools/ab_fusion_threshold_sweep.py
+      - code/test_prc_ab_threshold_sweep.py
+      - experiments/ab-fusion-threshold-v1/**
+      - .github/workflows/prc-ab-threshold.yml
+  workflow_dispatch:
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned Python requirements
+        run: python -m pip install -r code/requirements.txt
+      - name: Run synthetic and existing PRC regressions
+        run: python -m unittest discover -s code -p 'test_prc*.py' -v
+      - name: Fetch and verify pinned MMah geometry
+        run: bash scripts/download_prc_sources.sh
+      - name: Run predeclared 32-pair cohort plus two historical controls
+        run: |
+          set -euo pipefail
+          python tools/ab_fusion_threshold_sweep.py --graphics data/prc/graphics.txt --out /tmp/ab-sweep-1 > /tmp/ab-sweep-1.log
+          python tools/ab_fusion_threshold_sweep.py --graphics data/prc/graphics.txt --out /tmp/ab-sweep-2 > /tmp/ab-sweep-2.log
+          cmp /tmp/ab-sweep-1/cohort.json /tmp/ab-sweep-2/cohort.json
+          cmp /tmp/ab-sweep-1/summary.json /tmp/ab-sweep-2/summary.json
+          cmp /tmp/ab-sweep-1/observations.csv /tmp/ab-sweep-2/observations.csv
+      - name: Enforce cohort, independent controls and historical anchor gates
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          p = Path('/tmp/ab-sweep-1')
+          manifest = json.loads((p/'cohort.json').read_text(encoding='utf-8'))
+          result = json.loads((p/'summary.json').read_text(encoding='utf-8'))
+          rows = list(csv.DictReader((p/'observations.csv').open(encoding='utf-8')))
+          cases = manifest['cases']
+          assert len(cases) == 34
+          assert len(rows) == 170
+          assert len([c for c in cases if c['arm']=='source_overlap_enriched']) == 16
+          assert len([c for c in cases if c['arm']=='source_hash_control']) == 16
+          assert len([c for c in cases if c['arm']=='previous_pilot']) == 2
+          distinct = [x for c in cases[:32] for x in (c['a'],c['b'])]
+          assert len(set(distinct)) == 64
+          assert all(c not in set('中口日田目甲由韦芈') for c in distinct)
+          assert all(row['matched_strokes']=='0' and row['changed_pixels']=='0'
+              for row in rows if row['arm']=='previous_pilot' and row['threshold']=='4')
+          assert result['human_readability_validated'] is False
+          assert result['regional_forms_certified'] is False
+          print("Frozen source-only cohort, five thresholds and zero-match historical anchors: PASS")
+          PY
+      - name: Summarize non-reading geometric outcomes
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/ab-sweep-1/summary.json').read_text(encoding='utf-8'))
+          print('## Predeclared A/B fusion threshold sensitivity (geometry only)')
+          print('32 previously untested source-only pairs + 2 excluded exploratory anchors.')
+          print('| Arm | Threshold | Pairs | With matches | Changed raster |')
+          print('| --- | ---: | ---: | ---: | ---: |')
+          for row in d['arm_summaries']:
+              print('| {arm} | {threshold} | {n} | {any_matches} | {changed_pixels_pairs} |'.format(**row))
+          print()
+          print('No human readability or regional glyph-form validation is claimed.')
+          PY
+      - name: Publish numerical artifacts only (not derivative PNGs)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ab-fusion-threshold-v1-numerical
+          path: /tmp/ab-sweep-1/
+          retention-days: 30
+          if-no-files-found: error
