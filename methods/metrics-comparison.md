@@ -20,7 +20,7 @@ Different runs measured different things on different glyph sets, so **scores ar
 
 ## Metrics proposed but **not run**
 
-Chance-corrected tolerant F1 (run only in Claude); W1 (Claude only); symmetric Chamfer / Hausdorff on KanjiVG medians; GED with M:N merges; TPS warp cost; SDF midpoint `g=(f_a+R f_b)/2` and its rendering error; OCR/CNN recogniser as ρ proxy; distinctiveness weighting; ρ symmetry alarm from the [RFB repo](https://github.com/ClaudioDrews/reversible-faces-benchmark/blob/main/scripts/perceptual.py); composite `D = αD_skeleton + βD_topology + γD_distinctiveness + δD_style` (`LOG-GPT2`). Details: [existence-criterion §6](../theory/existence-criterion.md).
+Chance-corrected tolerant F1 (run only in Claude); W1 (Claude only); symmetric Chamfer / Hausdorff on KanjiVG medians; GED with M:N merges; TPS warp cost; SDF midpoint `g=(f_a+R f_b)/2` and its rendering error; OCR/CNN recogniser as ρ proxy; distinctiveness weighting; ρ symmetry alarm from the [RFB repo](https://github.com/ClaudioDrews/reversible-faces-benchmark/blob/main/scripts/perceptual.py); composite `D = αD_skeleton + βD_topology + γD_distinctiveness + δD_style` (`later methodological critique`). Details: [existence-criterion §6](../theory/existence-criterion.md).
 
 ## Known systematic biases
 
