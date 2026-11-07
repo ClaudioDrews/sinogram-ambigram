@@ -28,3 +28,13 @@ interpret geometric overlap as human readability. See
 
 Generated source files and results belong in `data/prc/` locally and are
 not required for the normal repository CI.
+
+## Median-skeleton ingestion (Stage 12)
+
+The deterministic, SHA-256-checked reader at [`code/stage12_prc_ingest.py`](../../code/stage12_prc_ingest.py) converts MMah stroke medians into a local 109 × 109 Stage 1-compatible cache. The exact coordinate formula, formats and limitations are in [`docs/prc-ingest-spec.md`](../../docs/prc-ingest-spec.md). Run:
+
+```bash
+python code/stage12_prc_ingest.py --graphics data/prc/graphics.txt --out data/prc/cache
+```
+
+**Regional safeguard:** MMah itself includes simplified and traditional forms; the unfiltered cache is marked `region: unassigned`. A verified CN-S preset must be applied before ranking. Median-skeleton scores are not directly equivalent to the earlier filled-ink PRC construction experiments. Neither source assets nor generated caches are tracked in Git.
