@@ -18,7 +18,6 @@ This directory holds the re-ranked, re-centred data produced by
 | `rotation_pairs_refined_v2.csv` | The 5,180 refined pairs with their exact metrics **and** their v2 ranking quantities | Mixed — see below |
 | `optimal_centres.csv` | The optimal rotation centre and distance for each refined pair | Grid distance-transform approximation |
 | `optimal_centres_stats.json` | Summary of the centre search | — |
-| `optimal_centres_stats.json` | Summary of the centre search | — |
 | `normalisation_stats.json` | Seed, partner count, definitions | — |
 
 ## The scale warning, in detail
