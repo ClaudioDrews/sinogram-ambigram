@@ -35,8 +35,6 @@ def main():
     res = np.asarray(res)
     print(f"{len(res)} pairs loaded", flush=True)
 
-    # reconstruct the (a,b) to stored-row index
-    print(f"{len(res)} pairs loaded", flush=True)
 
     dt = np.load(f"{CACHE}/dt.npy", mmap_mode="r")
     ious = {}
@@ -44,7 +42,7 @@ def main():
         t0 = time.time()
         iou = dilated_iou(np.asarray(dt), r)
         ious[r] = iou
-        print(f"  IoU dilatado r={r} em {time.time()-t0:.1f}s", flush=True)
+        print(f"  dilated IoU r={r} in {time.time()-t0:.1f}s", flush=True)
     new_dtype = res.dtype.descr + [("iou2", "f4"), ("iou3", "f4"), ("iou4", "f4")]
     out = np.empty(len(res), dtype=new_dtype)
     for name in res.dtype.names:
