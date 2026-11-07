@@ -182,7 +182,9 @@ class TestLegibility(unittest.TestCase):
     def test_a_bar_is_symmetric_about_its_own_centre(self):
         c = EM / 2
         strokes = [_stroke([[20.0, c], [88.0, c]], [1.5, 1.5])]
-        # Avoid half-integer polygon edges coinciding with pixel centres:\n        # exact border ties can break binary-raster rotational symmetry.\n        out = pc.legibility(strokes, (c, c))
+        # Avoid half-integer polygon edges coinciding with pixel centres:
+        # exact border ties can break binary-raster rotational symmetry.
+        out = pc.legibility(strokes, (c, c))
         self.assertGreater(out["mu"], 0.8)
 
 
