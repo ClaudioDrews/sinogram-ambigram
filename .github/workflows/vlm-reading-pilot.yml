@@ -1,0 +1,51 @@
+name: VLM reading pilot reproducibility
+
+on:
+  push:
+    branches:
+      - exp/vlm-reading-benchmark
+    paths:
+      - "experiments/vlm-reading-pilot-01/**"
+      - ".github/workflows/vlm-reading-pilot.yml"
+  pull_request:
+    branches:
+      - exp/thickness-fix
+      - main
+    paths:
+      - "experiments/vlm-reading-pilot-01/**"
+      - ".github/workflows/vlm-reading-pilot.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Regression tests for strict scoring and pairing
+        run: python -m unittest discover -s experiments/vlm-reading-pilot-01/scripts -p 'test_*.py' -v
+      - name: Verify all published pilot counts and render the comparison report
+        run: |
+          python experiments/vlm-reading-pilot-01/scripts/score.py --verify-pilot --output "$RUNNER_TEMP/VLM-SCORED-RESULTS.md"
+          cat "$RUNNER_TEMP/VLM-SCORED-RESULTS.md"
+      - name: Check personal workstation paths do not leak into published benchmark
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          base=Path('experiments/vlm-reading-pilot-01')
+          prose=list(base.rglob('*.md'))+list(base.rglob('*.py'))
+          # Avoid publicizing private workstation identifiers and credentials.
+          prohibited=[r'/home/',r'/Users/',r'(?i)api[_-]?key',r'(?i)bearer[ ]+[A-Za-z0-9_-]{12,}']
+          for path in prose:
+              text=path.read_text(encoding='utf-8')
+              for pattern in prohibited:
+                  assert not re.search(pattern,text),f'{path}: private identifier detected'
+          print('Benchmark private-identifier scan passed')
+          PY
