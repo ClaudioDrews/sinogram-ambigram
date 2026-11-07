@@ -33,6 +33,11 @@ jobs:
           node --check demo/c2/app.js
       - name: Run C2 and static integration tests (without network or dependencies)
         run: node --test tests/c2-visual.test.cjs
+      - name: Install CJK system fonts for readable browser QA (never committed)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-match "Noto Sans CJK JP"
       - name: Smoke-test rendered C2 canvases in headless Chrome (EN, Chinese, Japanese)
         run: |
           set -euo pipefail
@@ -48,7 +53,7 @@ jobs:
           mkdir -p /tmp/c2-browser
           for lang in en zh ja; do
             "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
-              --hide-scrollbars --window-size=1280,1800 --virtual-time-budget=2500 \
+              --hide-scrollbars --window-size=1280,3500 --virtual-time-budget=2500 \
               --dump-dom --screenshot="/tmp/c2-browser/c2-$lang.png" \
               "http://127.0.0.1:8765/demo/c2/?lang=$lang&glyph=%E7%94%B2" \
               > "/tmp/c2-browser/c2-$lang.html" \
@@ -57,6 +62,18 @@ jobs:
             grep -Eq 'id="iou">[0-9]' "/tmp/c2-browser/c2-$lang.html"
             test -s "/tmp/c2-browser/c2-$lang.png"
           done
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
+            --window-size=1280,950 --virtual-time-budget=2200 --dump-dom \
+            --screenshot="/tmp/c2-browser/existing-rotation-lab.png" \
+            "http://127.0.0.1:8765/demo/" \
+            > /tmp/c2-browser/existing-rotation-lab.html \
+            2> /tmp/c2-browser/existing-rotation-lab.log
+          grep -Eq 'id="pairTitle">[^<]+' /tmp/c2-browser/existing-rotation-lab.html
+          "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
+            --virtual-time-budget=1400 --dump-dom \
+            "http://127.0.0.1:8765/" \
+            > /tmp/c2-browser/home.html 2> /tmp/c2-browser/home.log
+          grep -q 'id="heroTurn"' /tmp/c2-browser/home.html
       - name: Retain three browser smoke screenshots for manual QA (not git assets)
         if: always()
         uses: actions/upload-artifact@v4
