@@ -1,23 +1,8 @@
----
-title: "Universal and Family-Specific Rules"
-id: family-rules
-type: research
-status: reviewed
-evidence: [DERIVED, MEASURED, CLAIM, PAPER, PLAN]
-tags: [sinogram, kanji, ambigram, rotation-180, c2-class]
-created: 2026-11-01
-updated: 2026-11-05
-language: en
-license: MIT
-translations: {zh: machine-assisted, ja: machine-assisted}
-related: [existence-criterion, results-summary, exp-08, ids-rotation-algebra]
----
-
 # Universal and Family-Specific Rules
 
-Sources: `RPT-CONSOL` §2, `RPT-META` §6, `CAT-XLSX`, `LOG-MULTI`, `LOG-GPT1` §6, `LOG-DEEPSEEK`, `LOG-QWEN`. Each rule is tagged with its evidence status; measured values are in [results](../findings/results-summary.md) and [pair matrix](../findings/pair-evidence-matrix.md). Labels: see README (source reference in repo2: `../README.md`).
+**Evidence basis:** The formulas below are derived from explicit structural assumptions; empirical claims require geometric measurements or recognition tests.
 
-> **Reliability caveat (owner, 2026-11-01):** `RPT-RULES`, `RPT-CONSOL`, `RPT-FACES` and the catalog `CAT-XLSX` were probably produced by Google NotebookLM/Gemini; the owner warns that these tools make many errors. Treat every claim in this file that rests **only** on those four sources as **unverified** ([CLAIM]), even where it is phrased as fact. Claims also backed by the paper `PAPER`, a script run in `sources/`, or Nomura's own interviews (nomura-sources-and-findings (source reference in repo2: `../research/nomura-sources-and-findings.md`)) are stronger.
+> **Evidence boundary:** Earlier synthesis documents suggested some of these rules without testing them. Untested rules remain [CLAIM] or [PLAN], not measured conclusions.
 
 ## A. Universal rules (apply to any sinogram)
 
@@ -36,7 +21,7 @@ Sources: `RPT-CONSOL` §2, `RPT-META` §6, `CAT-XLSX`, `LOG-MULTI`, `LOG-GPT1` �
 
 | Family | Rule | Examples cited | Status / evidence |
 |---|---|---|---|
-| **Pure C2** | `R(c)=c`, zero-cost anchors | 一 十 口 日 田 王 中 申 皿 回 工 互 亜 車 且 (lists differ) | Measured self-rotation: strong for 一 二 三 工 王 互 回 亜 (several runs); weak or inconsistent for 日 田 目 口 十 中 申 depending on metric ([results](../findings/results-summary.md) R-C2). On KanjiVG vectors the order is 目 .0323, 日 .0436, 一 .0504, 田 .0509, 口 .0614, 回 .0697, with 23 glyphs at H ≤ 0.085 (exp-08 (source reference in repo2: `../experiments/exp-08-minimax-rotation-graph.md`)); 十 is **not** in that group (370th, H 0.115), and the 囗 family dominates just below it. 士 and 木, 品 listed as C2 by `RPT-META` are contradicted (R(士)≈干). |
+| **Pure C2** | `R(c)=c`, zero-cost anchors | 一 十 口 日 田 王 中 申 皿 回 工 互 亜 車 且 (lists differ) | Measured self-rotation: strong for 一 二 三 工 王 互 回 亜 (several runs); weak or inconsistent for 日 田 目 口 十 中 申 depending on metric ([results](../findings/results-summary.md) R-C2). On KanjiVG vectors the order is 目 .0323, 日 .0436, 一 .0504, 田 .0509, 口 .0614, 回 .0697, with 23 glyphs at H ≤ 0.085 (exp-08); 十 is **not** in that group (370th, H 0.115), and the 囗 family dominates just below it. 士 and 木, 品 listed as C2 by `RPT-META` are contradicted (R(士)≈干). |
 | **Quasi-C2 / symmetric core** | `X=C⊕_p s` ⇒ `R(X)=C⊕_{R(p)}R(s)` | 甲↔由, 土↔士 (claims) | 甲↔由 supported by Claude v2 (0.92 as neighbour), Mistral (rank 24/6328), contradicted by GPT pilot (0.455) — see matrix |
 | **V-symmetric conjugation** | left–right symmetric glyphs: `R=H` | 甲/由, 土/士, 未/末, 杏/呆, 杳/杲 | 土/士 and 未/末 are **disputed**: Claude's final analysis says R(未)≈半 not 末 and 土~士 is head/tail displaced, other runs measure 0.40–0.86 |
 | **Duplicate duad ⿰SS / ⿱SS** | exact self-ambigram iff S is C2 | 昌 (日日), 吕 (口口) | algebra [DERIVED]; font measurement 0.09–0.54 (slot convention); CHISE 昌=⿱日曰 (Claude) |
@@ -59,5 +44,5 @@ Sources: `RPT-CONSOL` §2, `RPT-META` §6, `CAT-XLSX`, `LOG-MULTI`, `LOG-GPT1` �
 
 - [Existence criterion](../theory/existence-criterion.md)
 - [Results summary](../findings/results-summary.md)
-- EXP-08 — MiniMax rotation graph (source reference in repo2: `../experiments/exp-08-minimax-rotation-graph.md`)
+- [KanjiVG rotation-graph method](../methods/rotgraph-method.md)
 - [IDS rotation algebra](../theory/ids-rotation-algebra.md)
