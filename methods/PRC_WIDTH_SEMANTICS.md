@@ -1,7 +1,6 @@
 # PRC stroke-width semantics: historical v1.16 and corrected v2
 
-**Status:** draft integration study; not merged to `main`. The criterion here
-is fidelity to **source contours**, not automated or human recognition.
+**Status (2026-11-07):** the replay-safe correction was integrated into `main` via [PR #19](https://github.com/ClaudioDrews/sinogram-ambigram/pull/19) at `ec6e406686f785c9be804d4cd193dd2c62fde7ad`. PR #13 was **not** merged directly. The acceptance criterion is fidelity to **source contours**, not automated or human recognition.
 
 ## Why two modules are mandatory
 
@@ -9,7 +8,7 @@ The Make Me a Hanzi loader measures `half_width` as the distance from
 each resampled stroke median point to the nearest sampled source outline.
 The archived PRC v1.16 polygon renderer subsequently used
 `normal * (half_width / 2)`, which halves that measured radius a second
-time. PR #13 corrects the reconstruction to `normal * half_width`.
+time. PR #13 originally proposed correcting the reconstruction to `normal * half_width`; **PR #19** integrated that change while isolating historical replay.
 That is a genuine geometric change, not a safe refactor of old scores.
 
 - **Historical `legacy-v1.16`:** `code/prc_construct_legacy_v116.py`
@@ -106,6 +105,4 @@ Inspect the Actions run and its `prc-source-outline-fidelity` artifact for
 full machine-readable metrics; never assume a benchmark passed because the
 command is documented.
 
-**Merge decision:** requires explicit maintainer review. Geometry may be
-published experimentally without human-reader evidence, but must remain
-labelled as unvalidated perceptual candidates.
+**Merge decision:** the maintainer approved PR #19 after diff review and passing source, regression, historical-replay and source-contour CI. The source-level correction is merged; geometry remains an experimental proxy and must still be labelled as unvalidated for perceptual reading.
