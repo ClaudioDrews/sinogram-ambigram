@@ -55,6 +55,8 @@ def build(template: Path, items: Path, text: Path, out: Path) -> int:
         )
     html = _replace_block(html, ITEMS_BLOCK, items_payload)
     html = _replace_block(html, TEXT_BLOCK, text_payload)
+    # Canonical POSIX final newline keeps the generated artifact byte-for-byte reproducible.
+    html = html.rstrip("\n") + "\n"
     out.write_text(html, encoding="utf-8")
     count = len(item_data.get("items", []))
     print(f"Wrote {out} with {count} items ({out.stat().st_size:,} bytes)")
