@@ -18,7 +18,10 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "code"))
-import prc_construct as pc  # noqa: E402
+import prc_construct_legacy_v116 as pc  # noqa: E402
+
+# The archived metrics were computed with the pre-correction raster semantics.
+# This import is intentionally independent of the corrected construction module.
 
 SOURCE_SHA256 = "a28c478b5178e98f67f510b2d52fde08a69dc664654ef43498253b9b764d46ee"
 SOURCE_COMMIT = "bddc96d41bef78427ed0e034e9f7e31d71fd1b92"
