@@ -83,8 +83,9 @@ is the wrong centre for every PRC form. **Rule R0**: rotate about the ink
 centre, not about the centre of the square.
 
 **This is the largest single lever in the whole method, and it is larger
-than every extremity rule put together.** The centre alone is worth +0.093
-of symmetric ink; the extremity rules are worth +0.002.
+than every extremity rule put together.** The centre alone yields a **mean paired gain** of approximately +0.0925
+in symmetric ink (the **median paired gain** is +0.0692); the extremity
+rules yield a **mean paired gain** of approximately +0.0019.
 
 $$
 c^* = \arg\min_{c \in \mathcal{C}} \sum_{p \in P(A)} d\bigl(p, R_c(A)\bigr),
