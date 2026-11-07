@@ -9,7 +9,7 @@ python tools/verify_prc_archive.py /path/to/sinogram-prc-construction-v1.16/resu
   --out data/prc/archive-v1.16
 ```
 
-The verifier asserts input sample sizes and sector-edit constraints, writes two UTF-8 CSVs and a JSON digest/summary. Compare the generated files against this directory. The JSON summary stores SHA-256 hashes of the **three exact archived JSON input files**.
+The verifier asserts input sample sizes and sector-edit constraints, writes two UTF-8 CSVs and a JSON digest/summary. The committed CSVs now have **ordinary CSV headers on their first lines**, with no spreadsheet preamble or index column. **Compare generated versus published values numerically (tolerance 1e-12), not byte-for-byte:** an earlier spreadsheet round-trip truncated insignificant decimal digits. The regression test `code/test_prc_archive_csv.py` checks these values against the committed summary. For a byte-identical regeneration of the verifier's raw output, reproduce it with the original JSON inputs in the archived package; the current CSVs have the same data but are not claimed to be byte-identical to the original serializer. The JSON summary stores SHA-256 hashes of the **three exact archived JSON input files**.
 
 - `prc-centre-extremity-120.csv`: measured baseline, optimized centre, extremity-only and final geometric overlap for 120 candidates.
 - `prc-sector-generalisation-53.csv`: 53 tested candidates, before/after overlap, retention, growth, constraints.
