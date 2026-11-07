@@ -4,14 +4,14 @@ Evidence labels are defined in the [repository README](../README.md). Each limit
 
 ## L1. Evidence base
 
-1. **No controlled native-reader validation** — no blind reading test, no ε calibration, no 100–200-pair judgement sample (proposed in `LOG-MULTI`, `META-DECK`). All "ambigram" labels are geometric proxies.
+1. **No controlled native-reader validation** — no blind reading test, no ε calibration, no 100–200-pair judgement sample (proposed in `comparative discussion`, `earlier planning outline`). All "ambigram" labels are geometric proxies.
 2. **Heterogeneous experiments at very different scales**: 42 chars (GPT), 29 (GLM), 113 (Mistral), 2,136 for self-rotation (Kimi) and for Claude's filter, and 2,770 glyphs over all pairs (MiniMax, exp-08). A complete pair search now exists, but no pair search has been run under a **human-validated** metric: the MiniMax ranking is a geometric proxy whose ranking biases are documented and unresolved (X1–X8, CR1–CR7).
 3. **KanjiVG was used in exactly one run** (MiniMax, exp-08), although every source recommends it. Mistral used another median dataset with known quirks; the other runs used font rasters.
 4. **Single font lineage** (Source Han/Noto/Sarasa) for almost everything; Mincho only in Kimi (self-rotation) and Claude's control. Noto SC vs JP form differences (Claude's objection to GLM).
 5. **IDS layer barely exercised**: GPT's CHISE download failed; Kimi's IDS blocked; only Claude loaded CHISE, and its algebra recall was 5/100 (non-validating). Atomic components (甲, 未) are not decomposed by CHISE.
 6. **Lost artefacts**: Claude's scratch files (`res_*.npz`, `w1.npz`, `cand.json`, `trees.json`, CHISE IDS files — confirmed absent; Claude's zip itself is complete in `claude-run/`), Kimi's code/output, GLM's script, the GPT prototype zip as an archive (unpacked files present) — the runs cannot all be reproduced from the folder; Claude's can be regenerated with CHISE data.
 7. **Runs are not independent**: GPT's third turn and later runs read earlier outputs; ordering is inferred, not timestamped.
-8. **Provenance of syntheses**: `RPT-RULES`, `RPT-CONSOL`, `RPT-FACES`, `CAT-XLSX` carry no author/tool label; the owner says they were probably produced by Google NotebookLM/Gemini, which makes many errors → claims resting only on them are unverified (source inventory).
+8. **Provenance of syntheses**: `earlier rule synthesis`, `earlier synthesis`, `earlier visual-analogy notes`, `earlier candidate catalogue` carry no author/tool label; the owner says they were probably produced by Google NotebookLM/Gemini, which makes many errors → claims resting only on them are unverified (source inventory).
 
 ## L2. Metric limits (measured by the runs themselves)
 
@@ -34,7 +34,7 @@ no human-validated general-purpose ambigram generator, no candidate browser, no 
 
 * Sources are in Portuguese; this documentation translated and condensed them. Quotations are paraphrases.
 * Google Docs/Sheets were converted by pandoc/openpyxl for the `test-files` copies; images embedded in the original docs (e.g. AmbiGen illustrations in GPT chats) may be missing from the Markdown copies.
-* The `META-DECK` (13 slides, mostly images) was read as text; slide imagery was not described.
+* The `earlier planning outline` (13 slides, mostly images) was read as text; slide imagery was not described.
 * The Nomura sources found in the second pass (interviews, blog, X account, publisher page) were read live on 2026-11-01 (findings); X searches are limited (25 posts per call, older timeline not enumerated).
 * The external web sources cited by the reports (interviews, blogs, KanjiVG pages, Unicode charts) and Nomura's book were not retrieved or verified by this documentation, except the Reversible Faces Benchmark repository (checked on GitHub) and the paper PDF.
 
