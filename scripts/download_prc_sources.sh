@@ -5,7 +5,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DEST="${ROTG_DATA:-$ROOT/data}/prc"
 mkdir -p "$DEST"
-URL="https://raw.githubusercontent.com/skishore/makemeahanzi/master/graphics.txt"
+URL="https://raw.githubusercontent.com/skishore/makemeahanzi/bddc96d41bef78427ed0e034e9f7e31d71fd1b92/graphics.txt"
 SHA256="a28c478b5178e98f67f510b2d52fde08a69dc664654ef43498253b9b764d46ee"
 TARGET="$DEST/graphics.txt"
 if [[ -f "$TARGET" ]] && printf '%s  %s\n' "$SHA256" "$TARGET" | sha256sum -c --status; then
