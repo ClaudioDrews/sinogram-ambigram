@@ -170,7 +170,7 @@ def run(graphics_path: Path, out: Path, enforce: bool) -> dict:
     with (out / "source-outline-fidelity.csv").open(
         "w", encoding="utf-8", newline=""
     ) as f:
-        writer = csv.writer(f)
+        writer = csv.writer(f, lineterminator="\n")
         writer.writerow(["codepoint", "character", "stratum", "strokes",
                          "source_area", "legacy_iou", "corrected_iou",
                          "paired_iou_delta", "legacy_area_error",
