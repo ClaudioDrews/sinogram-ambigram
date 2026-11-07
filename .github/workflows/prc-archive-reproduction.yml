@@ -12,6 +12,9 @@ on:
       - code/prc_construct_legacy_v116.py
       - code/test_prc_geometry_semantics.py
       - tools/benchmark_prc_outlines.py
+      - data/prc/width-semantics-v2/source-outline-fidelity-32.csv
+      - findings/prc-width-contour-fidelity.md
+      - findings/prc-width-contour-fidelity.zh-CN.md
       - methods/PRC_WIDTH_SEMANTICS.md
       - methods/PRC_WIDTH_SEMANTICS.zh-CN.md
       - code/test_prc_archive_csv.py
@@ -29,6 +32,9 @@ on:
       - code/prc_construct_legacy_v116.py
       - code/test_prc_geometry_semantics.py
       - tools/benchmark_prc_outlines.py
+      - data/prc/width-semantics-v2/source-outline-fidelity-32.csv
+      - findings/prc-width-contour-fidelity.md
+      - findings/prc-width-contour-fidelity.zh-CN.md
       - methods/PRC_WIDTH_SEMANTICS.md
       - methods/PRC_WIDTH_SEMANTICS.zh-CN.md
       - code/test_prc_archive_csv.py
@@ -79,6 +85,8 @@ jobs:
           cmp /tmp/prc-outline-1/source-outline-fidelity.csv \
               /tmp/prc-outline-2/source-outline-fidelity.csv
           echo 'Original-outline cohort: 32 GB2312 glyphs in four predeclared stroke-count strata; compare artifact metrics, not human readability.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Compare with frozen, checked-in 32-glyph numerical baseline
+        run: cmp /tmp/prc-outline-1/source-outline-fidelity.csv data/prc/width-semantics-v2/source-outline-fidelity-32.csv
       - name: Upload per-glyph original-outline fidelity comparisons
         uses: actions/upload-artifact@v4
         with:
