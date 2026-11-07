@@ -34,15 +34,15 @@ jobs:
         run: |
           python experiments/vlm-reading-pilot-01/scripts/score.py --verify-pilot --output "$RUNNER_TEMP/VLM-SCORED-RESULTS.md"
           cat "$RUNNER_TEMP/VLM-SCORED-RESULTS.md"
-      - name: Check private labels and prohibited languages do not leak into published benchmark
+      - name: Check personal workstation paths do not leak into published benchmark
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
           base=Path('experiments/vlm-reading-pilot-01')
           prose=list(base.rglob('*.md'))+list(base.rglob('*.py'))
-          # Avoid publicizing private, workstation-specific aliases and paths.
-          prohibited=[r'(?i)\\b(?:david|peter)\\b', r'/home/box',r'/home/z/',r'(?i)\\bgrok\\b']
+          # Avoid publicizing private workstation identifiers and credentials.
+          prohibited=[r'/home/',r'/Users/',r'(?i)api[_-]?key',r'(?i)bearer[ ]+[A-Za-z0-9_-]{12,}']
           for path in prose:
               text=path.read_text(encoding='utf-8')
               for pattern in prohibited:
