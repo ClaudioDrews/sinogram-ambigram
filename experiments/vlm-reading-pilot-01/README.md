@@ -16,17 +16,19 @@ Methods differ in task: self-rotation and distinct-character fusion **must not b
 - [RESULTS.md](RESULTS.md): scored descriptive findings and limitations.
 - [data/responses_matrix.csv](data/responses_matrix.csv): the **exact short text returned** by the four models for each of 52 image IDs. The tokens `INVALID` and `ERROR` encode empty response/status, not literal model text. `UNKNOWN` was a literal response.
 - [data/ground_truth.csv](data/ground_truth.csv): trial-to-arm/reference mapping and expected character; **do not disclose to test models**.
+- [data/finish_reasons.csv](data/finish_reasons.csv): per-model completion metadata (`S` = stop, `L` = output cap, `E` = transport failure).
 - [scripts/score.py](scripts/score.py): deterministic report/scoring, validation, paired comparisons; standard-library Python only.
+- [scripts/rebuild_stimuli.py](scripts/rebuild_stimuli.py): rebuilds all 52 PNGs from pinned commits, verifies every SHA-256 and packages an unlabeled ZIP.
 - [scripts/test_score.py](scripts/test_score.py): unit tests for pairing, parsing and non-independence safeguards.
 - [LICENSE-NOTICE.md](LICENSE-NOTICE.md): source provenance and distribution boundary.
 
 A trial-order file and 52 PNGs were distributed to the original evaluation runner. Their source is the pinned Make Me a Hanzi geometry snapshot, SHA-256
 `a28c478b5178e98f67f510b2d52fde08a69dc664654ef43498253b9b764d46ee`.
-The original no-label PNGs **are not committed**: source-derived renderings are kept in reproducible GitHub Actions artifacts while their redistribution terms are reviewed. The existing PRC experiment workflows regenerate them using a checksum-pinned input. See [PRC experiment instructions](../PRC_EXPERIMENTS_README.md).
+The original no-label PNGs **are not committed**: source-derived renderings are kept in reproducible GitHub Actions artifacts while their redistribution terms are reviewed. The [benchmark reconstruction workflow](../../.github/workflows/vlm-stimuli-rebuild.yml) regenerates all 52 images, validates their checksums and uploads the answer-free `prc-vlm-blind-pilot-01` archive. Existing PRC workflows provide per-arm previews. See [PRC experiment instructions](../PRC_EXPERIMENTS_README.md).
 
 ## To evaluate your own vision models
 
-1. Obtain regenerated PNGs from the four experiment workflows/CI artifacts; verify source pin and PNG checksums against the manifest before proceeding.
+1. Download the answer-free ZIP from the [benchmark reconstruction workflow](../../.github/workflows/vlm-stimuli-rebuild.yml), or rebuild locally with `python experiments/vlm-reading-pilot-01/scripts/rebuild_stimuli.py --graphics data/prc/graphics.txt --out /tmp/blind.zip` from the repository root; verify all image hashes.
 2. Hide all manifests with labels, `ground_truth.csv`, this results document, model responses and method names from the inference agent.
 3. Use the exact P1 prompt in [PROTOCOL.md](PROTOCOL.md) and one fresh image-only inference per trial; preserve raw output and error cases.
 4. Save your model responses, then evaluate after the run is frozen with `python scripts/score.py --responses data/responses_matrix.csv --key data/ground_truth.csv`. See `--help` for CSV formats.
