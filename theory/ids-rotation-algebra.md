@@ -1,23 +1,8 @@
----
-title: "IDS Rotation Algebra (anti-automorphism)"
-id: ids-rotation-algebra
-type: research
-status: reviewed
-evidence: [DERIVED, MEASURED, CLAIM, CONFLICT]
-tags: [sinogram, ids, algebra, rotation-180]
-created: 2026-11-01
-updated: 2026-11-05
-language: en
-license: MIT
-translations: {zh: machine-assisted, ja: machine-assisted}
-related: [glossary-and-notation, stroke-type-rotation-table, family-rules]
----
-
 # IDS Rotation Algebra (anti-automorphism)
 
-Sources: `LOG-MULTI` (GLM/Claude/DeepSeek rounds), `PKG-GPT` (code, `stage1_operator_rules.csv`, `stage2_demo_rewrite_fixtures.csv`), `PKG-CLAUDE` (`rot.py`), `LOG-DEEPSEEK`, `RPT-CONSOL` §2.1, `CAT-XLSX`. Labels: see README (source reference in repo2: `../README.md`).
+**Evidence basis:** The formulas below are derived from explicit structural assumptions; empirical claims require geometric measurements or recognition tests.
 
-> **Reliability caveat (owner, 2026-11-01):** `RPT-RULES`, `RPT-CONSOL`, `RPT-FACES` and the catalog `CAT-XLSX` were probably produced by Google NotebookLM/Gemini; the owner warns that these tools make many errors. Treat every claim in this file that rests **only** on those four sources as **unverified** ([CLAIM]), even where it is phrased as fact. Claims also backed by the paper `PAPER`, a script run in `sources/`, or Nomura's own interviews (nomura-sources-and-findings (source reference in repo2: `../research/nomura-sources-and-findings.md`)) are stronger.
+> **Evidence boundary:** Earlier synthesis documents suggested some of these rules without testing them. Untested rules remain [CLAIM] or [PLAN], not measured conclusions.
 
 ## 1. Core rule [DERIVED]
 
@@ -41,7 +26,7 @@ IDS trees describe how components compose a glyph. 180° rotation reverses the o
 
 ## 2. Theorems / laws derived (all [DERIVED]; CAT-XLSX rows)
 
-* **Duplicate duad**: ⿰SS or ⿱SS is an exact self-ambigram iff S is C2 (昌=⿱日日, 吕/呂=⿱口口 predicted). In fonts the top component is drawn smaller (slot convention): measured IoU of 昌/吕 only 0.52–0.54 (GLM), 0.091/0.203 unshifted (GPT) — the algebra predicts, the font breaks (exp-02 (source reference in repo2: `../experiments/exp-02-glm-mini-29.md`), exp-01 (source reference in repo2: `../experiments/exp-01-gpt-pilot-42.md`)).
+* **Duplicate duad**: ⿰SS or ⿱SS is an exact self-ambigram iff S is C2 (昌=⿱日日, 吕/呂=⿱口口 predicted). In fonts the top component is drawn smaller (slot convention): measured IoU of 昌/吕 only 0.52–0.54 (GLM), 0.091/0.203 unshifted (GPT) — the algebra predicts, the font breaks (exp-02, exp-01).
 * **Symmetric core shift**: `X = C ⊕_p s` ⇒ `R(X) = C ⊕_{R(p)} R(s)` (甲↔由: vertical stroke at top vs bottom of 田).
 * **V-symmetric conjugation**: for left–right symmetric glyphs `R(S)=H(S)` (vertical flip) since `R = V∘H`; explains mirror-like pairs (士/干, 土/士, 未/末 *claims*).
 * **Conjugation**: for an edit T, `R∘T = T′∘R` where T′ is the conjugated edit (`LOG-DEEPSEEK`, three-layer framework below).
@@ -67,6 +52,6 @@ IDS trees describe how components compose a glyph. 180° rotation reverses the o
 
 ## Related
 
-- Glossary and notation (source reference in repo2: `../project/glossary-and-notation.md`)
+- Glossary and notation
 - [Stroke-type rotation table](../theory/stroke-type-rotation-table.md)
 - [Family rules](../theory/family-rules.md)
