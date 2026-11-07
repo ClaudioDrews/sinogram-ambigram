@@ -1,29 +1,14 @@
----
-title: "Proposed Methods, Algorithms and Roadmaps (not yet implemented unless stated)"
-id: methods-and-pipelines-proposed
-type: research
-status: reviewed
-evidence: [PLAN, DERIVED, CLAIM]
-tags: [sinogram, ambigram, rotation-180, algebra]
-created: 2026-11-01
-updated: 2026-11-05
-language: en
-license: MIT
-translations: {zh: machine-assisted, ja: machine-assisted}
-related: [existence-criterion, tool-status-and-roadmap, exp-08, exp-05]
----
-
 # Proposed Methods, Algorithms and Roadmaps (not yet implemented unless stated)
 
-Sources: `LOG-MULTI`, `LOG-GPT1`/`LOG-GPT2`, `LOG-QWEN`, `LOG-DEEPSEEK`, `RPT-RULES` §3 & §6, `RPT-META` §3,§5,§7, `RPT-CONSOL` §5, `META-DECK` slide 12, `CAT-XLSX`. Labels: see README (source reference in repo2: `../README.md`). **Everything here is [PLAN] unless a row says "run".**
+**Evidence basis:** Geometric experiments, explicit derivations and published methods are distinguished below; proposals are not presented as validated results.
 
-> **Reliability caveat (owner, 2026-11-01):** `RPT-RULES`, `RPT-CONSOL`, `RPT-FACES` and the catalog `CAT-XLSX` were probably produced by Google NotebookLM/Gemini; the owner warns that these tools make many errors. Treat every claim in this file that rests **only** on those four sources as **unverified** ([CLAIM]), even where it is phrased as fact. Claims also backed by the paper `PAPER`, a script run in `sources/`, or Nomura's own interviews (nomura-sources-and-findings (source reference in repo2: `../research/nomura-sources-and-findings.md`)) are stronger.
+> **Evidence boundary:** Proposals inferred from unverified summaries are hypotheses. Only measured results and explicitly derived claims are described as established.
 
 ## 1. Candidate-generation methods
 
 | Method | Description | Source | Status |
 |---|---|---|---|
-| Rotation graph (Approach 1) | compute `d(F(a), R·F(b))` for all Jōyō pairs (C(2,136,2) = 2,280,180 unordered pairs, i.e. ≈2.3 M; brute force viable; indexes only needed for full Unicode CJK); rank pairs below ε₀ | `RPT-RULES`, `META-DECK`, `LOG-MULTI` | **run** with raster/skeleton/profile/median metrics (experiments (source reference in repo2: `../experiments/README.md`)); KanjiVG-based version done at 2,770-glyph scale in exp-08 (source reference in repo2: `../experiments/exp-08-minimax-rotation-graph.md`) |
+| Rotation graph (Approach 1) | compute `d(F(a), R·F(b))` for all Jōyō pairs (C(2,136,2) = 2,280,180 unordered pairs, i.e. ≈2.3 M; brute force viable; indexes only needed for full Unicode CJK); rank pairs below ε₀ | `RPT-RULES`, `META-DECK`, `LOG-MULTI` | **run** with raster/skeleton/profile/median metrics (experiments); KanjiVG-based version done at 2,770-glyph scale in exp-08 |
 | Coarse-to-fine screening | packed-bitmap IoU at zero translation for all pairs → bounded top-k heap → ±3 px refinement of top 2,000 | `PKG-GPT` (`score_glyphs_large`) | coded, **never run** (needs full Jōyō list + font) |
 | Cloud-based nearest neighbour | signature indices (Fourier descriptors, skeleton graph, ink distribution, Betti numbers) + ANN search; two-stage shape then semantic filter | `LOG-QWEN`, `CAT-XLSX` | proposal |
 | Optimal-transport "distance maps between kanji" mining | hierarchical OT distance over nested components (Schuhmacher 2023, arXiv:2304.02493) + IDS filter → top 1,000 candidates. *Source note: `RPT-META` cites the distance maps and "Yencken & Baldwin" together; Yencken & Baldwin's work is rendered-image / radical-vector kanji similarity (ECAI 2008, COLING 2008), a different method, so the attribution is recorded as unverified* | `RPT-META` | proposal; paper not read |
@@ -65,11 +50,11 @@ Sources: `LOG-MULTI`, `LOG-GPT1`/`LOG-GPT2`, `LOG-QWEN`, `LOG-DEEPSEEK`, `RPT-RU
 
 ## 5. Data/tool needs identified
 
-KanjiVG (all sources), CHISE or UCD IDS, Jōyō+Jinmeiyō lists, JMdict/CC-CEDICT, a calibrated recogniser or human panel, a vector rendering path to SVG. Details and what was actually used: data-sources-and-tools (source reference in repo2: `../methodology/data-sources-and-tools.md`). What the final tool needs: tool-requirements-and-status (source reference in repo2: `../project/tool-status-and-roadmap.md`).
+KanjiVG (all sources), CHISE or UCD IDS, Jōyō+Jinmeiyō lists, JMdict/CC-CEDICT, a calibrated recogniser or human panel, a vector rendering path to SVG. Details and what was actually used: data-sources-and-tools. What the final tool needs: tool-requirements-and-status.
 
 ## Related
 
 - [Existence criterion](../theory/existence-criterion.md)
-- Tool status and roadmap (source reference in repo2: `../project/tool-status-and-roadmap.md`)
-- EXP-08 — MiniMax rotation graph (source reference in repo2: `../experiments/exp-08-minimax-rotation-graph.md`)
-- exp-05 (source reference in repo2: `../experiments/exp-05-mistral-medians-graph.md`)
+- Tool status and roadmap
+- [KanjiVG rotation-graph method](rotgraph-method.md)
+- exp-05
