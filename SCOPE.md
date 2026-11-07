@@ -2,11 +2,7 @@
 
 > **Two separate experimental geometric tracks:** 2,770 Japanese kanji (KanjiVG) and a 6,763-codepoint Mainland Chinese GB2312 shortlist (Make Me a Hanzi). The Chinese track uses source forms that are not independently certified for each region. Neither track establishes human readability.
 
-This document states exactly what this repository contains today, what it does
-not contain, and why. It exists because the project name refers to *sinograms*
-(a broad term for Chinese characters) while the measured dataset is a Japanese
-kanji inventory. That gap should be visible to anyone who opens the repository,
-not discoverable by them.
+This document distinguishes shipped research from draft experiments and documents geographic and linguistic boundaries. *Sinograms* here refers to the wider research question, not to a claim that all regional forms are interchangeable or that all Chinese characters are covered.
 
 ## What "sinogram" means here
 
@@ -15,18 +11,21 @@ characters of Chinese origin, wherever they are used — rather than the current
 data coverage. Renaming would break existing links and issue references, and
 the expansion below is intended to make the name accurate.
 
-## Current coverage
+## Current coverage on `main`
 
-| Aspect | State |
-|---|---|
-| Inventory | **2,770 glyphs**: 2,136 Jōyō kanji + 634 Jinmeiyō kanji |
-| Inventory source | Japanese Wikipedia tables, extracted and frozen in [`data/lists.json`](data/lists.json) |
-| Stroke geometry | **KanjiVG**, one canonical SVG per glyph, pinned to commit `70a0b7ae…` |
-| Glyph forms | **Japanese** standard forms only. No simplified Chinese, no traditional Chinese, no per-region variants |
-| Pair space | 2,770 × 2,771 / 2 = **3,837,835** unordered pairs, including self-pairs |
-| Published refined sample | 5,180 rows: 2,410 distinct pairs + 2,770 self-pairs |
-| Searched pairs | Full unordered space at grid resolution; exact refinement applied to the 2,500 best grid-ranked candidates plus every self-pair |
-| Language | Japanese kanji readings. The semantic fallback in the browser generator is a small hand-curated list, not a dictionary |
+The two tracks use **different source geometry and ranking methods**. Their counts and scores must not be combined.
+
+| Aspect | Japanese KanjiVG track | Chinese-source GB2312 track |
+|---|---|---|
+| Character repertoire | 2,770 kanji: 2,136 Jōyō + 634 Jinmeiyō | 6,763 GB2312 codepoints, all present in the pinned source |
+| Geometry | Japanese KanjiVG stroke paths | Make Me a Hanzi stroke paths and medians; 9,574 source glyph records |
+| Regional form status | Japanese reference shapes | Source includes simplified and traditional shapes; not individually certified to official Mainland Chinese glyph norms |
+| Candidate search | 3,837,835 unordered pairs at coarse grid scale, 5,180 refined rows selected | 106,347 coarse-shortlisted candidate pairs; public explorer shows up to eight partners per glyph |
+| Ranking metric | KanjiVG stroke-centreline distances and DT grid approximation | Coarse 37×37 half-turn ink IoU, ranked against the GB2312 repertoire |
+| Public interface | [Ambigram Generator](generator/) and [Rotation Lab](demo/) | [PRC Explorer](prc/) |
+| Human reading validation | Not established | Not established |
+
+The original browser generator retains 5,180 refined Japanese-track measurements (2,410 distinct pairs plus 2,770 self-pairs), vector paths embedded for 432 characters and optional on-demand loading. Inputting a Chinese character **does not switch its geometry source**; use the independent PRC Explorer for Chinese-source screening.
 
 ### What the published numbers mean
 
@@ -47,15 +46,19 @@ scale.
 
 The independent [PRC Explorer](prc/) reads a measured shortlist of 6,763 GB2312 characters using Make Me a Hanzi geometry, rather than Japanese KanjiVG vectors. The pinned input includes 9,574 source glyph records and fully covers the GB2312 repertoire. Its 106,347 coarse-screened candidate pairs are **not** fine-grid exact results, not a confirmed Mainland normative form certification, and not validated human-readable ambigrams. Source-derived rendering stays with the Arphic Public License; [the research method](methods/PRC_COARSE_SEARCH.md) and [source audit](LICENSE-AUDIT.md) describe the boundaries. Future regional inventories (including a verified official 2013 TCC transcription) and exact PRC refinement are separate tasks.
 
+## Experimental work in open draft pull requests
+
+- [#13 — PRC thickness correction](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13), [#14 — R-ODD](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14), [#15 — harmonic field](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15), and [#16 — A/B stroke fusion](https://github.com/ClaudioDrews/sinogram-ambigram/pull/16) are **not on `main`**.
+- [#17 — blind VLM-reading pilot](https://github.com/ClaudioDrews/sinogram-ambigram/pull/17) is **draft**. It documents a preselected 52-image, 208-observation automated-reading experiment, with reproducible scoring and a source-pinned generator. Its self-rotation dual-reading counts range from 10/20 (historical) to 15/20 (harmonic); both tested distinct-character pairs failed dual recognition. Model recognition is not human validation.
+- The pilot's unlabelled images are distributed through a reproducible, separately licensed workflow artifact rather than being silently relicensed under MIT.
+
 ## What is explicitly not here
 
 - **The original Japanese Generator** still uses Japanese forms, even for Chinese text input. **The separate PRC Explorer** uses Make Me a Hanzi source glyphs, which include simplified and traditional forms and are not individually certified against a normative character-form table.
 - **No JP/CN-S mixing.** Pair searches occur separately within each labelled repertoire. The PRC-source GB2312 repertoire is not yet sufficient to certify every source glyph as a particular regional canonical form.
 - **No validated perceptual threshold.** There is no calibrated ε. The
   thresholds in the code are geometric screening cut-offs.
-- **No human validation of any result.** No reading test, no ε calibration, no
-  native-reader study has been published. Every ambigram in this repository is
-  a *candidate*. See [`findings/limitations.md`](findings/limitations.md).
+- **No human reading validation.** A draft blind **VLM** pilot exists, but no calibrated ε, controlled native-reader study, or confirmed human-readable A↔B construction has been published. All alleged ambigrams remain *candidates*. See [`findings/limitations.md`](findings/limitations.md).
 - **No word-level or phrase-level work.** The unit of analysis is a single
   glyph. Rotating a word reverses its order as well as each glyph.
 - **No 90° rotation, no mirroring, no figure–ground inversion.** Only the
@@ -68,34 +71,21 @@ stable, publicly documented, and its glyph shapes are canonical in a single
 maintained vector source. That makes it a defensible testbed for the geometry
 before the method is pointed at a larger, more heterogeneous inventory.
 
-It is also, precisely, a limitation: the result measures Japanese kanji
-geometry. Every claim in [`findings/`](findings/) must be read with that
-boundary in place.
+It is also a limitation: historical Japanese-track results measure Japanese kanji geometry; the later, separate PRC-source track must be interpreted using its own source, conventions and metric. Neither certifies every regional glyph form.
 
-## Expansion plan
+## Expansion status and remaining work
 
-The planned expansion proceeds in stages. Each stage is gated on the previous
-one producing sound results, not on a calendar.
-
-1. **Audit the licence of every new source** before ingestion. Chinese stroke
-   data comes from sources with different, sometimes incompatible terms; see
-   [`LICENSE-AUDIT.md`](LICENSE-AUDIT.md).
-2. **Ingest Chinese stroke geometry** in a normalised representation that
-   matches the existing pipeline, with a `source` field on every item.
-3. **Model regional variants explicitly.** A character's simplified,
-   traditional, Japanese, Taiwanese and Korean forms are different shapes and
-   must be separate objects, not a lookup of one canonical form.
-4. **Build one rotation graph per regional convention.** Pairs are only formed
-   within the same convention.
-5. **Report coverage per inventory** rather than a single global figure, and
-   state the absolute coverage honestly, including the gaps.
+1. **Completed for the source-screening stage:** licence assessment, checksum-pinned Chinese stroke ingestion, GB2312 codepoint inventory and coarse candidate ranking. See [source reproduction](findings/prc-source-reproduction.md) and [PRC screening method](methods/PRC_COARSE_SEARCH.md).
+2. **Open:** certify source glyphs per region and shape; GB2312 codepoint coverage alone is not a certified simplified Chinese font. Preserve explicit source and regional-form metadata and avoid mixing incompatible conventions.
+3. **Open:** improve detailed PRC pair construction and test genuine structural A↔B transformations. Draft experimental operators have not demonstrated a legible different-character pair.
+4. **Open:** validate perceptions on a representative preregistered sample, including blind human native readers and genuine-/malformed-glyph controls. The small VLM pilot is preliminary and not an independent held-out generalization test.
+5. **Ongoing:** distinguish licences for original code, KanjiVG-adapted graphics and Arphic-derived geometry; do not relicense images by implication.
 
 ## How to read the results
 
 - A pair at the top of the ranking is a **geometric candidate**: its strokes
   align well after a half-turn.
-- Whether it is *readable* is a perceptual question. This repository has not
-  answered it.
+- Whether it is *readable to humans* remains a perceptual question. A draft VLM pilot supplies limited automated-reading observations, not a human validation.
 - The generator produces an experimental drawing to be judged by eye. Rotate it,
   compare it with both reference characters, and report what you see. If it
   does not read, that is a useful observation and an issue-worthy one.
