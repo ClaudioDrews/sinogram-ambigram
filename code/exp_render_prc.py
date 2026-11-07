@@ -47,10 +47,19 @@ def generate(graphics: Path, out: Path, mode: str,
             drawing, info = construct(a, b, centre)
             metrics = score(drawing, a, b, centre)
         elif ch_a != ch_b:
-            from prc_ab_fusion import rotate_strokes, score
-            drawing = a + rotate_strokes(b, centre)
+            rotated_b = [pc.Stroke(pc.half_turn(s.median, centre),
+                                   s.half_width.copy()) for s in b]
+            drawing = a + rotated_b
             info = {"operator": "unmodified_union"}
-            metrics = score(drawing, a, b, centre)
+            ink_union = pc.raster(drawing)
+            ink_a, ink_b = pc.raster(a), pc.raster(b)
+            ink_rot = pc.half_turn_grid(ink_union, centre)
+            def _f1(x, y):
+                return 2 * float(np.logical_and(x, y).sum()) / max(
+                    float(x.sum() + y.sum()), 1.0)
+            fa, fb = _f1(ink_union, ink_a), _f1(ink_rot, ink_b)
+            metrics = {"f1_a": fa, "f1_b": fb, "minimum_f1": min(fa, fb),
+                       "joint_f1": fa * fb, "stroke_count": len(drawing)}
         elif mode == "r-odd":
             from prc_r_odd import compensate
             drawing, metrics = compensate(a, centre)
