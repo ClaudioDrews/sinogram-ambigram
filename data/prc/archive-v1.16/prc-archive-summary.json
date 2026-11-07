@@ -1,0 +1,18 @@
+{
+  "scope": "Archived results verification only; not source rerun or human study",
+  "input_sha256": {
+    "repo_module_results.json": "9eca30e921e9056f3a5b89d0493942691b49d08d9d6badff72cefd7da7c9ba01",
+    "sector_generalisation.json": "dcedf83da8e13a15837f9b13369cd1c11eb0af0dad831d131b8ebc0329b02547",
+    "sector_experiment.json": "b1f4f1f6f195c5f90f315952d2dca026943bc299aaca24138a464763df4a4cce"
+  },
+  "construction_n": 120,
+  "centre_gain_mean": 0.09251757373426,
+  "centre_gain_median": 0.06921681025490856,
+  "extremity_gain_mean": 0.0018489885873094586,
+  "sector_n": 53,
+  "sector_improved_n": 52,
+  "sector_delta_median": 0.022872288210464303,
+  "sector_delta_mean": 0.030040425515813388,
+  "sector_baseline_median": 0.2403560830860534,
+  "sector_edited_median": 0.2660619803476946
+}
