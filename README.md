@@ -66,7 +66,7 @@ The [PRC ingestion stage](code/stage12_prc_ingest.py), [inventory preset builder
 
 The separate **CN-S (Mainland simplified Chinese)** research track now includes a deterministic, synthetic-tested construction module at [`code/prc_construct.py`](code/prc_construct.py), with [`28 targeted tests`](code/test_prc_construct.py). It explores rotation-centre optimisation, terminal stroke reconciliation, and constrained sector-wise thickness changes. See the [mathematical method](theory/prc-construction-method.md) and [PRC geometric analysis](findings/prc-extremity-analysis.md).
 
-**Scope boundary:** this is an experimental *construction method*, not a published Chinese-wide ranked dataset and not a verified legibility result. The reported numerical experiments are documented for inspection; independent reproduction from the pinned PRC source and human-reader studies remain outstanding. The Japanese and CN-S inventories must not be mixed in rankings.
+**Scope boundary:** this remains an experimental *construction method*, not a Chinese-wide generator or a human-validated legibility result. The archived PRC construction-cohort measurements have a separate pinned-source reproduction documented above; that does **not** independently validate the newer, draft-only stroke-width ablations or the readability of their outputs. Native-reader studies and certified regional forms remain outstanding. Japanese and PRC-source inventories must not be mixed in rankings.
 
 ### Research currently in draft branches (not released on `main`)
 
