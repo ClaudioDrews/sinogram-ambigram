@@ -56,7 +56,7 @@ The current prototype is intentionally small: the generator indexes **5,180 refi
 | [`theory/`](theory/) | Rotational algebra, IDS composition, stroke families, word-level rules and the legibility-set formulation. |
 | [`methods/`](methods/) | Search algorithms, vector geometry, distance metrics and the Inoue–Takahashi hiragana method. |
 | [`findings/`](findings/) | Experimental results, interesting pairs, disagreements and practical limitations. |
-| [`data/`](data/) | Character lists and CSV datasets for C₂ glyphs, refined pairs and top candidates. |
+| [`data/`](data/) | [Documented CSV datasets](data/README.md), character lists and provenance of grid vs exact metrics. |
 | [`code/`](code/) | Python rotation-graph pipeline components and experimental ambigram synthesis. |
 | [`generator/`](generator/) | Standalone browser proof of concept, its technical README and attribution. |
 | [`demo/`](demo/) | Rotation Lab: 16 interactive examples. |
@@ -70,10 +70,11 @@ Requires **Python 3.12 or newer** for the versions pinned in `code/requirements.
 
 ```bash
 python -m pip install -r code/requirements.txt
+bash scripts/download_kanjivg.sh  # pinned source + checksum verification
 python -m unittest discover -s code -p 'test_*.py' -v
 ```
 
-The smoke tests use synthetic data. Full recomputation requires the pinned KanjiVG source and the experiment inputs; see [`methods/rotgraph-method.md`](methods/rotgraph-method.md) and [`data/KANJIVG_PIN.txt`](data/KANJIVG_PIN.txt). Some pipeline stages retain their original environment-based path configuration.
+The tests include real CLI execution on synthetic SVG glyphs. Paths default to repository-relative directories, with optional `ROTG_*` environment overrides. For the full numerical pipeline and computational requirements, see the [reproduction protocol](methods/rotgraph-method.md). The [dataset guide](data/README.md) distinguishes exact point-cloud distances from grid-screening approximations.
 
 ## Run the demonstrations
 
@@ -82,6 +83,10 @@ Open the [live project website](https://claudiodrews.github.io/sinogram-ambigram
 ## Contribute and give feedback
 
 Try a character, rotate the output and compare it with both references. If you see a better reading or a promising transformation, **[open an issue](https://github.com/ClaudioDrews/sinogram-ambigram/issues/new)** and include the character pair, screenshot/SVG, chosen method and your observations. You can also email **[Claudio Drews](mailto:21au6i06R3w55891@proton.me)**.
+
+## Citation
+
+Use the repository's [CITATION.cff](CITATION.cff) to cite Claudio Drews and this software/data release. The current version remains an exploratory prototype; no controlled native-reader validation has been published.
 
 ## Credit and licensing
 
