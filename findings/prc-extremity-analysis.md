@@ -251,11 +251,11 @@ strokes the character has.
 
 ### Compared with the extremity rules
 
-| lever | median gain on the 120 candidates | note |
+| lever | measured paired gain | note |
 |---|---|---|
-| rotation centre | **+0.093** | the largest lever of all |
-| extremity rules (§8 of the method) | +0.002 | most places have no counterpart |
-| sector thickness (this section) | **+0.023** median, **+0.030** mean, 52/53 improve | on the frameless forms |
+| rotation centre | **+0.093 mean**; **+0.069 median** | 120 source candidates |
+| extremity rules (§8 of the method) | **+0.002 mean** | 120 source candidates; most places have no counterpart |
+| sector thickness (this section) | **+0.023 median**; **+0.030 mean**, 52/53 improve | 53 frameless candidates in the median band |
 
 ## 10. What was not measured
 
