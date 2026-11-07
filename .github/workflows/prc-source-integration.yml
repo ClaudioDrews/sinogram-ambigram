@@ -9,6 +9,8 @@ on:
       - 'code/stage12_prc_ingest.py'
       - 'code/test_prc_ingest.py'
       - 'code/prc_inventory.py'
+      - 'code/stage13_prc_presets.py'
+      - 'code/test_prc_presets.py'
       - 'scripts/download_prc_sources.sh'
       - 'data/MMAH_PIN.txt'
       - '.github/workflows/prc-source-integration.yml'
@@ -55,6 +57,21 @@ jobs:
           assert data['source_character_count'] >= 9000
           assert data['cohorts']['gb2312']['inventory'] == 6763
           assert data['cohorts']['gb2312']['covered'] == 6763
+          PY
+      - name: Generate verified PRC inventory presets
+        run: |
+          python code/stage13_prc_presets.py --graphics data/prc/graphics.txt --out /tmp/prc-presets
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          meta=json.loads(Path('/tmp/prc-presets/manifest.json').read_text())
+          cohort=meta['presets']['cn-s-gb2312']
+          print('GB2312 PRESET',cohort)
+          assert cohort['inventory_size'] == 6763
+          assert cohort['covered'] == 6763
+          assert cohort['missing'] == 0
+          assert len(Path('/tmp/prc-presets/cn-s-gb2312.txt').read_text().splitlines()) == 6763
+          assert meta['regional_form_certified'] is False
           PY
       - name: Build complete median cache twice and compare SHA-256
         run: |
