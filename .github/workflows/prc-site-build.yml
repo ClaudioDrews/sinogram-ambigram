@@ -1,0 +1,102 @@
+name: Build PRC public catalogue
+
+on:
+  push:
+    branches:
+      - integration/prc-public-explorer
+    paths:
+      - prc/**
+      - code/stage12_prc_ingest.py
+      - code/stage13_prc_presets.py
+      - code/stage14_prc_search.py
+      - code/test_prc_public_catalog.py
+      - .github/workflows/prc-site-build.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prc-public-catalogue-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install requirements
+        run: python -m pip install -r code/requirements.txt
+      - name: Test source and catalogue code
+        run: python -m unittest discover -s code -p 'test_prc_*.py' -v
+      - name: Fetch pinned PRC input
+        run: bash scripts/download_prc_sources.sh
+      - name: Ingest complete median geometry
+        run: python code/stage12_prc_ingest.py --graphics data/prc/graphics.txt --out data/prc/cache
+      - name: Create GB2312 repertoire
+        run: python code/stage13_prc_presets.py --graphics data/prc/graphics.txt --out data/prc/inventories
+      - name: Search coarse half-turn candidates
+        run: python code/stage14_prc_search.py --cache data/prc/cache --inventories data/prc/inventories --out data/prc/search --top-k 20 --batch-size 64
+      - name: Build compact public candidate catalogue
+        run: python prc/build_catalog.py --candidates data/prc/search/candidates_grid37.csv --manifest data/prc/inventories/manifest.json --out prc/catalog.json --top-k 8
+      - name: Check complete public dataset and JavaScript syntax
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('prc/catalog.json')
+          catalog=json.loads(p.read_text(encoding='utf-8'))
+          assert catalog['schema']=='prc-public-coarse-catalog-v1'
+          assert catalog['glyphs']==len(catalog['partners'])==6763
+          assert catalog['shortlisted_pairs']==106347
+          assert catalog['source_sha256']=='a28c478b5178e98f67f510b2d52fde08a69dc664654ef43498253b9b764d46ee'
+          assert catalog['human_readability_validated'] is False
+          assert catalog['source_forms_certified'] is False
+          assert all(1<=len(v)<=8 for v in catalog['partners'].values())
+          assert all(len(p)==3 and 0 <= p[2] <= 1 for v in catalog['partners'].values() for p in v)
+          print('SITE_CATALOG_VERIFIED',p.stat().st_size,'bytes,',catalog['glyphs'],'glyphs,',catalog['shortlisted_pairs'],'source pairs')
+          from html.parser import HTMLParser
+          class Scripts(HTMLParser):
+              def __init__(self): super().__init__(); self.flag=False; self.scripts=[]
+              def handle_starttag(self,t,a):
+                  if t=='script' and not dict(a).get('src'): self.flag=True;self.scripts.append('')
+              def handle_endtag(self,t):
+                  if t=='script': self.flag=False
+              def handle_data(self,x):
+                  if self.flag: self.scripts[-1]+=x
+          html=Path('prc/index.html').read_text(encoding='utf-8')
+          parser=Scripts();parser.feed(html)
+          assert parser.scripts
+          Path('/tmp/prc-page.js').write_text('\n'.join(parser.scripts),encoding='utf-8')
+          PY
+          node --check /tmp/prc-page.js
+          python tools/check_links.py
+      - name: Upload reproducible catalogue as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: prc-GB2312-public-catalogue
+          path: prc/catalog.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish generated catalogue to the integration branch
+        if: github.ref == 'refs/heads/integration/prc-public-explorer' && github.event_name == 'push'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add prc/catalog.json
+          if git diff --cached --quiet; then
+            echo 'Pinned public catalogue is unchanged'
+          else
+            git commit -m 'data(prc): reproducible pinned GB2312 site catalogue [skip ci]'
+            git push origin HEAD:integration/prc-public-explorer
+          fi
