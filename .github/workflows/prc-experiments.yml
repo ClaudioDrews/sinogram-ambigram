@@ -28,6 +28,17 @@ jobs:
         run: python -m unittest discover -s code -p 'test_prc*.py' -v
       - name: Fetch checksum-pinned PRC source
         run: bash scripts/download_prc_sources.sh
+      - name: Render immutable main geometry baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          MAIN_SHA=a9ddfabbdfe32d781c816ffbd6c93fc194d12e30
+          git fetch origin "$MAIN_SHA" --depth=1
+          mkdir -p /tmp/prc-main-baseline
+          git show "$MAIN_SHA:code/prc_construct.py" > /tmp/prc-main-baseline/prc_construct.py
+          cp code/exp_render_prc.py /tmp/prc-main-baseline/exp_render_prc.py
+          python /tmp/prc-main-baseline/exp_render_prc.py --graphics data/prc/graphics.txt --mode baseline --characters '田,中,口,日,目' --out outputs/original-main-self
+          python /tmp/prc-main-baseline/exp_render_prc.py --graphics data/prc/graphics.txt --mode baseline --pairs '甲:由,韦:芈' --out outputs/original-main-pairs
       - name: Render frozen exploratory stimuli
         shell: bash
         run: |
