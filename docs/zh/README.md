@@ -38,19 +38,7 @@
 
 ## 简体中文字形轨道
 
-本项目正在建立一条面向简体中文读者的轨道。字形几何取自 Arphic 授权的
-[Make Me a Hanzi](https://github.com/skishore/makemeahanzi) 笔画中线数据，
-由 [`scripts/download_prc_sources.sh`](../../scripts/download_prc_sources.sh)
-按固定校验和下载。
-
-- [`theory/prc-construction-method.md`](../../theory/prc-construction-method.md)：
-  把"两端笔画如何调和"写成公式，常数取自实测。
-- [`code/prc_construct.py`](../../code/prc_construct.py)：上述规则的实现，
-  以及 **按 3×3 扇区调整笔画粗细** 的规则（`R-SECT`）。
-- [`findings/prc-extremity-analysis.md`](../../findings/prc-extremity-analysis.md)：
-  实测证据。
-
-目前只发布**候选图形**。本轨道尚未取得读者验证，因此不作任何"可读性"结论。
+本项目正在准备独立的简体中文（PRC）字形数据和几何计算流程，采用不同于日本 KanjiVG 的数据来源。该流程尚未并入此版本，因此页面中的当前排名仅对应日本标准字形。后续发布会提供 PRC 版本的实际数据、构建方法和许可证信息。
 
 ## 代码与研究资料
 
