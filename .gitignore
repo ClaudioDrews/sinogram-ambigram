@@ -24,3 +24,5 @@ data/kanjivg/
 data/prc/graphics.txt
 data/prc/cache/
 data/prc/coverage.json
+# Preset inventories derived locally from external sources
+data/prc/inventories/
