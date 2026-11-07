@@ -130,7 +130,7 @@ def main():
         for i, r in enumerate(pool.imap_unordered(_work, chunks)):
             out.append(r)
             if (i + 1) % 25 == 0:
-                print(f"  {i+1}/{len(chunks)} blocos  {time.time()-t0:.1f}s", flush=True)
+                print(f"  {i+1}/{len(chunks)} blocks  {time.time()-t0:.1f}s", flush=True)
     ref = np.concatenate(out)
     np.save(f"{CACHE}/refined.npy", ref)
     print(f"refined: {len(ref)} pairs in {time.time()-t0:.1f}s", flush=True)
