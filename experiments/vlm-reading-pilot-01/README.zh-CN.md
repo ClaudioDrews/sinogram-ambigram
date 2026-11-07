@@ -16,13 +16,15 @@
 - [RESULTS.md](RESULTS.md) 与 [RESULTS.zh-CN.md](RESULTS.zh-CN.md)：评分结果、局限和解释。
 - [data/responses_matrix.csv](data/responses_matrix.csv)：四个模型对 52 个试次的原始短文本结果；`INVALID` 和 `ERROR` 表示空输出的状态编码，不是模型实际输出的字符串；`UNKNOWN` 为模型实际输出。
 - [data/ground_truth.csv](data/ground_truth.csv)：测试编号、算法条件、方向、目标字符的映射；**不可向接受盲测的模型提供**。
+- [data/finish_reasons.csv](data/finish_reasons.csv)：各模型的结束状态（`S` 正常结束、`L` 达到输出上限、`E` 传输失败）。
 - [scripts/score.py](scripts/score.py)：仅使用 Python 标准库的评分程序。
+- [scripts/rebuild_stimuli.py](scripts/rebuild_stimuli.py)：从固定提交重新构建 52 张 PNG，核验 SHA-256 并生成不含答案的 ZIP。
 - [scripts/test_score.py](scripts/test_score.py)：评分程序单元测试。
 - [LICENSE-NOTICE.md](LICENSE-NOTICE.md)：数据来源及许可边界。
 
 源数据为 Make Me a Hanzi 固定版本，SHA-256：
 `a28c478b5178e98f67f510b2d52fde08a69dc664654ef43498253b9b764d46ee`。
-原始 PNG **不提交到 Git 历史中**，以避免在衍生字体素材的再分发条款确认前将其错误视为 MIT 许可；图片由实验分支的 GitHub Actions 基于固定来源重新生成。
+原始 PNG **不提交到 Git 历史中**，以避免在衍生字体素材的再分发条款确认前将其错误视为 MIT 许可；图片由 [重建工作流](../../.github/workflows/vlm-stimuli-rebuild.yml) 从固定版本重新生成、逐张核验，并以 `prc-vlm-blind-pilot-01` 名称提供不含答案的归档文件。
 
 ## 如何进行自己的视觉模型测试
 
