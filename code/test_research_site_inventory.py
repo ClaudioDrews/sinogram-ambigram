@@ -105,8 +105,14 @@ class TestResearchSiteInventory(unittest.TestCase):
         shown = {x['method'] for x in data['cn']}
         self.assertFalse(unshown & shown)
         self.assertEqual(shown, {'cn-natural-self', 'cn-natural-pair', 'cn-source-union'})
+        built = json.loads((ROOT/'evaluation/recognition/generated/manifest.json').read_text('utf-8'))
+        self.assertEqual(built['schema'], 'sinogram-prc-method-examples-v1')
+        self.assertEqual(len(built['items']), 22)
+        self.assertEqual(len({x['method'] for x in built['items']}), 11)
+        for item in built['items']:
+            self.assertTrue((ROOT/'evaluation/recognition/generated'/item['file']).exists(), item['id'])
         self.assertEqual({x['type'] for x in data['jp']},
-                         {'natural-self', 'natural-pair', 'constructed'})
+                         {'natural-self', 'natural-pair', 'constructed', 'search-illustration'})
         self.assertIn('no native reader', data['evidence'].lower())
         self.assertEqual(len(json.loads((ROOT / 'evaluation/items.json').read_text('utf-8'))['items']), 48)
 
