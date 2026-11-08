@@ -80,23 +80,29 @@ class TestRecognitionGallery(unittest.TestCase):
 
         curated = json.loads((PAGE.parent / 'stimuli.json').read_text(encoding="utf-8"))
         self.assertEqual(curated['schema'], 'sinogram-reader-curated-methods-v2')
-        self.assertEqual(len(curated['jp']), 13)
+        self.assertEqual(len(curated['jp']), 20)
         self.assertEqual(len(curated['cn']), 9)
         self.assertEqual(
             {row['method'] for row in curated['jp']},
             {'jp-natural-self', 'jp-natural-pair', 'jp-overlay',
-             'jp-salience', 'jp-shared', 'jp-c2-blend'}
+             'jp-salience', 'jp-shared', 'jp-c2-blend',
+             'jp-gpt-raster-iou', 'jp-glm-translated-iou', 'jp-claude-skeleton-f1',
+             'jp-claude-w1-warp', 'jp-kimi-fft-iou', 'jp-mistral-medians', 'jp-minimax-rotgraph'}
         )
         self.assertEqual(
             {row['method'] for row in curated['cn']},
             {'cn-natural-self', 'cn-natural-pair', 'cn-source-union'}
         )
+        # Historical audit records remain in the manifest for provenance.
         self.assertEqual(len(curated['cn_unillustrated']), 7)
-        self.assertTrue(all(row['source'].startswith('KanjiVG') for row in curated['jp']))
+        self.assertIn("fetch('generated/manifest.json')", h)
+        self.assertIn("item.url||svgData(item.svg)", h)
+        self.assertIn("selected_center", h)
+        self.assertTrue(all('KanjiVG' in row['source'] for row in curated['jp']))
         self.assertTrue(all('Make Me a Hanzi' in row['source'] for row in curated['cn']))
         self.assertTrue(all(curated['jp_glyphs'].get(row['a']) for row in curated['jp']))
         self.assertTrue(all(curated['jp_glyphs'].get(row['b']) for row in curated['jp']))
-        self.assertTrue(all(row['type'] in ('natural-self','natural-pair','constructed')
+        self.assertTrue(all(row['type'] in ('natural-self','natural-pair','constructed','search-illustration')
                             for row in curated['jp'] + curated['cn']))
         self.assertFalse(any(row['method'] in {m['id'] for m in curated['cn_unillustrated']}
                              for row in curated['cn']))
@@ -112,7 +118,7 @@ class TestRecognitionGallery(unittest.TestCase):
         self.assertIn('id="method-inventory-link"', h)
         self.assertIn("status:item.status", h)
         self.assertIn("type:item.type", h)
-        self.assertIn("'method','type','status','source'", h)
+        self.assertIn("'method','type','status','source','svg_sha256'", h)
         self.assertIn("methodLabels[track][method]", h)
 
     def test_csv_and_txt_are_optional_local_downloads(self):
