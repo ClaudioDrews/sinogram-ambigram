@@ -1,0 +1,122 @@
+name: Research method pages and reader gallery browser QA
+
+on:
+  push:
+    branches: [docs/research-tracks-gallery-20261108]
+    paths:
+      - "methods/**"
+      - "evaluation/recognition/**"
+      - "code/test_research_site_inventory.py"
+      - ".github/workflows/method-site-qa.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "methods/**"
+      - "evaluation/recognition/**"
+      - ".github/workflows/method-site-qa.yml"
+  workflow_dispatch:
+
+jobs:
+  browser-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validate all JS scripts and static data
+        run: |
+          node --check methods/detail.js
+          python -m unittest discover -s code -p 'test_research_site_inventory.py' -v
+          python -m unittest discover -s code -p 'test_recognition_lab.py' -v
+      - name: Install CJK fonts for screenshot QA
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+      - name: Render every method and both reader tracks in headless Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME="$(command -v google-chrome || command -v chromium)"
+          test -n "$CHROME"
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/research-method-http.log 2>&1 &
+          server=$!
+          trap 'kill "$server" || true' EXIT
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/methods/ > /dev/null; then break; fi
+            sleep 0.2
+          done
+          mkdir -p /tmp/research-method-browser
+          python3 - "$CHROME" <<'PY'
+          import json, pathlib, subprocess, sys
+          chrome = sys.argv[1]
+          methods = json.loads(pathlib.Path('methods/catalog.json').read_text())['methods']
+          count=0
+          for m in methods:
+              url='http://127.0.0.1:8765/methods/'+m['slug']+'/'
+              p=subprocess.run([chrome,'--headless=new','--no-sandbox',
+                  '--disable-dev-shm-usage','--disable-gpu','--virtual-time-budget=3200',
+                  '--dump-dom',url],stdout=subprocess.PIPE,stderr=subprocess.PIPE,
+                  text=True,timeout=25)
+              page=p.stdout
+              if 'id="rotating-art"' not in page:
+                  raise RuntimeError('Method drawing not rendered: '+m['slug']+'\n'+p.stderr[-1500:]+'\n'+page[-1000:])
+              if 'id="rotation"' not in page or 'id="play"' not in page:
+                  raise RuntimeError('Method interactions absent: '+m['slug'])
+              count+=1
+          print('PASS: '+str(count)+' dedicated method pages actually render SVGs')
+          for slug in ('jp-salience','cn-ab-fusion','cn-harmonic','cn-centre-optimisation'):
+              dest=pathlib.Path('/tmp/research-method-browser')/(slug+'.png')
+              subprocess.run([chrome,'--headless=new','--no-sandbox','--disable-dev-shm-usage',
+                  '--disable-gpu','--virtual-time-budget=3200',
+                  '--window-size=1100,1300','--screenshot='+str(dest),
+                  'http://127.0.0.1:8765/methods/'+slug+'/'],
+                  stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,check=True,timeout=25)
+              assert dest.stat().st_size>1000
+          PY
+          cat > qa-reader.html <<'HTML'
+          <!doctype html><html><head><meta charset="utf-8"></head><body data-qa="loading">
+          <iframe id="f" src="evaluation/recognition/" width="430" height="700"></iframe>
+          <script>
+          const which=new URLSearchParams(location.search).get('track')||'jp';
+          const frame=document.getElementById('f');
+          frame.addEventListener('load',()=>{
+            setTimeout(()=>{
+              try{
+                const d=frame.contentDocument;
+                d.getElementById('choose-'+which).click();
+                setTimeout(()=>{
+                  const el=d.getElementById('glyph');
+                  const group=d.getElementById('gallery');
+                  const link=d.getElementById('method-inventory-link');
+                  if(!group.classList.contains('hidden')&&el.src&&link.href.includes('/methods/')){
+                    document.body.dataset.qa='ok';
+                    document.body.dataset.method=d.getElementById('method-value').textContent;
+                    d.getElementById('rotate').click();
+                    document.body.dataset.angle=d.getElementById('angle').textContent;
+                  }else document.body.dataset.qa='missing-card';
+                },2400);
+              }catch(e){document.body.dataset.qa=e.message}
+            },300);
+          });
+          </script></body></html>
+          HTML
+          for track in jp cn; do
+            "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
+              --virtual-time-budget=7200 --dump-dom \
+              "http://127.0.0.1:8765/qa-reader.html?track=$track" \
+              > "/tmp/research-method-browser/gallery-$track.html" \
+              2> "/tmp/research-method-browser/gallery-$track.log"
+            grep -q 'data-qa="ok"' "/tmp/research-method-browser/gallery-$track.html"
+            grep -q 'data-angle="180°"' "/tmp/research-method-browser/gallery-$track.html"
+          done
+          rm -f qa-reader.html
+      - name: Retain browser screenshots and QA traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: method-pages-browser-qa
+          path: /tmp/research-method-browser/
+          retention-days: 14
+          if-no-files-found: warn
