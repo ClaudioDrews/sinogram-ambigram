@@ -102,22 +102,59 @@ const svg=ns('svg');svg.setAttribute('xmlns','http://www.w3.org/2000/svg');svg.s
 const pathsA=g[item.a].map(d=>makePath(d,'#24211d',5,1,false)),pathsB=g[item.b].map(d=>makePath(d,'#32666a',5,.6,true));
 if(item.method==='canonical-c2'||item.method==='source-negative-control'){pathsA.forEach(p=>svg.appendChild(p))}
 else if(item.method==='overlay'){pathsA.forEach(p=>{p.setAttribute('opacity','.75');svg.appendChild(p)});pathsB.forEach(p=>svg.appendChild(p))}
-else{const coords=(paths,flipped)=>paths.map(p=>{const n=Math.max(12,Math.ceil(p.getTotalLength()/3)),pts=[];for(let i=0;i<n;i++){const v=p.getPointAtLength(p.getTotalLength()*i/(n-1));pts.push(flipped?[109-v.x,109-v.y]:[v.x,v.y]);}return pts;});const a=coords(pathsA,false),b=coords(pathsB,true),flatA=a.flat(),flatB=b.flat();
+else{[...pathsA,...pathsB].forEach(p=>svg.appendChild(p));const coords=(paths,flipped)=>paths.map(p=>{const n=Math.max(12,Math.ceil(p.getTotalLength()/3)),pts=[];for(let i=0;i<n;i++){const v=p.getPointAtLength(p.getTotalLength()*i/(n-1));pts.push(flipped?[109-v.x,109-v.y]:[v.x,v.y]);}return pts;});const a=coords(pathsA,false),b=coords(pathsB,true),flatA=a.flat(),flatB=b.flat();
 function match(pts,cloud){return pts.filter(v=>cloud.some(w=>Math.hypot(v[0]-w[0],v[1]-w[1])<=3)).length/Math.max(1,pts.length)}
 [[pathsA,a,flatB],[pathsB,b,flatA]].forEach(([paths,groups,other],side)=>paths.forEach((p,j)=>{const ratio=match(groups[j],other);if(item.method==='common-core'&&ratio<.5)return;p.setAttribute('stroke','#24211d');p.setAttribute('stroke-width',item.method==='common-core'?'7':ratio>=.5?'9':'2.6');p.setAttribute('opacity',side?'.54':'.94');svg.appendChild(p)}));}
-const serial=new XMLSerializer().serializeToString(svg);svg.remove();return serial;}
+svg.removeAttribute('style');const serial=new XMLSerializer().serializeToString(svg);svg.remove();return serial;}
 function toData(svg){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}
+function animateJapanese(svgText){
+ const doc=new DOMParser().parseFromString(svgText,'image/svg+xml');
+ if(doc.querySelector('parsererror'))throw Error('Invalid Japanese source SVG');
+ const paths=[...doc.querySelectorAll('path')];
+ paths.forEach((p,i)=>{
+  const a=doc.createElementNS('http://www.w3.org/2000/svg','animate');
+  a.setAttribute('attributeName','opacity');a.setAttribute('from','0');
+  a.setAttribute('to',p.getAttribute('opacity')||'1');
+  a.setAttribute('begin',(i*1.3/Math.max(1,paths.length-1)).toFixed(3)+'s');
+  a.setAttribute('dur','.26s');a.setAttribute('fill','freeze');p.appendChild(a);
+ });
+ return new XMLSerializer().serializeToString(doc.documentElement);
+}
 const PRC_SVG='https://raw.githubusercontent.com/skishore/makemeahanzi/bddc96d41bef78427ed0e034e9f7e31d71fd1b92/svgs/';
 function prcSrc(ch){return PRC_SVG+ch.codePointAt(0)+'.svg'}
+const prcCache=new Map();
+function sourceOutline(ch){
+ if(!prcCache.has(ch))prcCache.set(ch,(async()=>{
+  const response=await fetch(prcSrc(ch),{cache:'force-cache'});
+  if(!response.ok)throw Error('Chinese source '+ch+' HTTP '+response.status);
+  const doc=new DOMParser().parseFromString(await response.text(),'image/svg+xml');
+  if(doc.querySelector('parsererror'))throw Error('Invalid Chinese source SVG: '+ch);
+  const group=[...doc.querySelectorAll('g[transform]')].find(g=>/scale\(1,\s*-1\)\s*translate\(0,\s*-900\)/.test(g.getAttribute('transform')||''));
+  if(!group)throw Error('No outline container for '+ch);
+  const ds=[...group.children].filter(n=>n.localName==='path'&&n.getAttribute('fill')==='lightgray'&&n.getAttribute('d')).map(p=>p.getAttribute('d'));
+  if(!ds.length)throw Error('No finished outline paths for '+ch);
+  return ds;
+ })());
+ return prcCache.get(ch);
+}
+function vectorPaths(ds){return ds.map(d=>'<path d="'+d.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')+'"/>').join('');}
+function chineseComposite(item,animated){
+ const beginA=animated?'<animate attributeName="opacity" from="0" to="1" dur=".48s" fill="freeze"/>':'';
+ const beginB=animated?'<animateTransform attributeName="transform" type="rotate" from="0 512 512" to="180 512 512" begin=".48s" dur=".88s" fill="freeze"/><animate attributeName="fill" from="#32666a" to="#24211d" begin="1.36s" dur=".32s" fill="freeze"/>':'';
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">'+
+ '<g transform="scale(1 -1) translate(0 -900)" fill="#24211d">'+beginA+vectorPaths(item.pathsA)+'</g>'+
+ '<g transform="rotate(180 512 512)" fill="#24211d">'+beginB+
+ '<g transform="scale(1 -1) translate(0 -900)">'+vectorPaths(item.pathsB)+'</g></g></svg>';
+}
 async function load(which){
 if(items.length&&which===track)return;
 const sample=[];
 if(which==='jp'){
  const r=await fetch('../items.json',{cache:'no-cache'});if(!r.ok)throw Error('items '+r.status);
  const file=await r.json();
- ['v1-top','v2-top','self','control'].forEach(stratum=>file.items.filter(it=>it.stratum===stratum).slice(0,3).forEach(it=>sample.push({id:it.id,track:'jp',a:it.label_a,b:it.label_b,kind:'constructed-pilot',method:'stroke-salience',stratum:it.stratum,source:'KanjiVG / Japanese forms',svg:it.construction_svg})));
- for(const d of DEMOS)sample.push({...d,track:'jp',stratum:'exploratory',source:'KanjiVG / Rotation Lab',svg:makeDemoSVG(d)});
- if(sample.length!==17||sample.some(it=>!it.svg))throw Error('Japanese selection invalid');
+ ['v1-top','v2-top','self','control'].forEach(stratum=>file.items.filter(it=>it.stratum===stratum).slice(0,3).forEach(it=>sample.push({id:it.id,track:'jp',a:it.label_a,b:it.label_b,kind:'constructed-pilot',method:'stroke-salience',stratum:it.stratum,source:'KanjiVG / Japanese forms',svg:it.construction_svg,animatedSvg:animateJapanese(it.construction_svg)})));
+ for(const d of DEMOS){try{const svg=makeDemoSVG(d);sample.push({...d,track:'jp',stratum:'exploratory',source:'KanjiVG / Rotation Lab',svg,animatedSvg:animateJapanese(svg)});}catch(error){console.warn('Optional Rotation Lab example unavailable',d.id,error);}}
+ if(sample.length<12||sample.some(it=>!it.svg))throw Error('Japanese selection invalid');
 }else if(which==='cn'){
  const r=await fetch('../../prc/catalog.json',{cache:'no-cache'});if(!r.ok)throw Error('PRC catalog '+r.status);
  const catalog=await r.json();
@@ -131,6 +168,16 @@ if(which==='jp'){
   used.add(key);sample.push({id:'prc-'+a.codePointAt(0)+'-'+b.codePointAt(0),track:'cn',a,b,kind:'source-overlay-diagnostic',method:'prc-source-overlay',stratum:'gb2312-coarse',source:'Make Me a Hanzi / pinned Mainland Chinese-source SVG',score_z:ranked[1],score_iou:ranked[2]});
  }
  if(sample.length<8)throw Error('Too few Chinese-source candidates');
+  const built=await Promise.all(sample.map(async it=>{
+   try{
+    [it.pathsA,it.pathsB]=await Promise.all([sourceOutline(it.a),sourceOutline(it.b)]);
+    it.svg=chineseComposite(it,false);it.animatedSvg=chineseComposite(it,true);
+    delete it.pathsA;delete it.pathsB;
+    return it;
+   }catch(error){console.warn('Skipping unavailable Chinese source candidate',it.id,error);return null;}
+  }));
+  sample.splice(0,sample.length,...built.filter(Boolean));
+  if(sample.length<4)throw Error('Could not construct enough Chinese SVG drawings');
 }else throw Error('Invalid track');
 items=sample;track=which;seed=randomSeed();order=shuffle(sample.map((_,i)=>i),seed);
 }
