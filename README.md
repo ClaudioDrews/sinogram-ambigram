@@ -24,6 +24,41 @@ Inspired by the ambigram art of [Issei Nomura](https://x.com/IsseiNomura) and by
 
 **Start with the [interactive Research Methods map](methods/index.html)** ([GitHub Pages](https://claudiodrews.github.io/sinogram-ambigram/methods/)) or its [auditable method inventory](methods/RESEARCH_TRACKS.md). These separate **natural rotation screening**, **distinct A↔B candidate search**, **construction/synthesis**, and **perceptual evaluation**, and link to implementations, experimental PRs, demos, findings, and evidence limitations.
 
+### Dedicated illustrated pages for every explored method
+
+Each investigated **search**, **source-rotation**, and **construction** method has a dedicated page with its mathematical/algorithmic principle, a rotatable worked example, an optional 180° animation, provenance and limitations. **Japanese and Chinese have equal standing as experimental tracks.**
+
+Japanese historical metric pages illustrate their input geometry with current KanjiVG vectors; those illustrations are **not** reconstructions of the original model runs. The Chinese construction pages show **actual algorithm outputs** generated from checksum-pinned Make Me a Hanzi geometry, including unchanged/no-op cases. Nothing in these diagrams proves readability.
+
+| Track | Tested method — illustrated page | Example | What is displayed |
+| --- | --- | --- | --- |
+| Japanese / KanjiVG | [GPT · raster IoU](methods/jp-gpt-raster-iou/) | 甲 ↔ 由 | Current-source illustration of historical search inputs |
+| Japanese / KanjiVG | [GLM · translated raster IoU](methods/jp-glm-translated-iou/) | 甲 ↔ 由 | Current-source illustration of historical search inputs |
+| Japanese / KanjiVG | [Claude v1 · tolerant skeleton F-score](methods/jp-claude-skeleton-f1/) | 目 ↔ 目 | Current-source illustration of historical search inputs |
+| Japanese / KanjiVG | [Claude v2 · W1 + warp + structure](methods/jp-claude-w1-warp/) | 甲 ↔ 由 | Current-source illustration of historical search inputs |
+| Japanese / KanjiVG | [Kimi · FFT + raster IoU](methods/jp-kimi-fft-iou/) | 目 ↔ 目 | Current-source illustration of historical search inputs |
+| Japanese / KanjiVG | [Mistral · median point clouds](methods/jp-mistral-medians/) | 王 ↔ 玉 | Current-source illustration of historical search inputs |
+| Japanese / KanjiVG | [MiniMax · KanjiVG rotation graph](methods/jp-minimax-rotgraph/) | 甲 ↔ 由 | Current-source illustration of historical search inputs |
+| Japanese / KanjiVG | [Natural C₂ / unmodified self-rotation](methods/jp-natural-self/) | 目 ↔ 目 | Current KanjiVG visual-mode output |
+| Japanese / KanjiVG | [Natural distinct A↔B candidate](methods/jp-natural-pair/) | 甲 ↔ 由 | Current KanjiVG visual-mode output |
+| Japanese / KanjiVG | [Direct overlay](methods/jp-overlay/) | 甲 ↔ 由 | Current KanjiVG visual-mode output |
+| Japanese / KanjiVG | [Shared-stroke salience](methods/jp-salience/) | 甲 ↔ 由 | Current KanjiVG visual-mode output |
+| Japanese / KanjiVG | [Shared structure extraction](methods/jp-shared/) | 王 ↔ 玉 | Current KanjiVG visual-mode output |
+| Japanese / KanjiVG | [C₂ geometric blend](methods/jp-c2-blend/) | 田 ↔ 田 | Current KanjiVG visual-mode output |
+| Chinese / MMah | [Natural C₂ / self-rotation](methods/cn-natural-self/) | 田 ↔ 田 | Actual pinned-source geometric output |
+| Chinese / MMah | [Natural distinct-character search](methods/cn-natural-pair/) | 甲 ↔ 由 | Actual pinned-source geometric output |
+| Chinese / MMah | [Simple source union](methods/cn-source-union/) | 甲 ↔ 由 | Actual pinned-source geometric output |
+| Chinese / MMah | [Rotation centre optimisation](methods/cn-centre-optimisation/) | 田 ↔ 田 | Actual pinned-source geometric output |
+| Chinese / MMah | [Terminal / extremity reconciliation](methods/cn-extremity-reconciliation/) | 田 ↔ 田 | Actual pinned-source geometric output |
+| Chinese / MMah | [Deterministic sector thickness (R-SECT)](methods/cn-sector-deterministic/) | 田 ↔ 田 | Actual pinned-source geometric output |
+| Chinese / MMah | [Constrained sector thickness search](methods/cn-sector-search/) | 目 ↔ 目 | Actual pinned-source geometric output |
+| Chinese / MMah | [Corrected measured half-width](methods/cn-width-fixed/) | 田 ↔ 田 | Actual pinned-source geometric output |
+| Chinese / MMah | [R-ODD local compensation](methods/cn-r-odd/) | 田 ↔ 田 | Actual pinned-source geometric output |
+| Chinese / MMah | [C₂-even harmonic thickness field](methods/cn-harmonic/) | 目 ↔ 目 | Actual pinned-source geometric output |
+| Chinese / MMah | [Registered A/B stroke fusion](methods/cn-ab-fusion/) | 甲 ↔ 由 | Actual pinned-source geometric output |
+
+**[View the complete interactive method index](methods/)** · [Browse the 24 method pages](methods/catalog.json) · [Try the native-language Reader Gallery](evaluation/recognition/). The gallery includes representatives of all **13 Japanese and 11 Chinese method families**, clearly distinguishing reconstructed algorithm output from explanatory source-glyph illustrations. The original 48-item Japanese pilot is archived separately and unchanged.
+
 ### Japanese / KanjiVG
 
 Historical computational searches compared **seven metric/algorithm variants across six coding runs**, not seven distinct final-drawing constructors. Their different glyph subsets, fonts, normalizations and tolerances prevent numeric score comparison:
@@ -124,18 +159,18 @@ The separate **CN-S (Mainland simplified Chinese)** research track now includes 
 
 **Integrated geometric correction:** [PR #19](https://github.com/ClaudioDrews/sinogram-ambigram/pull/19) merged the measured half-width fix into `code/prc_construct.py` while preserving the exact historical v1.16 implementation in `code/prc_construct_legacy_v116.py` for archived replay. Against 32 pinned source-outline cases, corrected original-outline IoU improved in **32/32** (median **0.4743 → 0.9083**). This is a geometric reconstruction result, **not** evidence of human readability. See the [width-semantics method](methods/PRC_WIDTH_SEMANTICS.md) and [fidelity findings](findings/prc-width-contour-fidelity.md).
 
-**Scope boundary:** this remains an experimental *construction method*, not a Chinese-wide generator or a human-validated legibility result. The archived PRC construction-cohort measurements have a separate pinned-source reproduction documented above; that does **not** validate the still-draft R-ODD, harmonic-field, or A/B fusion experiments or the readability of their outputs. Native-reader studies and certified regional forms remain outstanding. Japanese and PRC-source inventories must not be mixed in rankings.
+**Scope boundary:** this remains an experimental *construction method*, not a Chinese-wide generator or a human-validated legibility result. The archived PRC construction-cohort measurements have a separate pinned-source reproduction documented above. The newly integrated R-ODD, harmonic-field and A/B fusion modules remain **experimental**, with actual source-pinned examples but **without established human readability**. Native-reader studies and certified regional forms remain outstanding. Japanese and PRC-source inventories must not be mixed in rankings.
 
 ### Research currently in draft branches (not released on `main`)
 
-The public website and the source on `main` are distinct from proposed changes in open experimental pull requests. **Do not interpret a draft PR as an integrated release.**
+The original standalone experimental PRs remain separate and unmerged for provenance. **Their tested R-ODD, harmonic, and A/B fusion operator modules and regression tests have now been integrated through the research-methods publication PR #28**; each genuine algorithm image appears in the method-specific examples and Gallery. Keeping the original PRs open does not mean these operators are omitted from the integration. None establishes human readability.
 
 | Draft work | Status and evidence |
 | --- | --- |
 | [PR #13](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13) — original thickness draft | **Not merged directly.** Its geometric fix was integrated safely by PR #19 with historical replay preserved; #13 remains an open draft for provenance. |
-| [PR #14](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14) — R-ODD | Local rotated-ink thickness-compensation experiment; not a validated ambigram generator. |
-| [PR #15](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15) — harmonic field | C₂-even smooth thickness field; geometric invariance is not evidence of readability. |
-| [PR #16](https://github.com/ClaudioDrews/sinogram-ambigram/pull/16) — A/B fusion | Experimental stroke registration and fusion; neither tested distinct-character pair was recognized in the pilot. |
+| [PR #14](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14) — R-ODD | Real integrated experimental module and [example](methods/cn-r-odd/), with original PR kept for provenance; not a validated ambigram generator. |
+| [PR #15](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15) — harmonic field | Integrated experimental module and [example](methods/cn-harmonic/). C₂ invariance is not evidence of readability. |
+| [PR #16](https://github.com/ClaudioDrews/sinogram-ambigram/pull/16) — A/B fusion | Integrated experimental module, [no-op examples](methods/cn-ab-fusion/); neither tested distinct-character pair was recognized in the pilot. |
 | [PR #17](https://github.com/ClaudioDrews/sinogram-ambigram/pull/17) — [blind VLM pilot](https://github.com/ClaudioDrews/sinogram-ambigram/tree/exp/vlm-reading-benchmark/experiments/vlm-reading-pilot-01) | Sanitized English/Chinese protocol, 52 image stimuli, 208 automated recognition responses, reproducible scoring and source-pinned image reconstruction. **Draft, not merged.** |
 | [PR #21](https://github.com/ClaudioDrews/sinogram-ambigram/pull/21) — A/B fusion threshold study | Independent frozen cohort of 32 new A/B pairs, tested at thresholds 2, 4, 8, 12 and 16. At 16, 31/32 pairs registered at least one stroke, but **0/32 final raster images changed**. The no-op persists downstream of matching. [Diagnostic](findings/prc-ab-fusion-null-diagnosis.md) and [draft results](https://github.com/ClaudioDrews/sinogram-ambigram/blob/exp/ab-fusion-threshold-sensitivity/experiments/ab-fusion-threshold-v1/RESULTS.md). **Draft, not merged.** |
 
