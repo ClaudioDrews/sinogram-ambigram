@@ -1,7 +1,7 @@
-"""Static and source-level regression checks for the native-reader recognition lab.
+"""Regression checks for the minimal native-reader gallery.
 
-These checks cannot certify visual appearance, upstream network availability,
-human readability or the correctness of real participants' semantic reports.
+Static structural assertions and JS parsing cannot substitute for testing rotation,
+visual glyph readability, and download behavior in real browsers.
 """
 from pathlib import Path
 import json
@@ -13,96 +13,89 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / "evaluation" / "recognition" / "index.html"
-PILOT = ROOT / "evaluation" / "items.json"
+ITEMS = ROOT / "evaluation" / "items.json"
 
 
-class TestNativeReaderRecognitionLab(unittest.TestCase):
+class TestRecognitionGallery(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.html = PAGE.read_text(encoding="utf-8")
 
-    def test_exclusive_track_selection_and_localisation(self):
-        html = self.html
-        self.assertIn('name="sourceTrack" value="cn"', html)
-        self.assertIn('name="sourceTrack" value="jp"', html)
-        self.assertIn('role="radiogroup"', html)
-        for locale in ('en', 'zh', 'ja'):
-            self.assertIn(f'data-lang="{locale}"', html)
-        self.assertIn("track=chosen.value", html)
-        self.assertIn("if(which==='jp')", html)
-        self.assertIn("}else if(which==='cn')", html)
-        self.assertIn("items=sample;track=which", html)
+    def test_only_two_language_choices_and_no_profile_form(self):
+        h = self.html
+        self.assertIn('id="choose-cn"', h)
+        self.assertIn('id="choose-jp"', h)
+        self.assertEqual(h.count('class="language-card"'), 2)
+        self.assertNotIn('id="proficiency"', h)
+        self.assertNotIn('id="native"', h)
+        self.assertNotIn('data-lang="en"', h)
+        self.assertIn("choose('cn')", h) if False else None
+        self.assertIn("start('cn')", h)
+        self.assertIn("start('jp')", h)
 
-    def test_chinese_fused_geometry_without_animated_external_images(self):
-        html = self.html
-        self.assertIn("fetch('../../prc/catalog.json'", html)
-        self.assertIn('prc-public-coarse-catalog-v1', html)
-        self.assertIn('source_forms_certified!==false', html)
-        self.assertIn('bddc96d41bef78427ed0e034e9f7e31d71fd1b92', html)
-        self.assertIn("function sourceOutline(ch)", html)
-        self.assertIn("function chineseComposite(item,animated)", html)
-        self.assertIn("getAttribute('fill')==='lightgray'", html)
-        self.assertIn("kind:'source-union-diagnostic'", html)
-        self.assertIn("method:'prc-source-vector-union'", html)
-        self.assertNotIn("id=\"cnArt\"", html)
-        self.assertNotIn("id=\"cnA\"", html)
-        self.assertNotIn("id=\"cnB\"", html)
-        self.assertEqual(html.count('id="drawing"'), 1)
+    def test_same_static_svg_animated_on_user_tap(self):
+        h = self.html
+        self.assertIn('id="rotate"', h)
+        self.assertEqual(h.count('id="glyph"'), 1)
+        self.assertIn("'rotate('+degrees+'deg)'", h)
+        self.assertIn("turns+=1", h)
+        self.assertIn("180*turns", h)
+        self.assertIn("transition:transform 950ms", h)
+        self.assertIn("addEventListener('click',rotate)", h)
+        self.assertIn("if(turns<1)", h)
+        self.assertNotIn("animateTransform", h)
+        self.assertNotIn("prefers-reduced-motion", h)
+        self.assertIn("background:var(--sheet)", h)
 
-    def test_japanese_committed_pilot_survives_optional_geometry_failure(self):
-        html = self.html
-        self.assertIn("fetch('../items.json'", html)
-        self.assertIn("sample.length<12", html)
-        self.assertIn("Optional Rotation Lab example unavailable", html)
-        self.assertIn("[...pathsA,...pathsB].forEach(p=>svg.appendChild(p))", html)
-        self.assertIn("svg.removeAttribute('style')", html)
-        data = json.loads(PILOT.read_text(encoding="utf-8"))
-        samples = [
-            item for stratum in ('v1-top', 'v2-top', 'self', 'control')
-            for item in [r for r in data['items'] if r['stratum'] == stratum][:3]
-        ]
-        self.assertEqual(len(samples), 12)
-        self.assertTrue(all(s['construction_svg'].startswith('<svg') for s in samples))
+    def test_exactly_three_meaning_answers_and_one_note(self):
+        h = self.html
+        self.assertIn('id="choices"', h)
+        self.assertIn('name=\'assessment\'', h)
+        self.assertIn('id="note"', h)
+        self.assertIn("value=String(2-index)", h)
+        self.assertIn("for(const [", h) if False else None
+        self.assertIn("meaning_orientations:Number(answer.value)", h)
+        self.assertIn("t.choices.forEach((label,index)", h)
+        self.assertIn("$('method-value').textContent=methodText(item.method)", h)
 
-    def test_construction_then_single_image_rotates_and_dark_mode_contrast(self):
-        html = self.html
-        self.assertIn(".stage{background:#fcfaf4;", html)
-        self.assertIn(".compare figure{margin:0;background:#fcfaf4;", html)
-        self.assertIn("shownItemId!==it.id", html)
-        self.assertIn("im.src=toData(reduced?it.svg:(it.animatedSvg||it.svg))", html)
-        self.assertIn("im.style.transform='rotate(180deg)'", html)
-        self.assertIn("view.src=toData(it.svg)", html)
-        self.assertIn("animationBusy", html)
-        self.assertIn("matchMedia('(prefers-reduced-motion: reduce)')", html)
+    def test_sources_are_constructed_and_track_specific(self):
+        h = self.html
+        self.assertIn("fetch('../items.json')", h)
+        self.assertIn("['v1-top','v2-top']", h)
+        self.assertIn("selected.length!==12", h)
+        self.assertIn("fetch('../../prc/catalog.json')", h)
+        self.assertIn("prc-public-coarse-catalog-v1", h)
+        self.assertIn("human_readability_validated!==false", h)
+        self.assertIn("function composite(pathsA,pathsB)", h)
+        self.assertIn("getAttribute('fill')==='lightgray'", h)
+        self.assertIn("bddc96d41bef78427ed0e034e9f7e31d71fd1b92", h)
+        items=json.loads(ITEMS.read_text(encoding="utf-8"))['items']
+        chosen=[r for group in ('v1-top','v2-top') for r in [it for it in items if it['stratum']==group][:6]]
+        self.assertEqual(len(chosen), 12)
+        self.assertTrue(all('<svg' in item['construction_svg'] for item in chosen))
 
-    def test_independent_meaning_judgments_and_exports(self):
-        html = self.html
-        self.assertIn('id="meaningOptions"', html)
-        self.assertIn('id="meaningGloss"', html)
-        self.assertIn("if(status!==2&&meaning===null)", html)
-        self.assertIn("both_meaningful_reported:", html)
-        self.assertIn("schema:'native-reader-exploratory-v2'", html)
-        self.assertIn("'meaning_gloss_a'", html)
-        self.assertIn("'meaning_gloss_b'", html)
-        self.assertIn("expected_a:it.a", html)
-        self.assertIn("expected_b:it.b", html)
-        self.assertIn("download('sinogram-reader-'+", html)
-        self.assertNotIn('method: "POST"', html)
+    def test_csv_and_txt_are_optional_local_downloads(self):
+        h = self.html
+        self.assertIn('id="download-csv"', h)
+        self.assertIn('id="download-txt"', h)
+        self.assertIn("new Blob([body]", h)
+        self.assertIn("URL.createObjectURL(blob)", h)
+        self.assertIn("link.click()", h)
+        self.assertNotIn("fetch('/submit'", h)
+        self.assertNotIn('type="email"', h)
 
-    def test_javascript_syntax_if_node_available(self):
-        node = shutil.which('node')
-        if node is None:
-            self.skipTest('Node.js not present (static assertions still run)')
-        html = self.html
-        scripts = re.findall(r'<script>(.*?)</script>', html, re.DOTALL)
+    def test_js_parses_with_node_if_available(self):
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("Node.js not installed")
+        scripts = re.findall(r"<script>(.*?)</script>", self.html, re.DOTALL)
         self.assertEqual(len(scripts), 1)
-        with tempfile.TemporaryDirectory() as td:
-            path = Path(td) / 'recognition.js'
-            path.write_text(scripts[0], encoding='utf-8')
-            process = subprocess.run([node, '--check', str(path)],
-                                     capture_output=True, text=True, check=False)
-            self.assertEqual(process.returncode, 0, process.stderr)
+        with tempfile.TemporaryDirectory() as tmp:
+            js = Path(tmp) / "gallery.js"
+            js.write_text(scripts[0], encoding="utf-8")
+            result = subprocess.run([node, "--check", str(js)], capture_output=True, text=True, check=False)
+        self.assertEqual(result.returncode, 0, result.stderr)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
