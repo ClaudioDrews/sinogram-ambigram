@@ -61,7 +61,7 @@ jobs:
                   text=True,timeout=25)
               page=p.stdout
               if 'id="rotating-art"' not in page:
-                  raise RuntimeError('Method drawing not rendered: '+m['slug']+'\n'+p.stderr[-1500:]+'\n'+page[-1000:])
+                  raise RuntimeError('Method drawing not rendered: '+m['slug']+'\n'+p.stderr[-1500:]+'\n'+page[max(0,page.find('id="visual"')-160):page.find('id="visual"')+1400])
               if 'id="rotation"' not in page or 'id="play"' not in page:
                   raise RuntimeError('Method interactions absent: '+m['slug'])
               count+=1
