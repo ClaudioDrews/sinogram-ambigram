@@ -4,7 +4,6 @@ Tests cover static provenance, track exclusivity logic, export-schema fields
 and manifest guards. A full browser perceptual evaluation is still required.
 """
 from pathlib import Path
-import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,7 +37,7 @@ class TestNativeReaderRecognitionLab(unittest.TestCase):
         self.assertIn("native-reader-exploratory-v1", self.html)
         self.assertIn("source-overlay-diagnostic", self.html)
         self.assertIn("constructed-pilot", self.html)
-        self.assertNotRegex(self.html, r"fetch\\s*\\([^)]*method\\s*:\\s*['\\\"]POST")
+        self.assertNotIn('method: "POST"', self.html)
 
     def test_blind_then_reveal_and_manual_exports(self):
         self.assertIn("expected_a:it.a", self.html)
