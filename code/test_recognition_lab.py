@@ -67,13 +67,10 @@ class TestRecognitionGallery(unittest.TestCase):
     def test_curated_sources_and_methods_are_provenance_distinct(self):
         h = self.html
         self.assertIn("fetch('stimuli.json')", h)
-        self.assertIn("fetch('../../prc/catalog.json')", h)
-        self.assertIn("prc-public-coarse-catalog-v1", h)
-        self.assertIn("human_readability_validated!==false", h)
-        self.assertIn("function composite(pathsA,pathsB)", h)
-        self.assertIn("function single(paths)", h)
-        self.assertIn("getAttribute('fill')==='lightgray'", h)
-        self.assertIn("bddc96d41bef78427ed0e034e9f7e31d71fd1b92", h)
+        self.assertIn("fetch(selection.cn_generated_manifest||'generated/manifest.json')", h)
+        self.assertIn("sinogram-prc-method-examples-v1", h)
+        self.assertNotIn("fetch('../../prc/catalog.json')", h)
+        self.assertNotIn("function finishedPaths", h)
         self.assertIn("jpPoints(d)", h)
         self.assertIn("jpProximity(", h)
         self.assertIn("if(row.method==='jp-shared'&&ratio<.35)return", h)
@@ -81,7 +78,8 @@ class TestRecognitionGallery(unittest.TestCase):
         curated = json.loads((PAGE.parent / 'stimuli.json').read_text(encoding="utf-8"))
         self.assertEqual(curated['schema'], 'sinogram-reader-curated-methods-v2')
         self.assertEqual(len(curated['jp']), 20)
-        self.assertEqual(len(curated['cn']), 9)
+        self.assertEqual(len(curated['cn']), 0)
+        self.assertEqual(len(curated['cn_legacy_browser_examples']), 9)
         self.assertEqual(
             {row['method'] for row in curated['jp']},
             {'jp-natural-self', 'jp-natural-pair', 'jp-overlay',
@@ -89,25 +87,23 @@ class TestRecognitionGallery(unittest.TestCase):
              'jp-gpt-raster-iou', 'jp-glm-translated-iou', 'jp-claude-skeleton-f1',
              'jp-claude-w1-warp', 'jp-kimi-fft-iou', 'jp-mistral-medians', 'jp-minimax-rotgraph'}
         )
-        self.assertEqual(
-            {row['method'] for row in curated['cn']},
-            {'cn-natural-self', 'cn-natural-pair', 'cn-source-union'}
-        )
-        # Historical audit records remain in the manifest for provenance.
-        self.assertEqual(len(curated['cn_unillustrated']), 7)
-        self.assertIn("fetch('generated/manifest.json')", h)
-        self.assertIn("item.url||svgData(item.svg)", h)
-        self.assertIn("selected_center", h)
         self.assertTrue(all('KanjiVG' in row['source'] for row in curated['jp']))
-        self.assertTrue(all('Make Me a Hanzi' in row['source'] for row in curated['cn']))
         self.assertTrue(all(curated['jp_glyphs'].get(row['a']) for row in curated['jp']))
         self.assertTrue(all(curated['jp_glyphs'].get(row['b']) for row in curated['jp']))
-        self.assertTrue(all(row['type'] in ('natural-self','natural-pair','constructed','search-illustration')
-                            for row in curated['jp'] + curated['cn']))
-        self.assertFalse(any(row['method'] in {m['id'] for m in curated['cn_unillustrated']}
-                             for row in curated['cn']))
 
-        # Keep the original, independently defined 48-item human-evaluation pilot untouched.
+        generated = json.loads((PAGE.parent/'generated/manifest.json').read_text('utf-8'))
+        self.assertEqual(generated['schema'], 'sinogram-prc-method-examples-v1')
+        self.assertEqual(len(generated['items']), 22)
+        self.assertEqual(len({x['method'] for x in generated['items']}), 11)
+        self.assertTrue(all('Make Me a Hanzi' in x['source'] for x in generated['items']))
+        self.assertTrue(all((PAGE.parent/'generated'/x['file']).exists()
+                            for x in generated['items']))
+        self.assertTrue(any(x['metrics'].get('identical_to_union')
+                            for x in generated['items'] if x['method']=='cn-ab-fusion'))
+        self.assertIn("item.url||svgData(item.svg)", h)
+        self.assertIn("selected_center", h)
+
+        # Original human-evaluation pilot is a different and immutable protocol.
         historic = json.loads(ITEMS.read_text(encoding='utf-8'))['items']
         self.assertEqual(len(historic), 48)
         self.assertTrue(all('<svg' in row['construction_svg'] for row in historic))
