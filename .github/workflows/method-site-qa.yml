@@ -2,7 +2,7 @@ name: Research method pages and reader gallery browser QA
 
 on:
   push:
-    branches: [docs/research-tracks-gallery-20261108]
+    branches: [main, docs/research-tracks-gallery-20261108]
     paths:
       - "methods/**"
       - "evaluation/recognition/**"
