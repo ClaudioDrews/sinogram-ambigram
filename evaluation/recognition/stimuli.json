@@ -1,8 +1,8 @@
 {
   "schema": "sinogram-reader-curated-methods-v2",
   "version": "2026-11-08",
-  "replaces": "The simplified gallery's 12 stroke-salience pilot stratum picks; the 48-item original evaluation/items.json is untouched.",
-  "evidence": "These are unvalidated geometric candidates or exploratory constructions; no native reader legibility claims.",
+  "replaces": "The simplified gallery's 12 stroke-salience pilot stratum picks; the 48-item original evaluation/items.json is untouched. Historic search metrics now have explicitly labelled educational source-glyph illustrations; no false historic output attribution.",
+  "evidence": "These are unvalidated geometric candidates or exploratory constructions; no native reader legibility claims. Dedicated methods pages provide actual output provenance and distinguish historical metric illustrations from algorithmic construction outputs.",
   "jp_source_pin": "KanjiVG/kanjivg@70a0b7ae0c18ceb5cb358274b029cce0234a43bc",
   "jp_glyphs": {
     "甲": [
@@ -191,6 +191,76 @@
       "status": "exploratory-construction",
       "source": "KanjiVG · pinned generator SVG path subset · CC BY-SA 3.0",
       "tau": 1.75
+    },
+    {
+      "id": "jp-gpt-raster-iou-30002-30001",
+      "method": "jp-gpt-raster-iou",
+      "a": "甲",
+      "b": "由",
+      "type": "search-illustration",
+      "status": "current-kanjivg-input-illustration-not-historical-run-output",
+      "source": "Current pinned KanjiVG strokes as an educational input example; original historical data/font not reproduced.",
+      "tau": 1.75
+    },
+    {
+      "id": "jp-glm-translated-iou-30002-30001",
+      "method": "jp-glm-translated-iou",
+      "a": "甲",
+      "b": "由",
+      "type": "search-illustration",
+      "status": "current-kanjivg-input-illustration-not-historical-run-output",
+      "source": "Current pinned KanjiVG strokes as an educational input example; original historical data/font not reproduced.",
+      "tau": 1.75
+    },
+    {
+      "id": "jp-claude-skeleton-f1-30446-30446",
+      "method": "jp-claude-skeleton-f1",
+      "a": "目",
+      "b": "目",
+      "type": "search-illustration",
+      "status": "current-kanjivg-input-illustration-not-historical-run-output",
+      "source": "Current pinned KanjiVG strokes as an educational input example; original historical data/font not reproduced.",
+      "tau": 1.75
+    },
+    {
+      "id": "jp-claude-w1-warp-30002-30001",
+      "method": "jp-claude-w1-warp",
+      "a": "甲",
+      "b": "由",
+      "type": "search-illustration",
+      "status": "current-kanjivg-input-illustration-not-historical-run-output",
+      "source": "Current pinned KanjiVG strokes as an educational input example; original historical data/font not reproduced.",
+      "tau": 1.75
+    },
+    {
+      "id": "jp-kimi-fft-iou-30446-30446",
+      "method": "jp-kimi-fft-iou",
+      "a": "目",
+      "b": "目",
+      "type": "search-illustration",
+      "status": "current-kanjivg-input-illustration-not-historical-run-output",
+      "source": "Current pinned KanjiVG strokes as an educational input example; original historical data/font not reproduced.",
+      "tau": 1.75
+    },
+    {
+      "id": "jp-mistral-medians-29579-29577",
+      "method": "jp-mistral-medians",
+      "a": "王",
+      "b": "玉",
+      "type": "search-illustration",
+      "status": "current-kanjivg-input-illustration-not-historical-run-output",
+      "source": "Current pinned KanjiVG strokes as an educational input example; original historical data/font not reproduced.",
+      "tau": 1.75
+    },
+    {
+      "id": "jp-minimax-rotgraph-30002-30001",
+      "method": "jp-minimax-rotgraph",
+      "a": "甲",
+      "b": "由",
+      "type": "search-illustration",
+      "status": "current-kanjivg-input-illustration-not-historical-run-output",
+      "source": "Current pinned KanjiVG strokes as an educational input example; original historical data/font not reproduced.",
+      "tau": 1.75
     }
   ],
   "cn_source_pin": "skishore/makemeahanzi@bddc96d41bef78427ed0e034e9f7e31d71fd1b92",
@@ -313,5 +383,6 @@
       "url": "https://github.com/ClaudioDrews/sinogram-ambigram/pull/16",
       "reason": "Draft branch; observed output equals corrected union in tested pairs"
     }
-  ]
+  ],
+  "cn_generated_manifest": "generated/manifest.json"
 }
