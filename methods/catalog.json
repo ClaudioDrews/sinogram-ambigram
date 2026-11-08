@@ -1,0 +1,607 @@
+{
+  "schema": "sinogram-methods-v1",
+  "revision": "2026-11-08",
+  "scope": "Japanese and Chinese are equally important, experimental research tracks.",
+  "methods": [
+    {
+      "slug": "jp-gpt-raster-iou",
+      "track": "jp",
+      "kind": "search",
+      "method": "jp-gpt-raster-iou",
+      "title": {
+        "en": "GPT · raster IoU",
+        "zh": "GPT · 栅格交并比",
+        "ja": "GPT · ラスターIoU"
+      },
+      "summary": "Original raster masks were compared after a half-turn, with fixed and ±3px-aligned variants; the historic sample used font rasters, not today's KanjiVG vectors.",
+      "formula": "IoU = |mask(A) ∩ R(mask(B))| / |mask(A) ∪ R(mask(B))|",
+      "example": {
+        "a": "甲",
+        "b": "由"
+      },
+      "status": "Historical search/comparison",
+      "detail": "The interactive source pair is a current KanjiVG illustration of the method inputs, NOT a replay of the historic run.",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "methods/metrics-comparison.md"
+        }
+      ]
+    },
+    {
+      "slug": "jp-glm-translated-iou",
+      "track": "jp",
+      "kind": "search",
+      "method": "jp-glm-translated-iou",
+      "title": {
+        "en": "GLM · translated raster IoU",
+        "zh": "GLM · 平移优化IoU",
+        "ja": "GLM · 平行移動IoU"
+      },
+      "summary": "Maximises raster overlap over translation (historically ±40px), which can artificially improve a geometric candidate's rank.",
+      "formula": "max_(dx,dy) IoU(A, T_(dx,dy)(R(B)))",
+      "example": {
+        "a": "甲",
+        "b": "由"
+      },
+      "status": "Historical search/comparison",
+      "detail": "Translating a glyph is an alignment hypothesis, not a proven reading.",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "methods/metrics-comparison.md"
+        }
+      ]
+    },
+    {
+      "slug": "jp-claude-skeleton-f1",
+      "track": "jp",
+      "kind": "search",
+      "method": "jp-claude-skeleton-f1",
+      "title": {
+        "en": "Claude v1 · tolerant skeleton F-score",
+        "zh": "Claude v1 · 骨架F值",
+        "ja": "Claude v1 · 骨格F値"
+      },
+      "summary": "Compares strokes within a skeleton-distance tolerance, with chance adjustment. Optical offsets and stroke topology are important biases.",
+      "formula": "F₁ = 2PR/(P+R), for tolerant skeleton matches",
+      "example": {
+        "a": "目",
+        "b": "目"
+      },
+      "status": "Historical search/comparison",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "methods/metrics-comparison.md"
+        }
+      ]
+    },
+    {
+      "slug": "jp-claude-w1-warp",
+      "track": "jp",
+      "kind": "search",
+      "method": "jp-claude-w1-warp",
+      "title": {
+        "en": "Claude v2 · W1 + warp + structure",
+        "zh": "Claude v2 · W1筛选及形变",
+        "ja": "Claude v2 · W1・ワープ・構造"
+      },
+      "summary": "Uses Wasserstein projection-profile filtering before quantile/structural warp scoring. It generates candidate rankings, not a construction.",
+      "formula": "W₁(profile_A,profile_R(B)) → warp → structural score",
+      "example": {
+        "a": "甲",
+        "b": "由"
+      },
+      "status": "Historical search/comparison",
+      "detail": "The diagnostic animation illustrates input geometry; it does not reproduce historical warp outputs.",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "methods/metrics-comparison.md"
+        }
+      ]
+    },
+    {
+      "slug": "jp-kimi-fft-iou",
+      "track": "jp",
+      "kind": "search",
+      "method": "jp-kimi-fft-iou",
+      "title": {
+        "en": "Kimi · FFT + raster IoU",
+        "zh": "Kimi · FFT对齐IoU",
+        "ja": "Kimi · FFT整列IoU"
+      },
+      "summary": "Uses FFT-based image alignment and overlap to screen rotation candidates, showing strong dependence on font choice.",
+      "formula": "FFT cross-correlation → candidate shift → IoU",
+      "example": {
+        "a": "目",
+        "b": "目"
+      },
+      "status": "Historical search/comparison",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "findings/results-summary.md"
+        }
+      ]
+    },
+    {
+      "slug": "jp-mistral-medians",
+      "track": "jp",
+      "kind": "search",
+      "method": "jp-mistral-medians",
+      "title": {
+        "en": "Mistral · median point clouds",
+        "zh": "Mistral · 笔画中线点云",
+        "ja": "Mistral · ストローク中線点群"
+      },
+      "summary": "Measures geometric distances and greedy stroke matches between median-point-cloud shapes; historical glyph source differs from KanjiVG.",
+      "formula": "d(positions of stroke-median point clouds)",
+      "example": {
+        "a": "王",
+        "b": "玉"
+      },
+      "status": "Historical search/comparison",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "methods/metrics-comparison.md"
+        }
+      ]
+    },
+    {
+      "slug": "jp-minimax-rotgraph",
+      "track": "jp",
+      "kind": "search",
+      "method": "jp-minimax-rotgraph",
+      "title": {
+        "en": "MiniMax · KanjiVG rotation graph",
+        "zh": "MiniMax · KanjiVG旋转图谱",
+        "ja": "MiniMax · KanjiVG回転グラフ"
+      },
+      "summary": "Implemented full KanjiVG screen using Hausdorff, Chamfer, RMS and dilated IoU over half-turn stroke paths, with known density biases.",
+      "formula": "Hausdorff, Chamfer, RMS, IoU_dilated",
+      "example": {
+        "a": "甲",
+        "b": "由"
+      },
+      "status": "Implemented geometric search",
+      "detail": "3,837,835 unordered pairs screened; 5,180 refined rows retained. Ranking is not reading.",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "methods/rotgraph-method.md"
+        }
+      ]
+    },
+    {
+      "slug": "jp-natural-self",
+      "track": "jp",
+      "kind": "visual",
+      "method": "jp-natural-self",
+      "title": {
+        "en": "Natural C₂ / unmodified self-rotation",
+        "zh": "自然C₂自旋转",
+        "ja": "自然C₂自己回転"
+      },
+      "summary": "An unmodified source kanji is rotated through 180°. Matching a shape with itself need not imply two accepted readings.",
+      "formula": "R(G_A) ≈ G_A",
+      "example": {
+        "a": "目",
+        "b": "目"
+      },
+      "status": "Source-form geometric candidate",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "demo/c2/README.md"
+        }
+      ]
+    },
+    {
+      "slug": "jp-natural-pair",
+      "track": "jp",
+      "kind": "visual",
+      "method": "jp-natural-pair",
+      "title": {
+        "en": "Natural distinct A↔B candidate",
+        "zh": "自然异字A↔B候选",
+        "ja": "自然な異字A↔B候補"
+      },
+      "summary": "Unmodified source glyph A is turned and compared with B. It tests natural candidates without constructing a new stroke pattern.",
+      "formula": "R(G_A) ≈ G_B",
+      "example": {
+        "a": "甲",
+        "b": "由"
+      },
+      "status": "Source-form geometric candidate",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "findings/pair-evidence-matrix.md"
+        }
+      ]
+    },
+    {
+      "slug": "jp-overlay",
+      "track": "jp",
+      "kind": "visual",
+      "method": "jp-overlay",
+      "title": {
+        "en": "Direct overlay",
+        "zh": "直接叠加",
+        "ja": "直接重ね合わせ"
+      },
+      "summary": "Combine A and rotated B vector paths with no geometric fusion. The resulting drawing often shows doubled or confusing strokes.",
+      "formula": "G = A ∪ R(B)",
+      "example": {
+        "a": "甲",
+        "b": "由"
+      },
+      "status": "Exploratory constructed drawing",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "generator/README.md"
+        }
+      ]
+    },
+    {
+      "slug": "jp-salience",
+      "track": "jp",
+      "kind": "visual",
+      "method": "jp-salience",
+      "title": {
+        "en": "Shared-stroke salience",
+        "zh": "共享笔画显著性",
+        "ja": "共有ストロークの顕著性"
+      },
+      "summary": "Sample path proximity, emphasize shared stroke segments and de-emphasize exclusive ones. v1-top/v2-top are candidate strata, not different constructors.",
+      "formula": "width = thick if proximity ≥ τ, else thin",
+      "example": {
+        "a": "甲",
+        "b": "由"
+      },
+      "status": "Exploratory constructed drawing",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "generator/README.md"
+        }
+      ]
+    },
+    {
+      "slug": "jp-shared",
+      "track": "jp",
+      "kind": "visual",
+      "method": "jp-shared",
+      "title": {
+        "en": "Shared structure extraction",
+        "zh": "共享结构提取",
+        "ja": "共通構造の抽出"
+      },
+      "summary": "Retain only paths near the other rotated source path. This is an informative diagnostic that may erase identifying strokes.",
+      "formula": "keep if shared_fraction ≥ 0.35",
+      "example": {
+        "a": "王",
+        "b": "玉"
+      },
+      "status": "Diagnostic, not finished ambigram",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "generator/README.md"
+        }
+      ]
+    },
+    {
+      "slug": "jp-c2-blend",
+      "track": "jp",
+      "kind": "visual",
+      "method": "jp-c2-blend",
+      "title": {
+        "en": "C₂ geometric blend",
+        "zh": "C₂几何融合",
+        "ja": "C₂幾何合成"
+      },
+      "summary": "Superpose a source glyph with its own half-turn to inspect invariant and asymmetric ink. Unlike natural C₂, this adds geometry.",
+      "formula": "G = A ∪ R(A)",
+      "example": {
+        "a": "田",
+        "b": "田"
+      },
+      "status": "Exploratory constructed drawing",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "demo/c2/README.md"
+        }
+      ]
+    },
+    {
+      "slug": "cn-natural-self",
+      "track": "cn",
+      "kind": "search",
+      "method": "cn-natural-self",
+      "title": {
+        "en": "Natural C₂ / self-rotation",
+        "zh": "自然C₂自旋转",
+        "ja": "自然C₂自己回転"
+      },
+      "summary": "Screen unmodified PRC-derived source forms against 180° self-rotation, separately from Japanese geometry.",
+      "formula": "IoU(G,R(G))",
+      "example": {
+        "a": "田",
+        "b": "田"
+      },
+      "status": "PRC-source geometric candidate",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "methods/PRC_COARSE_SEARCH.md"
+        }
+      ]
+    },
+    {
+      "slug": "cn-natural-pair",
+      "track": "cn",
+      "kind": "search",
+      "method": "cn-natural-pair",
+      "title": {
+        "en": "Natural distinct-character search",
+        "zh": "自然异字配对搜索",
+        "ja": "自然な異字ペア探索"
+      },
+      "summary": "Screen 6,763 GB2312 characters for geometrically close distinct partners under a half-turn.",
+      "formula": "IoU(G_A,R(G_B))",
+      "example": {
+        "a": "甲",
+        "b": "由"
+      },
+      "status": "PRC-source geometric candidate",
+      "detail": "106,347 shortlisted pairs in the pinned coarse screening; not legibility.",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "methods/PRC_COARSE_SEARCH.md"
+        }
+      ]
+    },
+    {
+      "slug": "cn-source-union",
+      "track": "cn",
+      "kind": "construction",
+      "method": "cn-source-union",
+      "title": {
+        "en": "Simple source union",
+        "zh": "原字形简单合并",
+        "ja": "元字形の単純合成"
+      },
+      "summary": "Draw A upright together with B rotated 180°. This is a baseline, not refined glyph fusion.",
+      "formula": "G = G_A ∪ R(G_B)",
+      "example": {
+        "a": "甲",
+        "b": "由"
+      },
+      "status": "Actual PRC operator output",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "prc/README.md"
+        }
+      ]
+    },
+    {
+      "slug": "cn-centre-optimisation",
+      "track": "cn",
+      "kind": "construction",
+      "method": "cn-centre-optimisation",
+      "title": {
+        "en": "Rotation centre optimisation",
+        "zh": "旋转中心优化",
+        "ja": "回転中心最適化"
+      },
+      "summary": "Optimize the 180° rotation pivot near the stroke centroid. The chosen centre may change even if no ink pixels do.",
+      "formula": "c* = argmax_c |G ∩ R_c(G)|/|G|",
+      "example": {
+        "a": "田",
+        "b": "田"
+      },
+      "status": "Actual PRC centre-selection output",
+      "detail": "The gallery must rotate about the selected center, not assume box-center.",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "theory/prc-construction-method.md"
+        }
+      ]
+    },
+    {
+      "slug": "cn-extremity-reconciliation",
+      "track": "cn",
+      "kind": "construction",
+      "method": "cn-extremity-reconciliation",
+      "title": {
+        "en": "Terminal / extremity reconciliation",
+        "zh": "笔画端点协调",
+        "ja": "終端・端点の調停"
+      },
+      "summary": "Match half-turn-related terminal clusters, equalize local widths and split strokes when a rotated endpoint meets the body.",
+      "formula": "R_c(T_i) ≈ T_j; equalize widths",
+      "example": {
+        "a": "田",
+        "b": "田"
+      },
+      "status": "Actual experimental operator output",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "theory/prc-construction-method.md"
+        }
+      ]
+    },
+    {
+      "slug": "cn-sector-deterministic",
+      "track": "cn",
+      "kind": "construction",
+      "method": "cn-sector-deterministic",
+      "title": {
+        "en": "Deterministic sector thickness (R-SECT)",
+        "zh": "扇区线宽确定性规则",
+        "ja": "領域別線幅の決定規則"
+      },
+      "summary": "Compare ink mass in opposing sectors of a 3×3 partition and thicken the lighter sector up to a cap.",
+      "formula": "m_sector = min(cap, ink_opposite/ink_local)",
+      "example": {
+        "a": "田",
+        "b": "田"
+      },
+      "status": "Actual experimental operator output",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "theory/prc-construction-method.md"
+        }
+      ]
+    },
+    {
+      "slug": "cn-sector-search",
+      "track": "cn",
+      "kind": "construction",
+      "method": "cn-sector-search",
+      "title": {
+        "en": "Constrained sector thickness search",
+        "zh": "扇区线宽约束搜索",
+        "ja": "領域別線幅の制約探索"
+      },
+      "summary": "Search admissible sector multipliers under retention and growth constraints; a feasible geometric optimum is not necessarily readable.",
+      "formula": "max sym(G_m) s.t. retention≥0.90, growth≤1.30",
+      "example": {
+        "a": "目",
+        "b": "目"
+      },
+      "status": "Actual experimental operator output",
+      "detail": "Gallery example uses one explicit coordinate-descent round.",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "theory/prc-construction-method.md"
+        }
+      ]
+    },
+    {
+      "slug": "cn-width-fixed",
+      "track": "cn",
+      "kind": "construction",
+      "method": "cn-width-fixed",
+      "title": {
+        "en": "Corrected measured half-width",
+        "zh": "实测半宽几何修正",
+        "ja": "計測された半幅の修正"
+      },
+      "summary": "Reconstruct PRC ink with measured median-to-outline half-width, fixing historical thickness semantics.",
+      "formula": "stroke_outline = offset(median, measured half-width)",
+      "example": {
+        "a": "田",
+        "b": "田"
+      },
+      "status": "Actual corrected raster baseline",
+      "detail": "On 32 source-contour cases, IoU improved in 32/32; this is a geometry result.",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "methods/PRC_WIDTH_SEMANTICS.md"
+        }
+      ]
+    },
+    {
+      "slug": "cn-r-odd",
+      "track": "cn",
+      "kind": "construction",
+      "method": "cn-r-odd",
+      "title": {
+        "en": "R-ODD local compensation",
+        "zh": "R-ODD局部补偿",
+        "ja": "R-ODD局所補償"
+      },
+      "summary": "Adjust half-width with a distance-to-rotated-ink field and bounded feasible bisection; the algorithm is not literal odd-part subtraction.",
+      "formula": "m(p)=min(cap,1+λ max(0,1-d/r)²)",
+      "example": {
+        "a": "田",
+        "b": "田"
+      },
+      "status": "Actual experimental operator output",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "code/prc_r_odd.py"
+        }
+      ]
+    },
+    {
+      "slug": "cn-harmonic",
+      "track": "cn",
+      "kind": "construction",
+      "method": "cn-harmonic",
+      "title": {
+        "en": "C₂-even harmonic thickness field",
+        "zh": "C₂偶谐波线宽场",
+        "ja": "C₂偶調和線幅場"
+      },
+      "summary": "Optimize a smooth rotation-even log-thickness field built from five cosine products under growth and retention bounds.",
+      "formula": "log m(p)=Σ aᵢ cos(πkₓqₓ) cos(πkᵧqᵧ)",
+      "example": {
+        "a": "目",
+        "b": "目"
+      },
+      "status": "Actual experimental operator output",
+      "detail": "",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "code/prc_harmonic.py"
+        }
+      ]
+    },
+    {
+      "slug": "cn-ab-fusion",
+      "track": "cn",
+      "kind": "construction",
+      "method": "cn-ab-fusion",
+      "title": {
+        "en": "Registered A/B stroke fusion",
+        "zh": "A/B笔画配准融合",
+        "ja": "A/Bストローク融合"
+      },
+      "summary": "Greedy one-to-one spine registration and blend, preserving unmatched strokes. Tested cases remained pixel-identical to union baseline.",
+      "formula": "RMS(spine_A,R(spine_B))≤τ; maximize F1_A×F1_B",
+      "example": {
+        "a": "甲",
+        "b": "由"
+      },
+      "status": "Actual experimental operator output; measured no-op",
+      "detail": "Two displayed pair examples are identical to simple union. No human dual-reading success was established.",
+      "references": [
+        {
+          "title": "Method evidence",
+          "path": "findings/prc-ab-fusion-null-diagnosis.md"
+        }
+      ]
+    }
+  ]
+}
