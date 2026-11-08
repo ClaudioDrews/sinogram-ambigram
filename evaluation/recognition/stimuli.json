@@ -1,8 +1,8 @@
 {
   "schema": "sinogram-reader-curated-methods-v2",
-  "version": "2026-11-08",
+  "version": "2026-11-08-method-coverage",
   "replaces": "The simplified gallery's 12 stroke-salience pilot stratum picks; the 48-item original evaluation/items.json is untouched. Historic search metrics now have explicitly labelled educational source-glyph illustrations; no false historic output attribution.",
-  "evidence": "These are unvalidated geometric candidates or exploratory constructions; no native reader legibility claims. Dedicated methods pages provide actual output provenance and distinguish historical metric illustrations from algorithmic construction outputs.",
+  "evidence": "Both Chinese (11) and Japanese (13) explored method categories appear in the Gallery. Chinese: 22 actual Python-rendered SVGs with pinned source and exact method labels; Japanese: 20 examples including seven explicitly illustrative historical-search inputs. Both tracks experimental; neither has native-reader validation.",
   "jp_source_pin": "KanjiVG/kanjivg@70a0b7ae0c18ceb5cb358274b029cce0234a43bc",
   "jp_glyphs": {
     "甲": [
@@ -264,7 +264,9 @@
     }
   ],
   "cn_source_pin": "skishore/makemeahanzi@bddc96d41bef78427ed0e034e9f7e31d71fd1b92",
-  "cn": [
+  "cn": [],
+  "cn_generated_manifest": "generated/manifest.json",
+  "cn_legacy_browser_examples": [
     {
       "id": "cn-self-30446",
       "method": "cn-natural-self",
@@ -346,43 +348,5 @@
       "status": "unoptimized-union",
       "source": "Make Me a Hanzi · pinned PRC source · Arphic Public License"
     }
-  ],
-  "cn_unillustrated": [
-    {
-      "id": "cn-centre-optimisation",
-      "url": "../../theory/prc-construction-method.md",
-      "reason": "No audited source-derived operator output in main"
-    },
-    {
-      "id": "cn-extremity-reconciliation",
-      "url": "../../code/prc_construct.py",
-      "reason": "No audited operator-specific public stimulus"
-    },
-    {
-      "id": "cn-sector-thickness-deterministic",
-      "url": "../../theory/prc-construction-method.md",
-      "reason": "No audited operator-specific public stimulus"
-    },
-    {
-      "id": "cn-sector-thickness-search",
-      "url": "../../code/prc_construct.py",
-      "reason": "No audited operator-specific public stimulus"
-    },
-    {
-      "id": "cn-r-odd",
-      "url": "https://github.com/ClaudioDrews/sinogram-ambigram/pull/14",
-      "reason": "Draft branch; its actual output is not included in main"
-    },
-    {
-      "id": "cn-harmonic",
-      "url": "https://github.com/ClaudioDrews/sinogram-ambigram/pull/15",
-      "reason": "Draft branch; conceptual C2 field is not algorithm output"
-    },
-    {
-      "id": "cn-ab-fusion",
-      "url": "https://github.com/ClaudioDrews/sinogram-ambigram/pull/16",
-      "reason": "Draft branch; observed output equals corrected union in tested pairs"
-    }
-  ],
-  "cn_generated_manifest": "generated/manifest.json"
+  ]
 }
