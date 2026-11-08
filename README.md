@@ -2,7 +2,7 @@
 
 **A 180° turn can change more than the shape of a character.**
 
-> **Current scope:** Japanese KanjiVG research (2,770 Jōyō + Jinmeiyō kanji) and a **separate, experimental Mainland Chinese GB2312 track** (6,763 characters; Make Me a Hanzi source). The Chinese explorer provides coarse geometric candidates, **not verified legible ambigrams**, and source glyphs are not independently certified by region. See [SCOPE.md](SCOPE.md) and [limitations](#known-limitations--cultural-scope).
+> **Research scope — two equally important, experimental tracks:** **Japanese kanji** (2,770 Jōyō + Jinmeiyō KanjiVG glyphs) **and Chinese hanzi** (6,763 GB2312 codepoints, Make Me a Hanzi source). **Neither track has established human readability**, and both explore natural rotation, geometric search, candidate construction, successful and unsuccessful experiments. Their source shapes, metrics, and unresolved regional-form questions differ, **not their standing within this project**. See [SCOPE.md](SCOPE.md), [research methods](methods/), and [limitations](findings/limitations.md).
 
 **Read in:** English · [简体中文](docs/zh/README.md) · [日本語](docs/ja/README.md)
 
@@ -20,7 +20,7 @@ Inspired by the ambigram art of [Issei Nomura](https://x.com/IsseiNomura) and by
 
 ## Research tracks and methods tested
 
-**Two independent source geometries, two independent evidence bases.** The Japanese track uses **2,770 KanjiVG kanji** (2,136 Jōyō + 634 Jinmeiyō); the Chinese/PRC-source track uses **6,763 GB2312 codepoints** from pinned Make Me a Hanzi data. A common character does **not** mean a common glyph outline, metric, or ranking. The original browser Generator uses **Japanese KanjiVG geometry even when its input-language selector says Chinese**; the independent [PRC Explorer](prc/) does not.
+**Two equal-status experimental research tracks, with independent source geometries and evidence bases.** The Japanese track uses **2,770 KanjiVG kanji** (2,136 Jōyō + 634 Jinmeiyō); the Chinese/PRC-source track uses **6,763 GB2312 codepoints** from pinned Make Me a Hanzi data. A common character does **not** mean a common glyph outline, metric, or ranking. The original browser Generator is **one tool in the Japanese KanjiVG track**, even when its input-language selector says Chinese; the independent [PRC Explorer](prc/) is **one tool in the equally important Chinese track**, not the limit of that track's research.
 
 **Start with the [interactive Research Methods map](methods/index.html)** ([GitHub Pages](https://claudiodrews.github.io/sinogram-ambigram/methods/)) or its [auditable method inventory](methods/RESEARCH_TRACKS.md). These separate **natural rotation screening**, **distinct A↔B candidate search**, **construction/synthesis**, and **perceptual evaluation**, and link to implementations, experimental PRs, demos, findings, and evidence limitations.
 
