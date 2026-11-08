@@ -141,7 +141,15 @@ const methodLabels={
  cn:{
   'cn-natural-self':'未修改原字形 · 自旋转候选 (C₂)',
   'cn-natural-pair':'未修改原字形 · 异字旋转候选',
-  'cn-source-union':'原字形矢量合成 · 未优化 A/B 叠加'
+  'cn-source-union':'原字形矢量合成 · 未优化 A/B 叠加',
+  'cn-centre-optimisation':'旋转中心优化 · 算法结果',
+  'cn-extremity-reconciliation':'笔画端点协调 · 算法结果',
+  'cn-sector-deterministic':'扇区线宽确定性规则 · 算法结果',
+  'cn-sector-search':'扇区线宽约束搜索 · 算法结果',
+  'cn-width-fixed':'实测半宽几何修正 · 算法结果',
+  'cn-r-odd':'R-ODD 局部线宽补偿 · 算法结果',
+  'cn-harmonic':'C₂ 偶谐波线宽场 · 算法结果',
+  'cn-ab-fusion':'A/B 笔画配准融合 · 零结果'
  },
  jp:{
   'jp-natural-self':'元の字形 · 自己回転候補 (C₂)',
@@ -149,14 +157,21 @@ const methodLabels={
   'jp-overlay':'幾何学的重ね合わせ · 単色プレビュー',
   'jp-salience':'筆画の顕著性構成 · 共有部と固有部',
   'jp-shared':'共通ストローク抽出 · 診断的プレビュー',
-  'jp-c2-blend':'C₂ 合成 · 元字形と180°回転形'
+  'jp-c2-blend':'C₂ 合成 · 元字形と180°回転形',
+  'jp-gpt-raster-iou':'GPT · ラスターIoU 候補探索',
+  'jp-glm-translated-iou':'GLM · 平行移動IoU 候補探索',
+  'jp-claude-skeleton-f1':'Claude v1 · 骨格Fスコア候補探索',
+  'jp-claude-w1-warp':'Claude v2 · W1/ワープ/構造評価',
+  'jp-kimi-fft-iou':'Kimi · FFTとIoU候補探索',
+  'jp-mistral-medians':'Mistral · 中線点群距離',
+  'jp-minimax-rotgraph':'MiniMax · KanjiVG回転グラフ'
  }
 };
 const statusLabels={
- cn:{'unmodified-source-candidate':'自然候选 · 未验证可读性','coarse-screened-source-candidate':'GB2312 粗筛候选 · 非构造成品','unoptimized-union':'实验合成 · 未优化'},
- jp:{'unmodified-source-candidate':'元の字形の候補 · 可読性未検証','exploratory-construction':'探索的構成 · 可読性未検証','diagnostic-extraction':'部分構造の抽出 · 完成字形ではない'}
+ cn:{'unmodified-source-candidate':'自然候选 · 未验证可读性','coarse-screened-source-candidate':'GB2312 粗筛候选 · 非构造成品','unoptimized-union':'实验合成 · 未优化','experimental-operator-output':'真实算法输出 · 尚未验证可读性','unmodified-source-geometric-candidate':'自然几何候选 · 未验证可读性'},
+ jp:{'unmodified-source-candidate':'元の字形の候補 · 可読性未検証','exploratory-construction':'探索的構成 · 可読性未検証','diagnostic-extraction':'部分構造の抽出 · 完成字形ではない','current-kanjivg-input-illustration-not-historical-run-output':'手法の入力例 · 元実験の出力ではない'}
 };
-const typeLabels={cn:{'natural-self':'自然自旋转','natural-pair':'自然异字候选','constructed':'实验构造'},jp:{'natural-self':'自然な自己回転','natural-pair':'自然な異字候補','constructed':'実験的構成'}};
+const typeLabels={cn:{'natural-self':'自然自旋转','natural-pair':'自然异字候选','constructed':'实验构造'},jp:{'natural-self':'自然な自己回転','natural-pair':'自然な異字候補','constructed':'実験的構成','search-illustration':'探索手法の入力例'}};
 const SOURCE='https://raw.githubusercontent.com/skishore/makemeahanzi/bddc96d41bef78427ed0e034e9f7e31d71fd1b92/svgs/';
 let track='',items=[],position=0,turns=0,results=[],seed=0,introLanguage='en';
 function svgData(svg){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}
@@ -190,7 +205,10 @@ function japaneseSvg(row,glyphs){
   paths.forEach(d=>group.appendChild(jpPath(d,width,opacity)));root.appendChild(group);
  }
  switch(row.method){
-  case 'jp-natural-self':case 'jp-natural-pair': add(pathsA,5,1);break;
+  case 'jp-natural-self':case 'jp-natural-pair':
+  case 'jp-gpt-raster-iou':case 'jp-glm-translated-iou':case 'jp-claude-skeleton-f1':
+  case 'jp-claude-w1-warp':case 'jp-kimi-fft-iou':case 'jp-mistral-medians':case 'jp-minimax-rotgraph':
+   add(pathsA,5,1);break;
   case 'jp-overlay':add(pathsA,4,.78);add(pathsB,4,.65,true);break;
   case 'jp-c2-blend':add(pathsA,3.4,.68);add(pathsA,3.4,.68,true);break;
   case 'jp-salience':case 'jp-shared':{
@@ -225,7 +243,7 @@ async function japaneseItems(){
  const data=await galleryManifest();
  const examples=data.jp.map(x=>({...x,track:'jp',svg:japaneseSvg(x,data.jp_glyphs)}));
  const types=new Set(examples.map(x=>x.method));
- for(const method of ['jp-natural-self','jp-natural-pair','jp-overlay','jp-salience','jp-shared','jp-c2-blend'])if(!types.has(method))throw Error('Japanese method absent: '+method);
+ for(const method of ['jp-natural-self','jp-natural-pair','jp-overlay','jp-salience','jp-shared','jp-c2-blend','jp-gpt-raster-iou','jp-glm-translated-iou','jp-claude-skeleton-f1','jp-claude-w1-warp','jp-kimi-fft-iou','jp-mistral-medians','jp-minimax-rotgraph'])if(!types.has(method))throw Error('Japanese method absent: '+method);
  return examples;
 }
 
@@ -280,7 +298,19 @@ async function chineseItems(){
  const available=built.filter(Boolean);
  if(!available.length)throw Error('No source-derived Chinese examples available');
  if(new Set(available.map(x=>x.method)).size!==3)throw Error('Chinese method categories incomplete');
- return available;
+ const generatedResponse=await fetch('generated/manifest.json');
+ if(!generatedResponse.ok)throw Error('Actual PRC experimental outputs missing');
+ const generated=await generatedResponse.json();
+ if(generated.schema!=='sinogram-prc-method-examples-v1'||generated.source_commit!=='bddc96d41bef78427ed0e034e9f7e31d71fd1b92')throw Error('PRC operator provenance mismatch');
+ const outputs=generated.items.map(x=>({
+  id:x.id,method:x.method,a:x.a,b:x.b,type:x.type,status:x.status,
+  source:x.source,track:'cn',url:'generated/'+x.file,
+  metrics:x.metrics,svg_sha256:x.svg_sha256
+ }));
+ const all=[...available,...outputs],actual=new Set(outputs.map(x=>x.method));
+ const required=['cn-natural-self','cn-natural-pair','cn-source-union','cn-centre-optimisation','cn-extremity-reconciliation','cn-sector-deterministic','cn-sector-search','cn-width-fixed','cn-r-odd','cn-harmonic','cn-ab-fusion'];
+ for(const method of required)if(!actual.has(method))throw Error('Missing generated PRC method: '+method);
+ return all;
 }
 
 function setIntroLanguage(code){
@@ -311,7 +341,8 @@ function render(){
  $('method-title').textContent=t.method;
  $('method-value').textContent=methodText(item.method);
  $('type-value').textContent=(typeLabels[track][item.type]||item.type)+' · '+(statusLabels[track][item.status]||item.status);
- $('method-inventory-link').textContent=track==='cn'?'全部研究方法及实验状态':'全研究手法と実験状況';
+ $('method-inventory-link').textContent=track==='cn'?'此方法：图解、实例和动画':'この手法の図解・実例・アニメーション';
+ $('method-inventory-link').href='../../methods/'+item.method+'/';
  $('notes-title').textContent=t.notes;
  $('next').textContent=position===items.length-1?t.finish:t.next;
  $('progress').textContent=(position+1)+' / '+items.length;
@@ -328,7 +359,9 @@ function render(){
  const image=$('glyph');
  image.style.transition='none';
  image.style.transform='rotate(0deg)';
- image.src=svgData(item.svg);
+ image.style.transformOrigin='50% 50%';
+ if(item.metrics?.selected_center){const [cx,cy]=item.metrics.selected_center;image.style.transformOrigin=(100*cx/109).toFixed(3)+'% '+(100*cy/109).toFixed(3)+'%';}
+ image.src=item.url||svgData(item.svg);
  $('angle').textContent='0°';
  $('rotate').setAttribute('aria-label',t.rotate+'0°');
  void image.offsetWidth;
@@ -350,7 +383,7 @@ function next(){
  if(turns<1){$('warning').textContent=t.needTurn;return;}
  if(!answer){$('warning').textContent=t.needChoice;return;}
  const item=items[position];
- results.push({position:position+1,id:item.id,track,method:item.method,type:item.type,status:item.status,source:item.source,intended_a:item.a,intended_b:item.b,meaning_orientations:Number(answer.value),turn_count:turns,observation:$('note').value.trim()});
+ results.push({position:position+1,id:item.id,track,method:item.method,type:item.type,status:item.status,source:item.source,svg_sha256:item.svg_sha256||'',intended_a:item.a,intended_b:item.b,meaning_orientations:Number(answer.value),turn_count:turns,observation:$('note').value.trim()});
  position+=1;
  if(position===items.length){complete();return;}
  render();
@@ -367,7 +400,7 @@ function report(){
  return {schema:'sinogram-simple-reader-v1',track,seed,explanation:'0 = neither orientation meaningful; 1 = one orientation meaningful; 2 = both orientations meaningful',answers:results};
 }
 function csv(){
- const keys=['position','id','track','method','type','status','source','intended_a','intended_b','meaning_orientations','turn_count','observation'];
+ const keys=['position','id','track','method','type','status','source','svg_sha256','intended_a','intended_b','meaning_orientations','turn_count','observation'];
  const enc=value=>'"'+String(value??'').replace(/"/g,'""')+'"';
  return '\uFEFF'+[keys.map(enc).join(','),...results.map(row=>keys.map(k=>enc(row[k])).join(','))].join('\r\n')+'\r\n';
 }
