@@ -1,36 +1,58 @@
-# Simple Native Reader Gallery
+# Simple Reader Gallery — method-attributed exploratory stimuli
 
-A minimal, voluntary native-reader gallery for **one completed experimental ambigram at a time**, published at [`evaluation/recognition/`](index.html).
+The [Reader Gallery](index.html) is an optional **three-choice meaning-feedback interface**, not a validated human-reading test or a gallery of proven ambigrams. The visual interface approved in PRs [#26](https://github.com/ClaudioDrews/sinogram-ambigram/pull/26) and [#27](https://github.com/ClaudioDrews/sinogram-ambigram/pull/27) remains deliberately simple.
 
-This page is an **exploratory feedback tool**, not the original 48-item prompted-legibility protocol ([`methods/HUMAN_EVAL.md`](../../methods/HUMAN_EVAL.md)). It does not ask for native-language status, proficiency or any identifying information.
+**Important separation:** the [historic 48-item pilot](../items.json) and [full evaluation protocol](../../methods/HUMAN_EVAL.md) remain unchanged. The simplified Gallery now reads its own [method-attributed curatorial manifest](stimuli.json), instead of misrepresenting `v1-top` and `v2-top` (ranking strata) as two different generators.
 
-## Participant flow
+## Participant flow — unchanged
 
-1. The opening screen starts in **English** and has a top **EN / 中文 / 日本語** interface-language selector. This selector changes **only the introduction** and is hidden after selection. The visitor then chooses **Chinese (汉字)** or **Japanese (漢字)** from exactly two material choices. All subsequent evaluation screens automatically use the language of the selected material (Chinese or Japanese), regardless of the introduction language.
-2. View **one fully consolidated drawing** on a fixed light-colored canvas. **Tap the drawing itself** to visibly rotate it **180°**; each further tap performs another animated half-turn. There is no automatic animation and no animation of source components.
-3. Choose exactly one **meaning recognition** response: *both orientations*, *one orientation*, or *neither orientation*. The participant must rotate the drawing at least once before advancing.
-4. See the **generation method**, with no expected character labels. Enter an optional observation.
-5. Advance to the next generated drawing.
-6. At the end, optionally download a **CSV** or a **TXT** file for manual sharing. Nothing is automatically transmitted.
+1. Landing page in **English by default**, with EN / 中文 / 日本語 selector for the introduction only.
+2. Choose precisely one track: **Chinese MMah** or **Japanese KanjiVG**. Subsequent evaluation language follows the chosen track.
+3. Inspect one drawing at a time, **tap the same image** to rotate it visibly by 180°.
+4. Mark whether meaningful content is read in **both, one or neither** orientation; a tap and one answer are required.
+5. See the **actual visual/source method and evidence class** (not the intended target glyphs). Add an optional comment and advance.
+6. Optionally save local **CSV** or **TXT**. Nothing is submitted automatically.
 
-The prompt deliberately concerns **whether a reader finds meaning** in either orientation, not just whether the form vaguely resembles a character. The simplified three-choice response does **not** record separate character identities, which orientation was legible when only one was, or detailed semantic glosses. These are intentional tradeoffs for ease of use; do not infer facts the three-choice response does not establish.
+No profile, identifying question, reader certification or user account is required. The export records intended labels *only for subsequent offline adjudication*; these are not shown on the card. The three choices do **not** identify which character the reader perceived or whether it matched the researcher's intended labels, so they cannot independently support a success rate.
 
-## Stimuli and method labeling
+## Curated examples on this page
 
-**Japanese:** 12 committed constructed drawings from [`evaluation/items.json`](../items.json): the first six `v1-top` and first six `v2-top` KanjiVG-derived stroke-salience pilot examples. The associated method is labeled as stroke-salience construction v1 or v2. Negative controls, C2 canonical source anchors and unconstructed geometry-only demonstrations are not included in this simplified gallery.
+| Track | Number of curated example rows | Authentic rendering path | What it means |
+| --- | ---: | --- | --- |
+| **JP natural C₂ self-rotation** | 3 | Exactly one KanjiVG source glyph | Unmodified-source self candidate; not certified readable in two orientations |
+| **JP natural distinct A↔B** | 2 | Exactly one KanjiVG source glyph A | Geometric B target; no alteration to A |
+| **JP overlay** | 2 | Generator's source/rotated-partner geometry; monochrome presentation | Diagnostic non-optimized overlap |
+| **JP salience** | 2 | Generator's `24`-sample per-path proximity and shared/exclusive widths (1.75-unit threshold) | Experimental constructed drawing; no legibility claim |
+| **JP shared structure** | 2 | Generator's `0.35` common-path fraction and width | Diagnostic extraction; may omit identifying strokes |
+| **JP C₂ blend** | 2 | One source path plus its 180° rotated form | Constructed symmetry view, distinct from untouched natural C₂ source |
+| **CN natural C₂ self-rotation** | 3 | Unmodified pinned MMah source outline | No composition |
+| **CN natural distinct A↔B** | 3 | Unmodified pinned MMah outline for A, with B selected from its current GB2312 coarse partners | Screening candidate; not an ambigram output |
+| **CN source vector union** | 3 | Pinned MMah source A + 180° B outlines, one consolidated SVG | Unoptimized baseline |
 
-**Chinese:** coarse candidate pairs selected from preselected GB2312 anchors in [`prc/catalog.json`](../../prc/catalog.json). The page fetches static finished outline paths from a pinned Make Me a Hanzi commit and consolidates upright A with 180°-rotated B into **one black-ink SVG vector composition**. The method label is **PRC source vector union (unoptimized)**. This algorithmic construction is **not a stroke-refined or independently human-validated ambigram**. Chinese source glyphs require network connectivity to the pinned image source; unavailable individual pairs are omitted.
+The 13 Japanese and 9 Chinese *configured examples* are randomized within each chosen track. If a Chinese source outline cannot be retrieved, that individual example is skipped; a missing whole method category causes an error rather than silently passing off a different operation as its output. Unlike the Japanese pinned vector subset, Chinese graphics require an internet connection to a **pinned MMah revision**.
 
-Each track uses only its own sources. Tracks are not comparable samples of equal difficulty. For Japanese and Chinese alike, rotating the exact same **`<img>`** element rather than switching source files guarantees consistent geometry in the two orientations.
+The Japanese SVGs use a frozen eight-glyph subset already embedded in the published KanjiVG Generator (the source is KanjiVG, not MMah), so the Gallery does not need to load the 671 KB generator page. The monochrome output uses its actual stroke/path rules; in overlay mode the original generator uses blue/orange diagnostic ink, but this gallery keeps the previously approved single-color drawing presentation.
 
-## Export and privacy
+## Methods not yet represented by distributable SVGs
 
-The lightweight schema is `sinogram-simple-reader-v1`:
+The project has **more tested methods than this gallery currently has authentically provenanced outputs for**. [Full inventory and visual evidence matrix](../../methods/RESEARCH_TRACKS.md); [interactive Methods map](../../methods/index.html).
 
-- `track`, `seed` and `answers[]` in the JSON-like in-memory record (no JSON download button).
-- For each answer: `position`, `id`, `track`, `method`, `source`, intended `a`/`b` for subsequent offline analysis, `meaning_orientations` (0, 1 or 2), `turn_count` and free-text `observation`.
-- CSV includes these fields, with UTF-8 BOM and quoted cells. TXT is intentionally more human-readable and includes the rating, method and observations.
+For PRC-source geometry, the following families **must not be relabelled as simple union examples**:
 
-No answers are posted to a server. Browser/server access itself is not anonymous to hosting infrastructure; the external source host receives ordinary image requests. Export files may be shared voluntarily, outside the webpage.
+- Rotation-centre optimization; extremity reconciliation; deterministic sector thickness; constrained sector-thickness search — implemented research operators in `code/prc_construct.py`, but no method-specific committed/audited gallery images.
+- R-ODD [PR #14](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14) and harmonic-field [PR #15](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15) — independent unmerged draft implementations. The [C₂ Lab](../../demo/c2/) has **concept-only field diagrams**, not images generated by these algorithms.
+- A/B fusion [PR #16](https://github.com/ClaudioDrews/sinogram-ambigram/pull/16) — unmerged; the [threshold study PR #21](https://github.com/ClaudioDrews/sinogram-ambigram/pull/21) found **0/32** changed final output images despite increasing matches. That no-op is a reportable result, not an improved ambigram.
 
-Do not use these exploratory responses to claim a method statistically outperforms another without native-reader review, adequate sampling, and adjudication of whether the perceived meaning matches any intended character.
+To publish authentic examples for these operators, first run each exact implementation on the licensed pinned source and save the output with its code commit, parameters, image hash and provenance/rights notice. The Gallery should display failure/no-op examples where genuine; it should **never** substitute a natural/source-union SVG while naming it as an optimized R-ODD/harmonic/fusion image. The existing Methods map and C₂ Lab make the research discoverable while this evidence gap remains.
+
+## Files, reproducibility and licences
+
+- [`stimuli.json`](stimuli.json): curated sources, exact methods, per-row type/status, pinned Japanese strokes and explicit missing-output inventory.
+- [`index.html`](index.html): static reader UI, Japanese stroke rendering, pinned Chinese-source outline fetch and local export. No build step.
+- [`../../generator/index.html`](../../generator/index.html): canonical interactive Japanese rendering operators; the gallery reuses its sampling, thresholds and widths.
+- [`../../prc/catalog.json`](../../prc/catalog.json): method-pinned Chinese screening catalogue and candidate partner selections.
+- [`../../code/test_recognition_lab.py`](../../code/test_recognition_lab.py): static syntax/provenance/structure checks. Visual reading and accessibility require real-device manual review.
+
+KanjiVG-derived adapted paths are **CC BY-SA 3.0**. Make Me a Hanzi's pinned glyph outlines come with the **Arphic Public License** and require ordinary external image requests; the MIT licence of application code does not relicense either. See [licensing](../../NOTICE.md) and [limitations](../../findings/limitations.md).
+
+**Evidence boundary:** none of the examples is a validated ambigram. The Gallery measures anonymous, voluntary reports of *meaningfulness*, not independently confirmed identification; its participant selection is not representative, and the two tracks are not matched samples of comparable difficulty.
