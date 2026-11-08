@@ -1,6 +1,6 @@
 # Scope
 
-> **Two separate experimental geometric tracks:** 2,770 Japanese kanji (KanjiVG) and a 6,763-codepoint Mainland Chinese GB2312 shortlist (Make Me a Hanzi). The Chinese track uses source forms that are not independently certified for each region. Neither track establishes human readability.
+> **Two coequal experimental research tracks:** Japanese kanji (2,770 KanjiVG glyphs) **and** Chinese hanzi (6,763 GB2312 codepoints; Make Me a Hanzi). Both investigate natural half-turns, distinct-character pairs, and geometric construction; both have open questions and unvalidated human readability. Their different source glyphs, geometric scales, and regional-form constraints demand separate measurements, **not unequal priority, maturity, or scientific status**.
 
 This document distinguishes shipped research from draft experiments and documents geographic and linguistic boundaries. *Sinograms* here refers to the wider research question, not to a claim that all regional forms are interchangeable or that all Chinese characters are covered.
 
@@ -19,10 +19,10 @@ The two tracks use **different source geometry and ranking methods**. Their coun
 |---|---|---|
 | Character repertoire | 2,770 kanji: 2,136 Jōyō + 634 Jinmeiyō | 6,763 GB2312 codepoints, all present in the pinned source |
 | Geometry | Japanese KanjiVG stroke paths | Make Me a Hanzi stroke paths and medians; 9,574 source glyph records |
-| Regional form status | Japanese reference shapes | Source includes simplified and traditional shapes; not individually certified to official Mainland Chinese glyph norms |
+| Regional form status | KanjiVG Japanese reference paths; other fonts and writing practices not individually certified | MMah source includes simplified and traditional shapes; not individually certified to official Mainland Chinese glyph norms |
 | Candidate search | 3,837,835 unordered pairs at coarse grid scale, 5,180 refined rows selected | 106,347 coarse-shortlisted candidate pairs; public explorer shows up to eight partners per glyph |
 | Ranking metric | KanjiVG stroke-centreline distances and DT grid approximation | Coarse 37×37 half-turn ink IoU, ranked against the GB2312 repertoire |
-| Public interface | [Ambigram Generator](generator/) and [Rotation Lab](demo/) | [PRC Explorer](prc/) |
+| Public interface | [Generator](generator/), [C₂ Lab](demo/c2/), [13 method pages](methods/), [Reader Gallery](evaluation/recognition/) | [PRC Explorer](prc/), [11 method pages](methods/), [Reader Gallery](evaluation/recognition/) |
 | Human reading validation | Not established | Not established |
 
 The original browser generator retains 5,180 refined Japanese-track measurements (2,410 distinct pairs plus 2,770 self-pairs), vector paths embedded for 432 characters and optional on-demand loading. Inputting a Chinese character **does not switch its geometry source**; use the independent PRC Explorer for Chinese-source screening.
@@ -42,17 +42,17 @@ Two distinct scales appear in the datasets and must not be mixed:
 [`data/README.md`](data/README.md) is the reference for which file uses which
 scale.
 
-## Experimental PRC-source track
+## Chinese research track — PRC-source geometry
 
-The independent [PRC Explorer](prc/) reads a measured shortlist of 6,763 GB2312 characters using Make Me a Hanzi geometry, rather than Japanese KanjiVG vectors. The pinned input includes 9,574 source glyph records and fully covers the GB2312 repertoire. Its 106,347 coarse-screened candidate pairs are **not** fine-grid exact results, not a confirmed Mainland normative form certification, and not validated human-readable ambigrams. Source-derived rendering stays with the Arphic Public License; [the research method](methods/PRC_COARSE_SEARCH.md) and [source audit](LICENSE-AUDIT.md) describe the boundaries. Future regional inventories (including a verified official 2013 TCC transcription) and exact PRC refinement are separate tasks.
+The [PRC Explorer](prc/) reads a measured shortlist of 6,763 GB2312 characters using Make Me a Hanzi geometry, rather than Japanese KanjiVG vectors. The pinned input includes 9,574 source glyph records and fully covers the GB2312 repertoire. Its 106,347 coarse-screened candidate pairs are **not** fine-grid exact results, not a confirmed Mainland normative form certification, and not validated human-readable ambigrams. Source-derived rendering stays with the Arphic Public License; [the research method](methods/PRC_COARSE_SEARCH.md) and [source audit](LICENSE-AUDIT.md) describe the boundaries. Future regional inventories (including a verified official 2013 TCC transcription) and exact PRC refinement are separate tasks.
 
 ## Integrated geometry correction
 
 [PR #19](https://github.com/ClaudioDrews/sinogram-ambigram/pull/19) incorporated measured half-width rendering on `main` while retaining byte-identical v1.16 geometry for historical replay. On a separate 32-glyph pinned contour benchmark, original-outline fidelity improved for **32/32** samples (median IoU **0.4743 → 0.9083**). This is not certified regional shape fidelity or human reading validation; see [method](methods/PRC_WIDTH_SEMANTICS.md) and [findings](findings/prc-width-contour-fidelity.md).
 
-## Experimental work in open draft pull requests
+## Historic experiment PRs and integrated operator examples
 
-- [#13 — original PRC thickness draft](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13) was **not merged directly**. Its correction reached `main` through protected PR #19; #13 remains open for provenance. [#14 — R-ODD](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14), [#15 — harmonic field](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15), and [#16 — A/B stroke fusion](https://github.com/ClaudioDrews/sinogram-ambigram/pull/16) remain separate, unmerged drafts.
+- [#13 — original PRC thickness draft](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13) was **not merged directly**. Its correction reached `main` through protected PR #19; #13 remains open for provenance. [#14 — R-ODD](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14), [#15 — harmonic field](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15), and [#16 — A/B stroke fusion](https://github.com/ClaudioDrews/sinogram-ambigram/pull/16) remain separate original PR histories; their tested R-ODD, harmonic and A/B algorithms and tests are integrated via PR #28, with real pinned-source outputs.
 - [#17 — blind VLM-reading pilot](https://github.com/ClaudioDrews/sinogram-ambigram/pull/17) is **draft**. It documents a preselected 52-image, 208-observation automated-reading experiment, with reproducible scoring and a source-pinned generator. Its self-rotation dual-reading counts range from 10/20 (historical) to 15/20 (harmonic); both tested distinct-character pairs failed dual recognition. Model recognition is not human validation.
 - The pilot's unlabelled images are distributed through a reproducible, separately licensed workflow artifact rather than being silently relicensed under MIT.
 
@@ -68,12 +68,9 @@ The independent [PRC Explorer](prc/) reads a measured shortlist of 6,763 GB2312 
 - **No 90° rotation, no mirroring, no figure–ground inversion.** Only the
   half-turn is in scope.
 
-## Why the Japanese inventory comes first
+## Historical inventory sequencing is not research priority
 
-The Japanese Jōyō + Jinmeiyō inventory has a rare property: it is small,
-stable, publicly documented, and its glyph shapes are canonical in a single
-maintained vector source. That makes it a defensible testbed for the geometry
-before the method is pointed at a larger, more heterogeneous inventory.
+KanjiVG was adopted in early experiments because its 2,770 Jōyō/Jinmeiyō inventory is bounded, documented and available as vector paths. Later work independently acquired MMah geometry and covers all 6,763 GB2312 codepoints. **This chronological sequence does not give Japanese kanji priority over Chinese hanzi in the scope, methodological ambition or publication. Both are coequal and experimental.**
 
 It is also a limitation: historical Japanese-track results measure Japanese kanji geometry; the later, separate PRC-source track must be interpreted using its own source, conventions and metric. Neither certifies every regional glyph form.
 
@@ -102,3 +99,6 @@ It is also a limitation: historical Japanese-track results measure Japanese kanj
 - [`data/README.md`](data/README.md) — dataset contents and metric provenance
 - [`LICENSE-AUDIT.md`](LICENSE-AUDIT.md) — obligations per source
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — how to run, test and propose changes
+## Public method coverage
+
+Both experimental tracks now have dedicated illustrated pages for every documented method family and an example in the [Native Reader Gallery](evaluation/recognition/). The [method catalog](methods/catalog.json) and [full inventory](methods/RESEARCH_TRACKS.md) enumerate **13 Japanese** and **11 Chinese** methods, including seven Japanese historical screening variants whose worked illustrations use contemporary source paths (not original historical renderings), and **22 source-pinned PRC method examples** from checksum-pinned MMah source. Failure/no-op is reported as such, including the A/B fusion results. No controlled native-reader validation has been established.

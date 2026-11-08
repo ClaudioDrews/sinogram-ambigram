@@ -45,7 +45,7 @@ h2{font:700 clamp(20px,4vw,29px)/1.35 var(--serif);margin:0 0 15px}
 .choice:has(input:checked){background:var(--redwash);border-color:var(--red)}
 .choice input{accent-color:var(--red);width:18px;height:18px;flex:0 0 auto}
 .method{margin-top:24px;font-size:13px;color:var(--soft);border-top:1px solid var(--line);padding-top:15px}
-.method strong{color:var(--ink);font-weight:700}
+.method strong{color:var(--ink);font-weight:700}.method-details{font-size:12px;color:var(--soft);margin-top:7px}.method-details a{color:var(--red)}
 .notes{display:block;margin-top:22px;font-weight:700;font-size:14px}
 textarea{display:block;width:100%;min-height:99px;margin-top:9px;resize:vertical;background:var(--sheet);color:var(--ink);padding:12px 14px;border:1px solid var(--line);border-radius:11px;font-size:15px}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}
@@ -87,7 +87,7 @@ footer a{color:var(--red)}
   <span class="legend" id="question"></span>
   <div class="choices" id="choices" role="radiogroup"></div>
  </div>
- <div class="method"><span id="method-title"></span> <strong id="method-value"></strong></div>
+ <div class="method"><span id="method-title"></span> <strong id="method-value"></strong><div id="type-value" class="method-details"></div><div class="method-details"><a href="../../methods/" id="method-inventory-link">Research methods and other experimental operators</a></div></div>
  <label class="notes" for="note" id="notes-title"></label>
  <textarea id="note" maxlength="2000"></textarea>
  <div class="actions"><button type="button" class="primary" id="next"></button></div>
@@ -137,62 +137,131 @@ const texts={
   methodCN:"原字形ベクトル合成 · PRC候補（未最適化）",methodV1:"ストローク顕著性構築 · v1",methodV2:"ストローク顕著性構築 · v2"
  }
 };
-const SOURCE='https://raw.githubusercontent.com/skishore/makemeahanzi/bddc96d41bef78427ed0e034e9f7e31d71fd1b92/svgs/';
+const methodLabels={
+ cn:{
+  'cn-natural-self':'未修改原字形 · 自旋转候选 (C₂)',
+  'cn-natural-pair':'未修改原字形 · 异字旋转候选',
+  'cn-source-union':'原字形矢量合成 · 未优化 A/B 叠加',
+  'cn-centre-optimisation':'旋转中心优化 · 算法结果',
+  'cn-extremity-reconciliation':'笔画端点协调 · 算法结果',
+  'cn-sector-deterministic':'扇区线宽确定性规则 · 算法结果',
+  'cn-sector-search':'扇区线宽约束搜索 · 算法结果',
+  'cn-width-fixed':'实测半宽几何修正 · 算法结果',
+  'cn-r-odd':'R-ODD 局部线宽补偿 · 算法结果',
+  'cn-harmonic':'C₂ 偶谐波线宽场 · 算法结果',
+  'cn-ab-fusion':'A/B 笔画配准融合 · 零结果'
+ },
+ jp:{
+  'jp-natural-self':'元の字形 · 自己回転候補 (C₂)',
+  'jp-natural-pair':'元の字形 · 異字の回転候補',
+  'jp-overlay':'幾何学的重ね合わせ · 単色プレビュー',
+  'jp-salience':'筆画の顕著性構成 · 共有部と固有部',
+  'jp-shared':'共通ストローク抽出 · 診断的プレビュー',
+  'jp-c2-blend':'C₂ 合成 · 元字形と180°回転形',
+  'jp-gpt-raster-iou':'GPT · ラスターIoU 候補探索',
+  'jp-glm-translated-iou':'GLM · 平行移動IoU 候補探索',
+  'jp-claude-skeleton-f1':'Claude v1 · 骨格Fスコア候補探索',
+  'jp-claude-w1-warp':'Claude v2 · W1/ワープ/構造評価',
+  'jp-kimi-fft-iou':'Kimi · FFTとIoU候補探索',
+  'jp-mistral-medians':'Mistral · 中線点群距離',
+  'jp-minimax-rotgraph':'MiniMax · KanjiVG回転グラフ'
+ }
+};
+const statusLabels={
+ cn:{'unmodified-source-candidate':'自然候选 · 未验证可读性','coarse-screened-source-candidate':'GB2312 粗筛候选 · 非构造成品','unoptimized-union':'实验合成 · 未优化','experimental-operator-output':'真实算法输出 · 尚未验证可读性','unmodified-source-geometric-candidate':'自然几何候选 · 未验证可读性'},
+ jp:{'unmodified-source-candidate':'元の字形の候補 · 可読性未検証','exploratory-construction':'探索的構成 · 可読性未検証','diagnostic-extraction':'部分構造の抽出 · 完成字形ではない','current-kanjivg-input-illustration-not-historical-run-output':'手法の入力例 · 元実験の出力ではない'}
+};
+const typeLabels={cn:{'natural-self':'自然自旋转','natural-pair':'自然异字候选','constructed':'实验构造'},jp:{'natural-self':'自然な自己回転','natural-pair':'自然な異字候補','constructed':'実験的構成','search-illustration':'探索手法の入力例'}};
 let track='',items=[],position=0,turns=0,results=[],seed=0,introLanguage='en';
 function svgData(svg){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}
 function choose(list){const x=list.slice();let state=seed>>>0;const rand=()=>{let t=state+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296};for(let i=x.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
-function scoreMethod(stratum){return stratum==='v1-top'?'stroke-salience-v1':'stroke-salience-v2'}
-async function japaneseItems(){
- const response=await fetch('../items.json');
- if(!response.ok)throw Error('Japanese catalog: HTTP '+response.status);
- const data=await response.json();
- if(!Array.isArray(data.items))throw Error('Japanese items missing');
- const selected=['v1-top','v2-top'].flatMap(group=>data.items.filter(x=>x.stratum===group).slice(0,6));
- if(selected.length!==12)throw Error('Twelve generated Japanese examples expected');
- return selected.map(x=>({id:x.id,track:'jp',a:x.label_a,b:x.label_b,method:scoreMethod(x.stratum),source:'KanjiVG generated evaluation pilot',svg:x.construction_svg}));
+const NS='http://www.w3.org/2000/svg';
+function jpPath(d,width,opacity=1){
+ const p=document.createElementNS(NS,'path');
+ p.setAttribute('d',d);p.setAttribute('fill','none');p.setAttribute('stroke','#26231f');
+ p.setAttribute('stroke-width',String(width));p.setAttribute('stroke-linecap','round');p.setAttribute('stroke-linejoin','round');p.setAttribute('opacity',String(opacity));
+ return p;
 }
-const sourceCache=new Map();
-function finishedPaths(char){
- if(!sourceCache.has(char))sourceCache.set(char,(async()=>{
-  const response=await fetch(SOURCE+char.codePointAt(0)+'.svg');
-  if(!response.ok)throw Error('Source outline: HTTP '+response.status);
-  const doc=new DOMParser().parseFromString(await response.text(),'image/svg+xml');
-  if(doc.querySelector('parsererror'))throw Error('Invalid source geometry');
-  const group=[...doc.querySelectorAll('g[transform]')].find(g=>/scale\(1,\s*-1\)\s*translate\(0,\s*-900\)/.test(g.getAttribute('transform')||''));
-  if(!group)throw Error('Source outline group not found');
-  const paths=[...group.children].filter(n=>n.localName==='path'&&n.getAttribute('fill')==='lightgray'&&n.getAttribute('d')).map(n=>n.getAttribute('d'));
-  if(!paths.length)throw Error('Finished outline paths missing');
-  return paths;
- })());
- return sourceCache.get(char);
+function jpPoints(d,n=24){
+ const path=jpPath(d,5);let length=0;
+ try{length=path.getTotalLength();}catch(error){return []}
+ if(!length)return [];
+ const samples=[];for(let i=0;i<n;i++){const p=path.getPointAtLength(length*i/(n-1));samples.push([p.x,p.y])}
+ return samples;
 }
-function pathsMarkup(paths){return paths.map(d=>'<path d="'+d.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')+'"/>').join('')}
-function composite(pathsA,pathsB){
- return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="#26231f">'+
- '<g transform="scale(1 -1) translate(0 -900)">'+pathsMarkup(pathsA)+'</g>'+
- '<g transform="rotate(180 512 512)"><g transform="scale(1 -1) translate(0 -900)">'+pathsMarkup(pathsB)+'</g></g></svg>';
+function jpProximity(samples,targets,tau){
+ if(!samples.length||!targets.length)return 0;
+ let count=0;for(const [x,y] of samples)if(targets.some(([u,v])=>Math.hypot(x-u,y-v)<=tau))count++;
+ return count/samples.length;
 }
-async function chineseItems(){
- const response=await fetch('../../prc/catalog.json');
- if(!response.ok)throw Error('PRC catalog: HTTP '+response.status);
- const data=await response.json();
- if(data.schema!=='prc-public-coarse-catalog-v1'||data.region!=='cn-s'||!data.partners||data.human_readability_validated!==false)throw Error('PRC provenance mismatch');
- const anchors=['甲','由','王','玉','目','田','回','国','上','下','日','昌'],chosen=[],seen=new Set();
- for(const a of anchors){
-  const options=data.partners[a]||[];
-  const best=options.find(x=>Array.isArray(x)&&x[0]!==a&&!seen.has([a,x[0]].sort().join(':')))||options[0];
-  if(!best)continue;
-  const b=best[0],key=[a,b].sort().join(':');
-  if(seen.has(key))continue;
-  seen.add(key);chosen.push({id:'prc-'+a.codePointAt(0)+'-'+b.codePointAt(0),track:'cn',a,b,method:'prc-source-vector-union',source:'Make Me a Hanzi · pinned source',svg:''});
+function japaneseSvg(row,glyphs){
+ const pathsA=glyphs[row.a],pathsB=glyphs[row.b];
+ if(!Array.isArray(pathsA)||!pathsA.length||!Array.isArray(pathsB)||!pathsB.length)throw Error('Missing pinned Japanese paths');
+ const root=document.createElementNS(NS,'svg');root.setAttribute('xmlns',NS);root.setAttribute('viewBox','0 0 109 109');root.setAttribute('class','construction');
+ const flip='rotate(180 54.5 54.5)';
+ function add(paths,width,opacity,rot=false){
+  const group=document.createElementNS(NS,'g');if(rot)group.setAttribute('transform',flip);
+  paths.forEach(d=>group.appendChild(jpPath(d,width,opacity)));root.appendChild(group);
  }
- const built=await Promise.all(chosen.map(async item=>{
-  try{const [a,b]=await Promise.all([finishedPaths(item.a),finishedPaths(item.b)]);item.svg=composite(a,b);return item;}
-  catch(error){console.warn('Unavailable candidate',item.id,error);return null;}
+ switch(row.method){
+  case 'jp-natural-self':case 'jp-natural-pair':
+  case 'jp-gpt-raster-iou':case 'jp-glm-translated-iou':case 'jp-claude-skeleton-f1':
+  case 'jp-claude-w1-warp':case 'jp-kimi-fft-iou':case 'jp-mistral-medians':case 'jp-minimax-rotgraph':
+   add(pathsA,5,1);break;
+  case 'jp-overlay':add(pathsA,4,.78);add(pathsB,4,.65,true);break;
+  case 'jp-c2-blend':add(pathsA,3.4,.68);add(pathsA,3.4,.68,true);break;
+  case 'jp-salience':case 'jp-shared':{
+   // Same path sampling, proximity thresholds and widths as generator/index.html;
+   // use monochrome black ink for the approved Reader Gallery presentation.
+   const aSamples=pathsA.map(d=>jpPoints(d));
+   const bSamples=pathsB.map(d=>jpPoints(d).map(([x,y])=>[109-x,109-y]));
+   const allA=aSamples.flat(),allB=bSamples.flat(),tau=row.tau||1.75;
+   function append(paths,samples,others,rot,opacity){
+    const group=document.createElementNS(NS,'g');if(rot)group.setAttribute('transform',flip);
+    paths.forEach((d,i)=>{
+     const ratio=jpProximity(samples[i],others,tau);
+     if(row.method==='jp-shared'&&ratio<.35)return;
+     group.appendChild(jpPath(d,row.method==='jp-shared'?5.8:(ratio>=.5?8.5:2.8),opacity));
+    });root.appendChild(group);
+   }
+   append(pathsA,aSamples,allB,false,.92);append(pathsB,bSamples,allA,true,.86);
+   break;
+  }
+  default:throw Error('Unknown Japanese rendering method '+row.method);
+ }
+ return new XMLSerializer().serializeToString(root);
+}
+async function galleryManifest(){
+ const response=await fetch('stimuli.json');
+ if(!response.ok)throw Error('Curated gallery: HTTP '+response.status);
+ const data=await response.json();
+ if(data.schema!=='sinogram-reader-curated-methods-v2'||!data.jp_glyphs||!Array.isArray(data.jp)||!data.cn_generated_manifest)throw Error('Curated source provenance mismatch');
+ return data;
+}
+async function japaneseItems(){
+ const data=await galleryManifest();
+ const examples=data.jp.map(x=>({...x,track:'jp',svg:japaneseSvg(x,data.jp_glyphs)}));
+ const types=new Set(examples.map(x=>x.method));
+ for(const method of ['jp-natural-self','jp-natural-pair','jp-overlay','jp-salience','jp-shared','jp-c2-blend','jp-gpt-raster-iou','jp-glm-translated-iou','jp-claude-skeleton-f1','jp-claude-w1-warp','jp-kimi-fft-iou','jp-mistral-medians','jp-minimax-rotgraph'])if(!types.has(method))throw Error('Japanese method absent: '+method);
+ return examples;
+}
+
+async function chineseItems(){
+ const selection=await galleryManifest();
+ const response=await fetch(selection.cn_generated_manifest||'generated/manifest.json');
+ if(!response.ok)throw Error('Published PRC output manifest missing');
+ const generated=await response.json();
+ if(generated.schema!=='sinogram-prc-method-examples-v1'||generated.source_commit!=='bddc96d41bef78427ed0e034e9f7e31d71fd1b92')throw Error('PRC operator provenance mismatch');
+ const outputs=generated.items.map(x=>({
+  id:x.id,method:x.method,a:x.a,b:x.b,type:x.type,status:x.status,
+  source:x.source,track:'cn',url:'generated/'+x.file,
+  metrics:x.metrics,svg_sha256:x.svg_sha256
  }));
- const available=built.filter(Boolean);
- if(!available.length)throw Error('No PRC source candidates available');
- return available;
+ const required=['cn-natural-self','cn-natural-pair','cn-source-union','cn-centre-optimisation','cn-extremity-reconciliation','cn-sector-deterministic','cn-sector-search','cn-width-fixed','cn-r-odd','cn-harmonic','cn-ab-fusion'];
+ const actual=new Set(outputs.map(x=>x.method));
+ for(const method of required)if(!actual.has(method))throw Error('Missing generated PRC method: '+method);
+ if(outputs.length!==22)throw Error('Unexpected PRC method example count');
+ return outputs;
 }
 function setIntroLanguage(code){
  if(!introTexts[code])return;
@@ -212,7 +281,7 @@ function show(id){
  $('privacy').textContent=id==='home'?introTexts[introLanguage].privacy:texts[track].privacy;
  window.scrollTo(0,0);
 }
-function methodText(method){const t=texts[track];if(method==='stroke-salience-v1')return t.methodV1;if(method==='stroke-salience-v2')return t.methodV2;return t.methodCN}
+function methodText(method){return methodLabels[track][method]||method}
 function render(){
  const t=texts[track],item=items[position];
  $('track-label').textContent=t.track;
@@ -221,6 +290,9 @@ function render(){
  $('question').textContent=t.question;
  $('method-title').textContent=t.method;
  $('method-value').textContent=methodText(item.method);
+ $('type-value').textContent=(typeLabels[track][item.type]||item.type)+' · '+(statusLabels[track][item.status]||item.status);
+ $('method-inventory-link').textContent=track==='cn'?'此方法：图解、实例和动画':'この手法の図解・実例・アニメーション';
+ $('method-inventory-link').href='../../methods/'+item.method+'/';
  $('notes-title').textContent=t.notes;
  $('next').textContent=position===items.length-1?t.finish:t.next;
  $('progress').textContent=(position+1)+' / '+items.length;
@@ -237,7 +309,9 @@ function render(){
  const image=$('glyph');
  image.style.transition='none';
  image.style.transform='rotate(0deg)';
- image.src=svgData(item.svg);
+ image.style.transformOrigin='50% 50%';
+ if(item.metrics?.selected_center){const [cx,cy]=item.metrics.selected_center;image.style.transformOrigin=(100*cx/109).toFixed(3)+'% '+(100*cy/109).toFixed(3)+'%';}
+ image.src=item.url||svgData(item.svg);
  $('angle').textContent='0°';
  $('rotate').setAttribute('aria-label',t.rotate+'0°');
  void image.offsetWidth;
@@ -259,7 +333,7 @@ function next(){
  if(turns<1){$('warning').textContent=t.needTurn;return;}
  if(!answer){$('warning').textContent=t.needChoice;return;}
  const item=items[position];
- results.push({position:position+1,id:item.id,track,method:item.method,source:item.source,intended_a:item.a,intended_b:item.b,meaning_orientations:Number(answer.value),turn_count:turns,observation:$('note').value.trim()});
+ results.push({position:position+1,id:item.id,track,method:item.method,type:item.type,status:item.status,source:item.source,svg_sha256:item.svg_sha256||'',intended_a:item.a,intended_b:item.b,meaning_orientations:Number(answer.value),turn_count:turns,observation:$('note').value.trim()});
  position+=1;
  if(position===items.length){complete();return;}
  render();
@@ -276,13 +350,13 @@ function report(){
  return {schema:'sinogram-simple-reader-v1',track,seed,explanation:'0 = neither orientation meaningful; 1 = one orientation meaningful; 2 = both orientations meaningful',answers:results};
 }
 function csv(){
- const keys=['position','id','track','method','source','intended_a','intended_b','meaning_orientations','turn_count','observation'];
+ const keys=['position','id','track','method','type','status','source','svg_sha256','intended_a','intended_b','meaning_orientations','turn_count','observation'];
  const enc=value=>'"'+String(value??'').replace(/"/g,'""')+'"';
  return '\uFEFF'+[keys.map(enc).join(','),...results.map(row=>keys.map(k=>enc(row[k])).join(','))].join('\r\n')+'\r\n';
 }
 function txt(){
  const values=['Sinogram Ambigrams · Reader Gallery','Track: '+track,'Evaluated: '+results.length,'Rating: 0=neither, 1=one, 2=both',''];
- for(const x of results){values.push(x.position+'. '+x.id+' | method: '+x.method+' | meaning: '+x.meaning_orientations+'/2 | turns: '+x.turn_count);values.push('Notes: '+(x.observation||'—'));values.push('');}
+ for(const x of results){values.push(x.position+'. '+x.id+' | method: '+x.method+' | type: '+x.type+' | status: '+x.status+' | meaning: '+x.meaning_orientations+'/2 | turns: '+x.turn_count);values.push('Notes: '+(x.observation||'—'));values.push('');}
  return values.join('\n');
 }
 function download(ext,body,mime){
