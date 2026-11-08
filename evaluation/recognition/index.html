@@ -16,7 +16,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 .hidden{display:none!important}
 .wrap{width:min(700px,calc(100% - 32px));margin-inline:auto}
 header{border-bottom:1px solid var(--line);background:var(--sheet)}
-header .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;min-height:66px}
+header .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;min-height:66px}.lang-switch{display:flex;gap:4px;align-items:center}.lang-switch button{border:0;border-radius:7px;background:transparent;color:var(--ink);padding:7px 9px;font:700 12px var(--sans)}.lang-switch button[aria-pressed=true]{background:var(--ink);color:var(--sheet)}
 .brand{font:700 18px var(--serif);color:var(--ink);text-decoration:none}
 .brand span{color:var(--red)}
 .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--red)}
@@ -62,18 +62,17 @@ footer a{color:var(--red)}
 </style>
 </head>
 <body>
-<header><div class="wrap"><a class="brand" href="../../">Sinogram <span>↻</span> Ambigrams</a><span class="eyebrow">READER GALLERY</span></div></header>
+<header><div class="wrap"><a class="brand" href="../../">Sinogram <span>↻</span> Ambigrams</a><div id="introLangs" class="lang-switch" role="group" aria-label="Introduction language"><button type="button" data-intro-lang="en" aria-pressed="true">EN</button><button type="button" data-intro-lang="zh" aria-pressed="false">中文</button><button type="button" data-intro-lang="ja" aria-pressed="false">日本語</button></div></div></header>
 <main class="wrap">
 <section id="home">
- <div class="eyebrow">180° · 汉字 · 漢字</div>
- <h1>旋转阅读 · 回転して読む</h1>
- <p class="lead">选择要评价的文字。点击图形，它将旋转 180°。</p>
- <p class="lead">評価する文字を選んでください。図形をタップすると180°回転します。</p>
+ <div class="eyebrow" id="intro-eyebrow">180° · Chinese / Japanese</div>
+ <h1 id="intro-title">One drawing. Two readings.</h1>
+ <p class="lead" id="intro-description">Choose Chinese or Japanese characters. Tap the ambigram to rotate it 180°.</p>
  <div class="selection">
-  <button type="button" class="language-card" id="choose-cn"><strong>汉字</strong><span>中文 · Chinese characters</span></button>
-  <button type="button" class="language-card" id="choose-jp"><strong>漢字</strong><span>日本語 · Japanese characters</span></button>
+  <button type="button" class="language-card" id="choose-cn"><strong>汉字</strong><span id="intro-cn">Chinese characters</span></button>
+  <button type="button" class="language-card" id="choose-jp"><strong>漢字</strong><span id="intro-jp">Japanese characters</span></button>
  </div>
- <p class="small">每次仅显示一种文字。 / 一度に一つの言語の文字だけを表示します。</p>
+ <p class="small" id="intro-note">Only the chosen writing system will appear in your gallery.</p>
  <p class="small" id="home-error" role="alert"></p>
 </section>
 <section id="gallery" class="hidden">
@@ -107,12 +106,17 @@ footer a{color:var(--red)}
   <p class="small" id="done-privacy" style="margin-top:18px"></p>
  </div>
 </section>
-<footer><p id="privacy">回答不会自动发送。 / 回答は自動送信されません。</p><a href="https://github.com/ClaudioDrews/sinogram-ambigram">GitHub · Sinogram Ambigrams</a></footer>
+<footer><p id="privacy">Your responses are never sent automatically.</p><a href="https://github.com/ClaudioDrews/sinogram-ambigram">GitHub · Sinogram Ambigrams</a></footer>
 </main>
 <script>
 (function(){
 'use strict';
 const $=id=>document.getElementById(id);
+const introTexts={
+ en:{eyebrow:"180° · Chinese / Japanese",title:"One drawing. Two readings.",description:"Choose Chinese or Japanese characters. Tap the ambigram to rotate it 180°.",cn:"Chinese characters",jp:"Japanese characters",note:"Only the chosen writing system will appear in your gallery.",privacy:"Your responses are never sent automatically."},
+ zh:{eyebrow:"180° · 中文 / 日文",title:"一幅图形，两种方向。",description:"请选择中文汉字或日文汉字。点击旋转合字，即可观看其旋转 180°。",cn:"中文汉字",jp:"日文汉字",note:"每次只显示您选择的文字。",privacy:"您的回答不会自动发送。"},
+ ja:{eyebrow:"180° · 中国語 / 日本語",title:"一つの図形、二つの向き。",description:"中国語または日本語の漢字を選んでください。図形をタップすると180°回転します。",cn:"中国語の漢字",jp:"日本語の漢字",note:"選択した言語の文字だけが表示されます。",privacy:"回答は自動送信されません。"}
+};
 const texts={
  cn:{
   track:"中文汉字",title:"这个图形能表达意义吗？",tap:"点击图形，观看它旋转 180°。可再次点击旋转。",
@@ -134,7 +138,7 @@ const texts={
  }
 };
 const SOURCE='https://raw.githubusercontent.com/skishore/makemeahanzi/bddc96d41bef78427ed0e034e9f7e31d71fd1b92/svgs/';
-let track='',items=[],position=0,turns=0,results=[],seed=0;
+let track='',items=[],position=0,turns=0,results=[],seed=0,introLanguage='en';
 function svgData(svg){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}
 function choose(list){const x=list.slice();let state=seed>>>0;const rand=()=>{let t=state+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296};for(let i=x.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
 function scoreMethod(stratum){return stratum==='v1-top'?'stroke-salience-v1':'stroke-salience-v2'}
@@ -190,7 +194,24 @@ async function chineseItems(){
  if(!available.length)throw Error('No PRC source candidates available');
  return available;
 }
-function show(id){for(const name of ['home','gallery','done'])$(name).classList.toggle('hidden',name!==id);window.scrollTo(0,0)}
+function setIntroLanguage(code){
+ if(!introTexts[code])return;
+ introLanguage=code;
+ const copy=introTexts[code];
+ for(const [key,id] of [['eyebrow','intro-eyebrow'],['title','intro-title'],['description','intro-description'],['cn','intro-cn'],['jp','intro-jp'],['note','intro-note']])$(id).textContent=copy[key];
+ document.querySelectorAll('[data-intro-lang]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.introLang===code)));
+ if(!$('home').classList.contains('hidden')){
+  document.documentElement.lang=code==='zh'?'zh-Hans':code;
+  $('privacy').textContent=copy.privacy;
+ }
+}
+function show(id){
+ for(const name of ['home','gallery','done'])$(name).classList.toggle('hidden',name!==id);
+ $('introLangs').classList.toggle('hidden',id!=='home');
+ document.documentElement.lang=id==='home'?(introLanguage==='zh'?'zh-Hans':introLanguage):(track==='cn'?'zh-Hans':'ja');
+ $('privacy').textContent=id==='home'?introTexts[introLanguage].privacy:texts[track].privacy;
+ window.scrollTo(0,0);
+}
 function methodText(method){const t=texts[track];if(method==='stroke-salience-v1')return t.methodV1;if(method==='stroke-salience-v2')return t.methodV2;return t.methodCN}
 function render(){
  const t=texts[track],item=items[position];
@@ -283,6 +304,8 @@ async function start(which){
   console.error(error);$('home-error').textContent=texts[which].error;cn.disabled=false;jp.disabled=false;
  }
 }
+document.querySelectorAll('[data-intro-lang]').forEach(button=>button.addEventListener('click',()=>setIntroLanguage(button.dataset.introLang)));
+setIntroLanguage('en');
 $('choose-cn').addEventListener('click',()=>start('cn'));
 $('choose-jp').addEventListener('click',()=>start('jp'));
 $('rotate').addEventListener('click',rotate);
