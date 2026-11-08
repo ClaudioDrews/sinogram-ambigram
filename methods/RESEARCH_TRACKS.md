@@ -1,83 +1,86 @@
-# Research-track audit and method inventory
+# Methods, examples and evidence inventory
 
-**Audit date:** 2026-11-08 · **Source:** `main` at `77ec5e7`, PRs #13–#17, #19, #21, #26–#27 and live GitHub Pages.  
-**Purpose:** Make tested methods discoverable without conflating ranking, construction and recognition. [Interactive map](index.html) · [Project overview](../README.md).
+**Both Japanese kanji and Chinese hanzi are equal-priority experimental research tracks.** This file inventories *all* the method families that the public examples cover. A method can be a geometric candidate search, a source-glyph rotation, or a construction operator; these are distinct kinds of experiments, not interchangeable "generators".
 
-## Definitions
+**Reproducibility update (2026-11-08):** The original Chinese R-ODD, harmonic and A/B fusion PRs remain open and separate for historical provenance, but their tested algorithm modules and tests were copied into the integrated research publication branch. The pinned-source [output manifest](../evaluation/recognition/generated/manifest.json) now contains **22 genuine PRC-source algorithm examples spanning 11 categories**. The original 48-item Japanese evaluation protocol is unchanged.
 
-- **Natural self-rotation / C₂ candidate:** rotate an unmodified source glyph by 180°; the claimed second reading has not been demonstrated.
-- **Natural A↔B candidate:** a source glyph A, with R(A) geometrically close to B; screening is not synthesis.
-- **Constructed geometry:** an algorithm emits a single modified or combined drawing from one or more source glyphs.
-- **Experimental failure / no-op:** a measured implementation with no demonstrated image improvement or changed output. These outputs still belong in the research record.
-- **Recognition:** the published Reader Gallery collects voluntary, unverified three-choice impressions. The draft blind VLM study is not a human-reader study.
+## Evidence distinction
 
-A **method has a demonstrated visual output** only when the example is attributed to the code path that actually generated that output. A conceptual field diagram and an unmodified glyph are not interchangeable with an operator-generated output.
+- **Historic search metric example:** A visual explanation using current pinned KanjiVG paths, *not* a falsely attributed reconstruction of GPT, GLM, Claude, Kimi or Mistral's historic font datasets.
+- **Natural candidate:** Source glyph rotated unchanged, possibly against another predicted source character; geometric proximity is not readability.
+- **Construction output:** Image emitted by the named algorithm. Unchanged pixels/no-op are genuine negative findings and remain visible.
+- **Recognized ambigram:** Requires independent human native-reader evaluation, which this project has not established.
 
-## Japanese KanjiVG — computational screening
+## Full methods matrix
 
-| Tested run / method | Code/evidence | In main? | Public demo / example | Boundary |
+| Track | Category | Method and illustrated page | Example | Implementation / outcome |
 | --- | --- | --- | --- | --- |
-| GPT raster IoU | [Metric definitions](metrics-comparison.md) | Historic report | [Research methods](index.html); [results](../findings/results-summary.md) | Comparison, **not** an output SVG constructor |
-| GLM translated raster IoU | [Metric definitions](metrics-comparison.md) | Historic report | [Research methods](index.html) | Translation policy changes rankings |
-| Claude v1 skeleton F-score | [Metric definitions](metrics-comparison.md) | Historic report | [Research methods](index.html) | Tolerance score, not a reading |
-| Claude v2 W1 + warp + structure | [Metric definitions](metrics-comparison.md) | Historic report | [Research methods](index.html) | Pre-filter can exclude viable glyphs |
-| Kimi FFT + IoU | [Measured summaries](../findings/results-summary.md) | Historic report | [C₂ visual lab](../demo/c2/) (related geometry, **not** a replay of Kimi's algorithm) | Font-sensitive |
-| Mistral median point-cloud | [Metric definitions](metrics-comparison.md) | Historic report | [Research methods](index.html) | Different source/normalisation |
-| MiniMax KanjiVG graph (Hausdorff, Chamfer, RMS, dilated IoU) | [Implemented pipeline](rotgraph-method.md) | **Yes** | [Generator](../generator/), [C₂](../demo/c2/), [candidate CSV](../data/rotation_pairs.csv) | Fixed scale/centre; biased ranking |
+| **Japanese · KanjiVG** | search | [GPT · raster IoU](jp-gpt-raster-iou/) | 甲 ↔ 由 | Historical search/comparison |
+| **Japanese · KanjiVG** | search | [GLM · translated raster IoU](jp-glm-translated-iou/) | 甲 ↔ 由 | Historical search/comparison |
+| **Japanese · KanjiVG** | search | [Claude v1 · tolerant skeleton F-score](jp-claude-skeleton-f1/) | 目 ↔ 目 | Historical search/comparison |
+| **Japanese · KanjiVG** | search | [Claude v2 · W1 + warp + structure](jp-claude-w1-warp/) | 甲 ↔ 由 | Historical search/comparison |
+| **Japanese · KanjiVG** | search | [Kimi · FFT + raster IoU](jp-kimi-fft-iou/) | 目 ↔ 目 | Historical search/comparison |
+| **Japanese · KanjiVG** | search | [Mistral · median point clouds](jp-mistral-medians/) | 王 ↔ 玉 | Historical search/comparison |
+| **Japanese · KanjiVG** | search | [MiniMax · KanjiVG rotation graph](jp-minimax-rotgraph/) | 甲 ↔ 由 | Implemented geometric search |
+| **Japanese · KanjiVG** | visual | [Natural C₂ / unmodified self-rotation](jp-natural-self/) | 目 ↔ 目 | Source-form geometric candidate |
+| **Japanese · KanjiVG** | visual | [Natural distinct A↔B candidate](jp-natural-pair/) | 甲 ↔ 由 | Source-form geometric candidate |
+| **Japanese · KanjiVG** | visual | [Direct overlay](jp-overlay/) | 甲 ↔ 由 | Exploratory constructed drawing |
+| **Japanese · KanjiVG** | visual | [Shared-stroke salience](jp-salience/) | 甲 ↔ 由 | Exploratory constructed drawing |
+| **Japanese · KanjiVG** | visual | [Shared structure extraction](jp-shared/) | 王 ↔ 玉 | Diagnostic, not finished ambigram |
+| **Japanese · KanjiVG** | visual | [C₂ geometric blend](jp-c2-blend/) | 田 ↔ 田 | Exploratory constructed drawing |
+| **Chinese · MMah** | search | [Natural C₂ / self-rotation](cn-natural-self/) | 田 ↔ 田 | PRC-source geometric candidate |
+| **Chinese · MMah** | search | [Natural distinct-character search](cn-natural-pair/) | 甲 ↔ 由 | PRC-source geometric candidate |
+| **Chinese · MMah** | construction | [Simple source union](cn-source-union/) | 甲 ↔ 由 | Actual PRC operator output |
+| **Chinese · MMah** | construction | [Rotation centre optimisation](cn-centre-optimisation/) | 田 ↔ 田 | Actual PRC centre-selection output |
+| **Chinese · MMah** | construction | [Terminal / extremity reconciliation](cn-extremity-reconciliation/) | 田 ↔ 田 | Actual experimental operator output |
+| **Chinese · MMah** | construction | [Deterministic sector thickness (R-SECT)](cn-sector-deterministic/) | 田 ↔ 田 | Actual experimental operator output |
+| **Chinese · MMah** | construction | [Constrained sector thickness search](cn-sector-search/) | 目 ↔ 目 | Actual experimental operator output |
+| **Chinese · MMah** | construction | [Corrected measured half-width](cn-width-fixed/) | 田 ↔ 田 | Actual corrected raster baseline |
+| **Chinese · MMah** | construction | [R-ODD local compensation](cn-r-odd/) | 田 ↔ 田 | Actual experimental operator output |
+| **Chinese · MMah** | construction | [C₂-even harmonic thickness field](cn-harmonic/) | 目 ↔ 目 | Actual experimental operator output |
+| **Chinese · MMah** | construction | [Registered A/B stroke fusion](cn-ab-fusion/) | 甲 ↔ 由 | Actual experimental operator output; measured no-op |
 
-**Important count:** Seven computational **variants**, drawn from **six code-producing runs**, not seven different ambigram renderers. Historic GPT/GLM/Claude/Kimi/Mistral outputs cannot be relabelled as outputs of the current KanjiVG generator.
+Each of the **24 methods above has its own HTML page** with a rotatable visual, formula, evidence note, source links and an animated half-turn. [Open the trilingual illustrated Methods index](index.html). [Native Reader Gallery](../evaluation/recognition/) samples every listed method family.
 
-## Japanese KanjiVG — source views and constructions
+## Chinese source-derived algorithm outputs
 
-| Type / operation | Code/evidence | In main? | Visual availability | Critical label |
-| --- | --- | --- | --- | --- |
-| Natural self-rotation (A↔A / C₂) | [C₂ data](../data/c2_class.csv), [C₂ Lab](../demo/c2/) | **Yes** | [C₂ Lab](../demo/c2/); source-glyph examples in [Reader Gallery](../evaluation/recognition/) | Unmodified Japanese KanjiVG glyph; unverified reading |
-| Natural distinct-character A↔B candidate | [Pair CSV](../data/rotation_pairs.csv), [pair matrix](../findings/pair-evidence-matrix.md) | **Yes** | [Generator](../generator/); source-only item in [Reader Gallery](../evaluation/recognition/) | Source A only; B is a geometric prediction |
-| Overlay | [Generator method](../generator/README.md) | **Yes** | [Generator](../generator/) · [Reader Gallery](../evaluation/recognition/) | Diagnostic overlay, not a fused validated glyph |
-| Stroke salience | [Generator method](../generator/README.md), [Python prototype](../code/make_ambigram.py) | **Yes** | [Generator](../generator/) · [48-item pilot](../evaluation/items.json) | Salience operation; `v1-top`/`v2-top` are selection strata |
-| Shared structure | [Generator method](../generator/README.md) | **Yes** | [Generator](../generator/) · [Reader Gallery](../evaluation/recognition/) | May discard distinctive strokes; diagnostic, not an ambigram success |
-| C₂ source + symmetric rendering | [Generator](../generator/README.md), [C₂ Lab](../demo/c2/) | **Yes** | [Generator](../generator/) · [C₂ Lab](../demo/c2/) | The algebraic even field is not necessarily a legible glyph |
+Unlike an unexecuted proposal, the following examples are computed using the actual Python operator, not a replacement illustration. Source geometry is pinned to [Make Me a Hanzi](https://github.com/skishore/makemeahanzi) commit `bddc96d41bef78427ed0e034e9f7e31d71fd1b92`, SHA-256 `a28c478b5178e98f67f510b2d52fde08a69dc664654ef43498253b9b764d46ee`.
 
-## Chinese GB2312 / Make Me a Hanzi
+| Method | Real SVG examples | Did the output differ from the source? | Reproduction |
+| --- | ---: | --- | --- |
+| [Natural C₂ / self-rotation](cn-natural-self/) | [田↔田](../evaluation/recognition/generated/cn-natural-self-30000-30000.svg) · [目↔目](../evaluation/recognition/generated/cn-natural-self-30446-30446.svg) | unchanged from source / unchanged from source | [Builder](../code/build_prc_method_gallery.py) |
+| [Natural distinct-character search](cn-natural-pair/) | [甲↔由](../evaluation/recognition/generated/cn-natural-pair-30002-30001.svg) · [王↔玉](../evaluation/recognition/generated/cn-natural-pair-29579-29577.svg) | unchanged from source / unchanged from source | [Builder](../code/build_prc_method_gallery.py) |
+| [Simple source union](cn-source-union/) | [甲↔由](../evaluation/recognition/generated/cn-source-union-30002-30001.svg) · [王↔玉](../evaluation/recognition/generated/cn-source-union-29579-29577.svg) | changed from source / changed from source | [Builder](../code/build_prc_method_gallery.py) |
+| [Rotation centre optimisation](cn-centre-optimisation/) | [田↔田](../evaluation/recognition/generated/cn-centre-optimisation-30000-30000.svg) · [目↔目](../evaluation/recognition/generated/cn-centre-optimisation-30446-30446.svg) | unchanged from source / unchanged from source | [Builder](../code/build_prc_method_gallery.py) |
+| [Terminal / extremity reconciliation](cn-extremity-reconciliation/) | [田↔田](../evaluation/recognition/generated/cn-extremity-reconciliation-30000-30000.svg) · [目↔目](../evaluation/recognition/generated/cn-extremity-reconciliation-30446-30446.svg) | changed from source / changed from source | [Builder](../code/build_prc_method_gallery.py) |
+| [Deterministic sector thickness (R-SECT)](cn-sector-deterministic/) | [田↔田](../evaluation/recognition/generated/cn-sector-deterministic-30000-30000.svg) · [目↔目](../evaluation/recognition/generated/cn-sector-deterministic-30446-30446.svg) | changed from source / changed from source | [Builder](../code/build_prc_method_gallery.py) |
+| [Constrained sector thickness search](cn-sector-search/) | [田↔田](../evaluation/recognition/generated/cn-sector-search-30000-30000.svg) · [目↔目](../evaluation/recognition/generated/cn-sector-search-30446-30446.svg) | changed from source / changed from source | [Builder](../code/build_prc_method_gallery.py) |
+| [Corrected measured half-width](cn-width-fixed/) | [田↔田](../evaluation/recognition/generated/cn-width-fixed-30000-30000.svg) · [目↔目](../evaluation/recognition/generated/cn-width-fixed-30446-30446.svg) | unchanged from source / unchanged from source | [Builder](../code/build_prc_method_gallery.py) |
+| [R-ODD local compensation](cn-r-odd/) | [田↔田](../evaluation/recognition/generated/cn-r-odd-30000-30000.svg) · [目↔目](../evaluation/recognition/generated/cn-r-odd-30446-30446.svg) | changed from source / changed from source | [Builder](../code/build_prc_method_gallery.py) |
+| [C₂-even harmonic thickness field](cn-harmonic/) | [田↔田](../evaluation/recognition/generated/cn-harmonic-30000-30000.svg) · [目↔目](../evaluation/recognition/generated/cn-harmonic-30446-30446.svg) | changed from source / changed from source | [Builder](../code/build_prc_method_gallery.py) |
+| [Registered A/B stroke fusion](cn-ab-fusion/) | [甲↔由](../evaluation/recognition/generated/cn-ab-fusion-30002-30001.svg) · [韦↔芈](../evaluation/recognition/generated/cn-ab-fusion-38886-33416.svg) | identical to union baseline / identical to union baseline | [Builder](../code/build_prc_method_gallery.py) |
 
-| Tested method / category | Code / findings | In main? | Public visual example | Evidence status |
-| --- | --- | --- | --- | --- |
-| Natural self-rotation screening | [Coarse search](PRC_COARSE_SEARCH.md), [extremity findings](../findings/prc-extremity-analysis.md) | **Yes** | [PRC Explorer](../prc/) and [Reader Gallery](../evaluation/recognition/) | Coarse geometric candidate |
-| Natural distinct A↔B screening | [Coarse search](PRC_COARSE_SEARCH.md), [catalogue](../prc/catalog.json) | **Yes** | [PRC Explorer](../prc/) and [Reader Gallery](../evaluation/recognition/) | 106,347 shortlisted pairs; not human-validated |
-| Source-vector union | [PRC Explorer](../prc/README.md) | **Yes** (browser) | [PRC Explorer](../prc/), [Reader Gallery](../evaluation/recognition/) | Unmodified A + rotated B, not a refined constructor |
-| Rotation-centre optimization | [Construction theory](../theory/prc-construction-method.md), [code](../code/prc_construct.py) | **Yes** (research code) | [C₂ Lab](../demo/c2/) demonstrates centre parameter; **not an emitted PRC optimization result** | Candidate geometric optimization |
-| Extremity / terminal reconciliation | [Theory](../theory/prc-construction-method.md), [code](../code/prc_construct.py) | **Yes** (research code) | See [reproduction instructions](../theory/prc-construction-method.md); **no audited gallery SVG** | Experimental operator |
-| Sector thickness — deterministic | [Theory](../theory/prc-construction-method.md), [code](../code/prc_construct.py) | **Yes** (research code) | No audited public method-specific SVG in the Reader Gallery | Experimental operator |
-| Sector thickness — constrained search | [Theory](../theory/prc-construction-method.md), [code](../code/prc_construct.py) | **Yes** (research code) | No audited public method-specific SVG in the Reader Gallery | Experimental operator |
-| Width semantics v2 | [PR #19](https://github.com/ClaudioDrews/sinogram-ambigram/pull/19), [fidelity study](../findings/prc-width-contour-fidelity.md) | **Yes** | [C₂ Lab](../demo/c2/) illustrative bands + measured stats | **32/32 contour-fidelity improvement, not reading** |
-| R-ODD local compensation | [PR #14](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14) | **No — draft** | [PR #14 reproducible preview workflow](https://github.com/ClaudioDrews/sinogram-ambigram/pull/14); [C₂ Lab](../demo/c2/) is concept-only | No controlled reader evidence |
-| Harmonic C₂-even thickness | [PR #15](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15) | **No — draft** | [PR #15 reproducible preview workflow](https://github.com/ClaudioDrews/sinogram-ambigram/pull/15); [C₂ Lab](../demo/c2/) is concept-only | No controlled reader evidence |
-| Registered A/B fusion | [PR #16](https://github.com/ClaudioDrews/sinogram-ambigram/pull/16), [null diagnosis](../findings/prc-ab-fusion-null-diagnosis.md) | **No — draft** | [C₂ Lab no-op visualization](../demo/c2/), [threshold study PR #21](https://github.com/ClaudioDrews/sinogram-ambigram/pull/21) | 0/32 changed final rasters in later threshold study |
+**Important:** For centre optimisation, the source ink can be unchanged while its selected rotation centre differs from the box centre. The page and gallery record that centre. For A/B fusion the two published test cases are **pixel-identical to the source-union baseline**; they are not presented as an improved fusion. The source-width correction has its separate 32-glyph original-outline fidelity benchmark, which does *not* measure human legibility.
 
-**Important:** the original draft thickness correction [PR #13](https://github.com/ClaudioDrews/sinogram-ambigram/pull/13) was not merged directly. [PR #19](https://github.com/ClaudioDrews/sinogram-ambigram/pull/19) safely introduced the corrected geometry while preserving historical v1.16 replay. Do not combine these numerical scales.
+**Not merged by simple PR merge:** the original experimental PR #14 (R-ODD), #15 (harmonic), #16 (A/B), and #21 (threshold sweep) remain independent experiment discussions. The method modules and real output assets were integrated selectively into this publication branch with tests, not by discarding their evidence or equating metrics.
 
-## Public-site and gallery audit
+## Japanese historical provenance and visual-mode distinction
 
-| Page | Track | What it actually shows | Gap / fix |
-| --- | --- | --- | --- |
-| [Home](../index.html) | Both | Links to major tools | Add independent research-track and Methods navigation |
-| [Japanese Generator](../generator/) | JP/KanjiVG | Candidate ranking + four rendering modes | Explain input-language selector does not change glyph source |
-| [Rotation Lab](../demo/) | JP/KanjiVG | Sixteen experiments | Better discoverability via Methods |
-| [C₂ Lab](../demo/c2/) | JP and PRC research | Exact C₂ decomposition, measured PRC width and A/B no-op, field *concepts* | Do not pretend diagrams are algorithm output |
-| [PRC Explorer](../prc/) | CN/MMah | Coarse ranked candidates and original-source overlay | No integrated multi-operator renderer yet |
-| [Reader Gallery](../evaluation/recognition/) | Separate JP and CN | Simple per-language meaning-choice review | Retain UI; use identifiable actual method provenance |
-| [48-item pilot](../evaluation/index.html) | JP/KanjiVG | Different larger-sample protocol | **Do not edit** its 48 original items to change the simple gallery |
+Seven historical algorithm/metric variants were tested in **six code-producing runs** (GPT, GLM, Claude v1/v2, Kimi, Mistral, MiniMax). The earlier run data use different sources and fonts, with noncomparable numeric scales. Every method page shows its intended geometric input and technique, but only current KanjiVG generator modes claim to produce actual current KanjiVG drawings.
 
-**Remaining research gap, not something to disguise in a user interface:** some draft PRC operators have no audited, redistributable method-specific images on `main`. Producing those requires running the exact branch algorithm on pinned licensed source geometry, provenance/hashes and licensing review; a source glyph or conceptual field cannot be passed off as the algorithm's output. Such experiments remain discoverable through direct PR/reproduction links. The Reader Gallery must not silently invent missing successful constructions.
+Japanese actual visual operations: source-only natural C₂; source-only A↔B comparison; overlay; stroke salience; shared structure; C₂ blend. The `v1-top` and `v2-top` labels in [historic 48-item pilot](../evaluation/items.json) are *selection/ranking strata*, never two independently developed drawing algorithms.
 
-## Evidence and licensing rules
+See [metrics comparison](metrics-comparison.md), [ranking method](rotgraph-method.md), [results summary](../findings/results-summary.md), [pair evidence](../findings/pair-evidence-matrix.md), [known biases](../findings/known-biases.md), [C₂ Lab](../demo/c2/).
 
-1. Geometric score ≠ human legibility. A self-rotation or pair candidate is not automatically a successful ambigram.
-2. No controlled, independent native-reader validation exists. [Draft VLM pilot #17](https://github.com/ClaudioDrews/sinogram-ambigram/pull/17) includes 52 images/208 model readings but is not a human study.
-3. The original Japanese Generator is Japanese KanjiVG even if its UI input language reads “Chinese”; PRC GB2312 uses MMah. Source licences differ: KanjiVG CC BY-SA 3.0; MMah-derived outlines Arphic Public License.
-4. The Reader Gallery is exploratory, includes diagnostic negatives, and its method labels identify the *actual drawing process*. Never pool methods/tracks or interpret its unadjudicated selections as measured recognition rates.
-5. [Full limitations](../findings/limitations.md), [source boundary](../SCOPE.md), [licence audit](../LICENSE-AUDIT.md).
+## Validation gates
 
-## Future stimulus quality gate
+1. **Correct source:** Japanese KanjiVG and Chinese MMah geometry remain separate. The Generator’s input-language option does not change its original KanjiVG geometry source.
+2. **Actual operation:** Every Chinese constructed example is reproduced by [`code/build_prc_method_gallery.py`](../code/build_prc_method_gallery.py); labels reflect actual algorithms and precise parameters.
+3. **Controlled data:** The visual gallery uses its separate [`stimuli.json`](../evaluation/recognition/stimuli.json) and [generated manifest](../evaluation/recognition/generated/manifest.json). It does not silently rewrite the historic 48-item pilot.
+4. **Measured nulls:** unchanged source contours, unchanged A/B union, and unsuccessful recognition are reported, not hidden.
+5. **No human-legibility inference:** even 22 correctly generated SVGs and successful CI prove only the geometric procedures, not human interpretation.
+6. **Source licences:** [KanjiVG CC BY-SA 3.0](../NOTICE.md) and MMah [Arphic Public License](../licenses/ARPHICPL.TXT) apply to adapted assets; the MIT licence does not supersede either.
 
-Before admitting a draft-only operator to the Reader Gallery: (a) pin the source and branch commit; (b) run its actual implementation; (c) preserve image hash, pair, centre/parameters and operator; (d) verify it is not a duplicate/no-op of another arm; (e) review visual quality and redistribution terms; (f) label failures as failures; (g) ensure that the exported data records exact method/provenance. This gate is **not** a requirement that all images look good, only that every label is true.
+## Remaining work
+
+Further shape refinement, broader representative glyph sampling, regional-form certification, genuine held-out human native-reader adjudication, and repeatability testing across independent fonts remain open. The project's **scope and documented methods are complete in this index; the science itself remains experimental**.
