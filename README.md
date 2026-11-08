@@ -161,7 +161,7 @@ The separate **CN-S (Mainland simplified Chinese)** research track now includes 
 
 **Scope boundary:** this remains an experimental *construction method*, not a Chinese-wide generator or a human-validated legibility result. The archived PRC construction-cohort measurements have a separate pinned-source reproduction documented above. The newly integrated R-ODD, harmonic-field and A/B fusion modules remain **experimental**, with actual source-pinned examples but **without established human readability**. Native-reader studies and certified regional forms remain outstanding. Japanese and PRC-source inventories must not be mixed in rankings.
 
-### Research currently in draft branches (not released on `main`)
+### Historical experimental PRs and selective code integration
 
 The original standalone experimental PRs remain separate and unmerged for provenance. **Their tested R-ODD, harmonic, and A/B fusion operator modules and regression tests have now been integrated through the research-methods publication PR #28**; each genuine algorithm image appears in the method-specific examples and Gallery. Keeping the original PRs open does not mean these operators are omitted from the integration. None establishes human readability.
 
