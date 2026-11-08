@@ -55,7 +55,7 @@ label{display:block;font-size:13px;font-weight:650;margin:0 0 6px}input,select,t
 <div id="readFields">
 <div class="question"><div class="opt-grid" id="recognitionOptions"></div></div>
 <div class="question"><label for="reading" data-t="reading">Which character do you see? (type it if possible)</label><input id="reading" type="text" maxlength="32" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="字 / 漢字"></div>
-<div class="question"><label data-t="meaningQuestion">Do you recognize a meaning for this reading?</label><div class="opt-grid" id="meaningOptions"></div></div><div class="question"><label for="meaningGloss" data-t="meaningGloss">Meaning in your own words (optional)</label><input id="meaningGloss" type="text" maxlength="140" autocomplete="off"></div><div class="question"><label for="confidence" data-t="confidence">Recognition confidence</label><select id="confidence"><option value="" data-t="choose">— choose —</option><option value="1">1 / 5</option><option value="2">2 / 5</option><option value="3">3 / 5</option><option value="4">4 / 5</option><option value="5">5 / 5</option></select></div>
+<div id="meaningFields"><div class="question"><label data-t="meaningQuestion">Do you recognize a meaning for this reading?</label><div class="opt-grid" id="meaningOptions"></div></div><div class="question"><label for="meaningGloss" data-t="meaningGloss">Meaning in your own words (optional)</label><input id="meaningGloss" type="text" maxlength="140" autocomplete="off"></div></div><div class="question"><label for="confidence" data-t="confidence">Recognition confidence</label><select id="confidence"><option value="" data-t="choose">— choose —</option><option value="1">1 / 5</option><option value="2">2 / 5</option><option value="3">3 / 5</option><option value="4">4 / 5</option><option value="5">5 / 5</option></select></div>
 </div>
 <div id="relationFields" class="hidden">
 <div class="compare" id="compare"></div>
@@ -239,6 +239,7 @@ function paint(){
  }else{
   makeOptions('recognitionOptions','status',t('status'));
   makeOptions('meaningOptions','meaning',t('meaningOptions'));
+  $('meaningFields').classList.remove('hidden');
   $('reading').value='';$('meaningGloss').value='';$('confidence').value='';
  }
 }
@@ -264,6 +265,7 @@ $('agree').onclick=()=>{const chosen=document.querySelector('input[name="sourceT
 $('decline').onclick=()=>{show('welcome');$('welcome').replaceChildren(document.createTextNode(t('declined')))};
 $('start').onclick=async()=>{respondent={native: $('native').value,proficiency:$('proficiency').value};if(!respondent.native||!respondent.proficiency){$('loadStatus').textContent=t('choose');return;}const button=$('start');button.disabled=true;$('loadStatus').textContent=t('loading');try{await load(track);show('study');phase='a';idx=0;paint()}catch(err){console.error(err);$('loadStatus').textContent=t('loadFail');button.disabled=false}};
 $('advance').onclick=next;$('skip').onclick=skip;
+$('recognitionOptions').addEventListener('change',()=>{$('meaningFields').classList.toggle('hidden',valueRadio('status')===2)});
 $('json').onclick=()=>download('sinogram-reader-'+seed+'.json','application/json;charset=utf-8',JSON.stringify(collect(),null,2));
 $('csv').onclick=()=>download('sinogram-reader-'+seed+'.csv','text/csv;charset=utf-8',csv());
 })();
