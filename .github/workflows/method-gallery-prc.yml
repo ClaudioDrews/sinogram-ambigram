@@ -1,0 +1,79 @@
+name: Generate pinned PRC method examples (review branch)
+
+on:
+  push:
+    branches:
+      - docs/research-tracks-gallery-20261108
+    paths:
+      - "code/build_prc_method_gallery.py"
+      - "code/prc_construct.py"
+      - "code/prc_r_odd.py"
+      - "code/prc_harmonic.py"
+      - "code/prc_ab_fusion.py"
+      - ".github/workflows/method-gallery-prc.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  examples:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install numeric and graphics dependencies
+        run: python -m pip install -r code/requirements.txt
+      - name: Download checksum-pinned licensed source
+        run: bash scripts/download_prc_sources.sh
+      - name: Execute actual integrated construction operators
+        run: python code/build_prc_method_gallery.py --graphics data/prc/graphics.txt
+      - name: Verify method coverage, static SVG and reproducible hashes
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          p = Path("evaluation/recognition/generated")
+          d = json.loads((p / "manifest.json").read_text())
+          assert d["schema"] == "sinogram-prc-method-examples-v1"
+          expected = {
+              "cn-natural-self", "cn-natural-pair", "cn-source-union",
+              "cn-centre-optimisation", "cn-extremity-reconciliation",
+              "cn-sector-deterministic", "cn-sector-search", "cn-width-fixed",
+              "cn-r-odd", "cn-harmonic", "cn-ab-fusion"
+          }
+          assert set(x["method"] for x in d["items"]) == expected
+          assert len(d["items"]) == 22
+          for item in d["items"]:
+              raw = (p / item["file"]).read_bytes()
+              assert raw.startswith(b'<svg ') and raw.rstrip().endswith(b'</svg>')
+              assert hashlib.sha256(raw).hexdigest() == item["svg_sha256"]
+          print("PASS: all actual PRC operator classes have reproducible SVG output")
+          PY
+      - name: Commit gallery assets to review branch only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add evaluation/recognition/generated/
+          if git diff --cached --quiet; then
+            echo "Method assets already committed"
+          else
+            git commit -m "assets: publish source-pinned PRC algorithm examples (Arphic)"
+            git push origin HEAD:docs/research-tracks-gallery-20261108
+          fi
+      - name: Archive generated examples and source-licence notice
+        uses: actions/upload-artifact@v4
+        with:
+          name: prc-method-gallery-verified
+          path: |
+            evaluation/recognition/generated/
+            licenses/ARPHICPL.TXT
+          retention-days: 90
