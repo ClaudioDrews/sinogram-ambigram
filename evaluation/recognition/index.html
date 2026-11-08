@@ -3,272 +3,292 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="A blind, multilingual human-recognition pilot for 180-degree rotational sinogram drawings.">
-<meta name="color-scheme" content="light dark">
-<title>Native Reader Lab · Sinogram Ambigrams</title>
+<meta name="description" content="A simple native-reader gallery: tap to turn a generated sinogram ambigram 180° and report meaning in both orientations.">
+<meta name="theme-color" content="#f3eee3">
+<title>Sinogram Ambigrams · Reader Gallery</title>
 <style>
-:root{--paper:#f3eee3;--sheet:#fcfaf4;--ink:#24211d;--sub:#645f55;--rule:#d9d0c2;--accent:#ad4c33;--accent-tint:#f5e1d9;--teal:#32666a;--serif:Georgia,'Noto Serif CJK SC','Noto Serif CJK JP',serif;--sans:system-ui,'Noto Sans CJK SC','Noto Sans CJK JP',sans-serif}
-@media(prefers-color-scheme:dark){:root{--paper:#171613;--sheet:#24211e;--ink:#ede5d7;--sub:#b1a99b;--rule:#494338;--accent:#e78a68;--accent-tint:#432a23;--teal:#80bdc2}}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 var(--sans)}.wrap{max-width:1020px;margin:auto;padding:0 22px}header{border-bottom:1px solid var(--rule);background:var(--sheet)}header .wrap{min-height:62px;display:flex;justify-content:space-between;align-items:center;gap:18px}.brand{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--ink);text-decoration:none}.brand i{color:var(--accent);font-style:normal}.langs{display:flex;gap:3px}.langs button{font-size:12px;border:none;background:transparent;padding:7px 9px}.langs button[aria-pressed=true]{background:var(--ink);color:var(--sheet)}
-main{padding:43px 0 74px}.eyebrow{font-size:11px;font-weight:750;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}h1,h2,h3{font-family:var(--serif);line-height:1.19;letter-spacing:-.018em}h1{font-size:clamp(34px,6vw,58px);max-width:780px;margin:14px 0 16px}h2{font-size:25px;margin:0 0 12px}h3{font-size:18px;margin:0 0 8px}p{margin:0 0 14px}.lead{max-width:72ch;font-size:17px;color:var(--sub)}.panel{border:1px solid var(--rule);background:var(--sheet);border-radius:14px;padding:clamp(18px,3vw,30px);margin-top:22px}.muted,.note{color:var(--sub)}.note{font-size:13px}.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.grow{flex:1}.actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:22px}.btn{cursor:pointer;font:600 14px var(--sans);border-radius:999px;border:1px solid var(--rule);background:transparent;color:var(--ink);padding:11px 20px;min-height:43px}.btn.primary{background:var(--ink);color:var(--sheet);border-color:var(--ink)}.btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}.btn.primary:hover{background:var(--accent);color:var(--sheet)}.btn:disabled{opacity:.5;cursor:not-allowed}.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-label{display:block;font-size:13px;font-weight:650;margin:0 0 6px}input,select,textarea{font:16px var(--sans);background:var(--sheet);color:var(--ink);border:1px solid var(--rule);border-radius:9px;padding:11px;width:100%;min-width:0}textarea{min-height:76px;resize:vertical}.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}.tiny{font-size:12px}.hidden{display:none!important}
-.study-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,340px);gap:22px;align-items:start}.stage{background:#fcfaf4;border:1px solid var(--rule);border-radius:14px;aspect-ratio:1;display:grid;place-items:center;overflow:hidden;position:relative;box-shadow:0 9px 27px #23180b0a}.stage img{width:100%;height:100%;object-fit:contain;transition:transform .9s cubic-bezier(.6,0,.3,1);transform-origin:50% 50%;padding:12px}.source-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:22px 0 16px}.source-option{position:relative;display:block;border:1px solid var(--rule);border-radius:14px;padding:18px 16px;cursor:pointer;background:var(--sheet);min-height:137px}.source-option input{position:absolute;top:14px;right:14px;width:18px;height:18px;accent-color:var(--accent)}.source-option:has(input:checked){border-color:var(--accent);background:var(--accent-tint);box-shadow:0 0 0 1px var(--accent)}.source-option strong{font:700 27px var(--serif);display:block}.source-option small{font:13px var(--sans);color:var(--sub)}@media(max-width:480px){.source-options{grid-template-columns:1fr}.source-option{min-height:auto}}.stage .cnArt{position:absolute;inset:0;width:100%;height:100%;transition:transform .65s cubic-bezier(.6,0,.3,1)}.stage .cnArt img,.compare .cnArt img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:7px}.stage .cnArt img.srcB,.compare .cnArt img.srcB{transform:rotate(180deg);opacity:.48}.compare .cnArt{position:relative;aspect-ratio:1;width:100%}.stage .angle{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);color:var(--sub);font:12px monospace;background:var(--sheet);border:1px solid var(--rule);border-radius:999px;padding:4px 11px}.side{position:relative}.side .panel{margin:0}.phase{display:inline-block;color:var(--teal);font-size:12px;letter-spacing:.09em;text-transform:uppercase;font-weight:800;margin:0 0 10px}.steptext{font-size:16px;color:var(--sub)}.question{margin-top:16px}.opt-grid{display:grid;gap:8px}.opt{display:flex;align-items:flex-start;gap:8px;font-weight:500;border:1px solid var(--rule);padding:9px 11px;border-radius:9px;cursor:pointer}.opt input{width:auto;margin:4px 0 0;accent-color:var(--accent)}.opt:has(input:checked){border-color:var(--accent);background:var(--accent-tint)}.compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}.compare figure{margin:0;background:#fcfaf4;border-radius:9px;text-align:center;padding:10px;min-width:0}.compare img{display:block;width:100%;aspect-ratio:1}.compare figcaption{font:12px var(--sans);color:var(--sub)}.progressbar{height:5px;background:var(--rule);border-radius:9px;overflow:hidden;margin:12px 0 22px}.progressbar>div{height:100%;width:0;background:var(--accent);transition:width .3s}.smallcaps{font:11px monospace;letter-spacing:.05em;color:var(--sub)}.footer{margin-top:46px;border-top:1px solid var(--rule);padding-top:22px;font-size:12px;color:var(--sub)}.footer a{color:var(--accent)}.notice{border-left:3px solid var(--accent);padding-left:14px}.summary{overflow-x:auto}.summary table{border-collapse:collapse;width:100%;font-size:12px}.summary td,.summary th{text-align:left;padding:8px;border-bottom:1px solid var(--rule)}.summary td:first-child{font-family:monospace}a{color:var(--accent)}
-@media(max-width:770px){.study-grid{grid-template-columns:1fr}.side .panel{margin-top:16px}.stage{max-width:520px;margin:auto}.wrap{padding:0 16px}main{padding-top:28px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important}}
-</style></head>
+:root{--paper:#f3eee3;--sheet:#fcfaf4;--ink:#26231f;--soft:#686054;--line:#d8d0c3;--red:#a94731;--redwash:#f8e8df;--serif:Georgia,"Noto Serif CJK SC","Noto Serif CJK JP",serif;--sans:system-ui,"Noto Sans CJK SC","Noto Sans CJK JP",sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 var(--sans)}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.hidden{display:none!important}
+.wrap{width:min(700px,calc(100% - 32px));margin-inline:auto}
+header{border-bottom:1px solid var(--line);background:var(--sheet)}
+header .wrap{display:flex;justify-content:space-between;align-items:center;gap:20px;min-height:66px}
+.brand{font:700 18px var(--serif);color:var(--ink);text-decoration:none}
+.brand span{color:var(--red)}
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--red)}
+h1{font:700 clamp(34px,6vw,51px)/1.16 var(--serif);letter-spacing:-.026em;margin:14px 0 18px}
+p{margin:0 0 15px}
+main{padding:44px 0 70px}
+.lead{font-size:18px;color:var(--soft);max-width:580px}
+.selection{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:32px 0}
+.language-card{background:var(--sheet);border:1px solid var(--line);border-radius:15px;min-height:178px;text-align:left;padding:23px 21px;color:var(--ink);transition:border-color .15s,transform .15s,box-shadow .15s}
+.language-card:hover{border-color:var(--red);transform:translateY(-2px);box-shadow:0 8px 24px #33251b13}
+.language-card strong{font:700 clamp(32px,6vw,45px)/1.25 var(--serif);display:block;margin-bottom:10px}
+.language-card span{display:block;font-size:14px;color:var(--soft)}
+.small{font-size:13px;color:var(--soft)}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px}
+.progress{font:700 13px var(--sans);color:var(--soft)}
+h2{font:700 clamp(20px,4vw,29px)/1.35 var(--serif);margin:0 0 15px}
+.instructions{text-align:center;color:var(--soft);font-size:15px;margin:0 0 13px}
+.glyph-button{width:100%;border:1px solid var(--line);border-radius:17px;background:var(--sheet);min-height:310px;aspect-ratio:1/1;display:grid;place-items:center;position:relative;overflow:hidden;touch-action:manipulation;-webkit-tap-highlight-color:transparent;padding:10px}
+.glyph-button:hover{border-color:var(--red)}
+.glyph{display:block;width:min(88%,460px);height:88%;object-fit:contain;transform:rotate(0deg);transform-origin:50% 50%;transition:transform 950ms cubic-bezier(.28,.06,.23,1);pointer-events:none;user-select:none;-webkit-user-drag:none}
+.angle{position:absolute;bottom:13px;left:50%;transform:translateX(-50%);background:var(--paper);border:1px solid var(--line);padding:3px 13px;border-radius:30px;font:700 12px var(--sans);color:var(--soft)}
+.formgroup{margin-top:27px}
+.legend{font-size:16px;font-weight:700;display:block;margin-bottom:12px}
+.choices{display:grid;gap:9px}
+.choice{border:1px solid var(--line);border-radius:11px;background:var(--sheet);display:flex;align-items:center;gap:11px;padding:13px 15px;cursor:pointer}
+.choice:has(input:checked){background:var(--redwash);border-color:var(--red)}
+.choice input{accent-color:var(--red);width:18px;height:18px;flex:0 0 auto}
+.method{margin-top:24px;font-size:13px;color:var(--soft);border-top:1px solid var(--line);padding-top:15px}
+.method strong{color:var(--ink);font-weight:700}
+.notes{display:block;margin-top:22px;font-weight:700;font-size:14px}
+textarea{display:block;width:100%;min-height:99px;margin-top:9px;resize:vertical;background:var(--sheet);color:var(--ink);padding:12px 14px;border:1px solid var(--line);border-radius:11px;font-size:15px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}
+.primary,.secondary{border-radius:30px;padding:12px 25px;min-height:46px;font-weight:700;font-size:15px}
+.primary{background:var(--ink);color:var(--sheet);border:1px solid var(--ink)}
+.primary:hover{background:var(--red);border-color:var(--red)}
+.secondary{color:var(--ink);background:var(--sheet);border:1px solid var(--line)}
+.secondary:hover{border-color:var(--red)}
+.warning{min-height:22px;margin-top:12px;font-size:13px;color:var(--red)}
+.panel{background:var(--sheet);border:1px solid var(--line);border-radius:15px;padding:25px;margin-top:22px}
+footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--soft)}
+footer a{color:var(--red)}
+@media(max-width:500px){main{padding-top:29px}.selection{grid-template-columns:1fr;gap:11px;margin-top:25px}.language-card{min-height:120px;padding:18px}.language-card strong{font-size:33px;margin-bottom:5px}.glyph-button{min-height:0}.wrap{width:calc(100% - 28px)}}
+</style>
+</head>
 <body>
-<header><div class="wrap"><a class="brand" href="../../">Sinogram <i>↻</i> Native Reader Lab</a><div class="langs" role="group" aria-label="Language"><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="zh" aria-pressed="false">中文</button><button type="button" data-lang="ja" aria-pressed="false">日本語</button></div></div></header>
+<header><div class="wrap"><a class="brand" href="../../">Sinogram <span>↻</span> Ambigrams</a><span class="eyebrow">READER GALLERY</span></div></header>
 <main class="wrap">
-<section id="welcome">
-<div class="eyebrow" data-t="eyebrow">Independent reading · 180°</div>
-<h1 data-t="title">What do you actually read?</h1>
-<p class="lead" data-t="intro">One drawing, two orientations. Identify what you see before learning which characters the designer intended. Recognition matters more than geometric similarity.</p>
-<div class="source-options" role="radiogroup" aria-label="Choose which source characters to evaluate">
-<label class="source-option"><input type="radio" name="sourceTrack" value="cn"><strong>汉字</strong><span data-t="trackCN">Chinese characters</span><small data-t="trackCNDetail">Mainland Chinese source · GB2312</small></label>
-<label class="source-option"><input type="radio" name="sourceTrack" value="jp"><strong>漢字</strong><span data-t="trackJP">Japanese characters</span><small data-t="trackJPDetail">Japanese KanjiVG source</small></label>
-</div><p id="sourceRequired" class="note" role="status" aria-live="polite"></p>
-<div class="panel">
-<h2 data-t="consentTitle">Before you begin</h2>
-<p data-t="consent">This exploratory, voluntary study shows experimental drawings. You may stop at any time. Your answers are not sent anywhere automatically: you choose whether to export and share a file. No name, contact information, account or IP address is requested by the questionnaire.</p>
-<p class="note notice" data-t="sourceCaveat">The source glyphs are Japanese KanjiVG forms. Chinese and Japanese regional conventions can differ; a failure to identify one form is not proof about every form of the character.</p>
-<div class="actions"><button class="btn primary" id="agree" type="button" data-t="agree">I agree · begin</button><button class="btn" id="decline" type="button" data-t="decline">Decline</button></div>
-</div>
+<section id="home">
+ <div class="eyebrow">180° · 汉字 · 漢字</div>
+ <h1>旋转阅读 · 回転して読む</h1>
+ <p class="lead">选择要评价的文字。点击图形，它将旋转 180°。</p>
+ <p class="lead">評価する文字を選んでください。図形をタップすると180°回転します。</p>
+ <div class="selection">
+  <button type="button" class="language-card" id="choose-cn"><strong>汉字</strong><span>中文 · Chinese characters</span></button>
+  <button type="button" class="language-card" id="choose-jp"><strong>漢字</strong><span>日本語 · Japanese characters</span></button>
+ </div>
+ <p class="small">每次仅显示一种文字。 / 一度に一つの言語の文字だけを表示します。</p>
+ <p class="small" id="home-error" role="alert"></p>
 </section>
-<section id="profile" class="hidden">
-<div class="eyebrow" data-t="eyebrow">Independent reading · 180°</div><h1 data-t="profileTitle">Reading background</h1>
-<p class="lead" data-t="profileIntro">These answers help interpret regional script differences. They do not identify you.</p>
-<div class="panel"><div class="formgrid">
-<div><label for="native" data-t="native">Native reading language</label><select id="native"><option value="">—</option><option value="zh-CN">中文（简体）</option><option value="zh-TW">中文（繁體）</option><option value="ja">日本語</option><option value="other">Other / 其他 / その他</option></select></div>
-<div><label for="proficiency" data-t="proficiency">Hanzi / kanji proficiency</label><select id="proficiency"><option value="">—</option><option value="native">Native</option><option value="fluent">Fluent</option><option value="intermediate">Intermediate</option><option value="beginner">Beginner</option></select></div>
-</div><div class="actions"><button class="btn primary" id="start" type="button" data-t="start">Start drawings</button></div><p class="note" id="loadStatus" role="status" aria-live="polite"></p></div>
+<section id="gallery" class="hidden">
+ <div class="topline"><span id="track-label" class="eyebrow"></span><span class="progress" id="progress"></span></div>
+ <h2 id="gallery-title"></h2>
+ <p class="instructions" id="tap-hint"></p>
+ <button type="button" class="glyph-button" id="rotate" aria-label="Rotate drawing 180 degrees">
+  <img class="glyph" id="glyph" alt="Experimental ambigram drawing" draggable="false">
+  <span class="angle" id="angle">0°</span>
+ </button>
+ <div class="formgroup">
+  <span class="legend" id="question"></span>
+  <div class="choices" id="choices" role="radiogroup"></div>
+ </div>
+ <div class="method"><span id="method-title"></span> <strong id="method-value"></strong></div>
+ <label class="notes" for="note" id="notes-title"></label>
+ <textarea id="note" maxlength="2000"></textarea>
+ <div class="actions"><button type="button" class="primary" id="next"></button></div>
+ <p class="warning" id="warning" role="alert"></p>
 </section>
-<section id="study" class="hidden">
-<div class="row"><div class="grow"><div class="eyebrow" data-t="eyebrow">Independent reading · 180°</div><h2 id="progressText">—</h2></div><span class="smallcaps" id="phaseTag">A · 0°</span></div>
-<div class="progressbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar"><div id="progressFill"></div></div>
-<div class="study-grid">
-<div>
-<div class="stage" id="stage"><img id="drawing" alt="The same consolidated drawing in each orientation"><span class="angle" id="angle">0°</span></div><p class="note" id="constructionStatus" style="margin:10px 0 0" role="status" aria-live="polite"></p>
-<p class="note" style="margin:12px 0 0" data-t="blind">The intended characters and construction method remain hidden until the assessment is complete.</p>
-</div>
-<div class="side"><div class="panel">
-<div class="phase" id="phaseName"></div><h3 id="prompt"></h3>
-<div id="readFields">
-<div class="question"><div class="opt-grid" id="recognitionOptions"></div></div>
-<div class="question"><label for="reading" data-t="reading">Which character do you see? (type it if possible)</label><input id="reading" type="text" maxlength="32" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="字 / 漢字"></div>
-<div id="meaningFields"><div class="question"><label data-t="meaningQuestion">Do you recognize a meaning for this reading?</label><div class="opt-grid" id="meaningOptions"></div></div><div class="question"><label for="meaningGloss" data-t="meaningGloss">Meaning in your own words (optional)</label><input id="meaningGloss" type="text" maxlength="140" autocomplete="off"></div></div><div class="question"><label for="confidence" data-t="confidence">Recognition confidence</label><select id="confidence"><option value="" data-t="choose">— choose —</option><option value="1">1 / 5</option><option value="2">2 / 5</option><option value="3">3 / 5</option><option value="4">4 / 5</option><option value="5">5 / 5</option></select></div>
-</div>
-<div id="relationFields" class="hidden">
-<div class="compare" id="compare"></div>
-<p class="steptext" data-t="relationPrompt">How do your two readings relate?</p>
-<div class="opt-grid" id="relationOptions"></div>
-<div class="question"><label for="comment" data-t="comment">Optional note on variant forms or interpretation</label><textarea id="comment" maxlength="1000"></textarea></div>
-</div>
-<div class="actions"><button class="btn primary" id="advance" type="button"></button><button class="btn" id="skip" type="button" data-t="skip">Skip this drawing</button></div>
-<p class="note" role="status" aria-live="polite" id="validation"></p>
-</div></div></div>
+<section id="done" class="hidden">
+ <div class="eyebrow">READER GALLERY · 180°</div>
+ <h1 id="done-title"></h1>
+ <p class="lead" id="done-description"></p>
+ <div class="panel">
+  <p id="done-count"></p>
+  <div class="actions">
+   <button type="button" class="primary" id="download-csv">CSV</button>
+   <button type="button" class="secondary" id="download-txt">TXT</button>
+  </div>
+  <p class="small" id="done-privacy" style="margin-top:18px"></p>
+ </div>
 </section>
-<section id="finished" class="hidden"><div class="eyebrow" data-t="doneEyebrow">Session complete</div><h1 data-t="doneTitle">Your observations matter.</h1><p class="lead" data-t="doneIntro">The questionnaire has not transmitted anything. Export a file and send it to the research organizer if you choose.</p>
-<div class="panel"><div class="row"><button class="btn primary" id="json" type="button" data-t="exportJson">Download JSON</button><button class="btn" id="csv" type="button" data-t="exportCsv">Download CSV</button></div><p class="note" data-t="exportCaveat">These results are exploratory observations, not evidence of validated legibility or a statistical ranking.</p><h2 style="margin-top:25px" data-t="reveal">Stimulus provenance, revealed after assessment</h2><div class="summary" id="summary"></div></div></section>
-<div class="footer"><a href="../../">Sinogram Ambigrams</a> · <a href="../">Earlier prompted-legibility pilot</a> · <a href="https://github.com/ClaudioDrews/sinogram-ambigram" rel="noopener">GitHub</a><p data-t="footer">Geometric candidates are not certified readable ambigrams. Study responses stay in your browser unless you explicitly export and share them.</p></div>
+<footer><p id="privacy">回答不会自动发送。 / 回答は自動送信されません。</p><a href="https://github.com/ClaudioDrews/sinogram-ambigram">GitHub · Sinogram Ambigrams</a></footer>
 </main>
-<script src="../../demo/kanjivg-geometry.js"></script>
 <script>
 (function(){
 'use strict';
 const $=id=>document.getElementById(id);
-const L={
- en:{eyebrow:"Independent reading · 180°",title:"What do you actually read?",intro:"One drawing, two orientations. Identify what you see before learning which characters the designer intended. Recognition matters more than geometric similarity.",consentTitle:"Before you begin",consent:"This exploratory, voluntary study shows experimental drawings. You may stop at any time. Your answers are not sent anywhere automatically: you choose whether to export and share a file. No name, contact information, account or IP address is requested by the questionnaire.",trackCN:"Chinese characters",trackCNDetail:"Mainland Chinese source · GB2312",trackJP:"Japanese characters",trackJPDetail:"Japanese KanjiVG source",chooseTrack:"Choose Chinese or Japanese characters before continuing.",sourceCaveat:"These are two different study tracks with distinct source glyphs. Japanese materials use KanjiVG; Chinese materials use Mainland Chinese-source Make Me a Hanzi outlines. Chinese stimuli are single-ink vector composites of two source outlines, not optimized ambigrams; source forms are not individually certified as simplified or traditional. Track results must not be pooled. Chinese glyph images are requested from a pinned public GitHub source, which receives ordinary connection metadata but no questionnaire responses.",agree:"I agree · begin",decline:"Decline",profileTitle:"Reading background",profileIntro:"These answers help interpret regional script differences. They do not identify you.",native:"Native reading language",proficiency:"Hanzi / kanji proficiency",start:"Start drawings",blind:"The intended characters and construction method remain hidden until the assessment is complete.",reading:"Which character do you see? (type it if possible)",confidence:"Recognition confidence",meaningQuestion:"Do you recognize a meaning for this reading?",meaningOptions:["Yes, I know a meaning","It resembles a character, but I do not know its meaning","Not sure"],meaningGloss:"Meaning in your own words (optional)",assembling:"Constructing one drawing from source geometry…",ready0:"Consolidated drawing · 0°. Record your reading to rotate it.",ready180:"The same drawing, now rotated 180°.",compareMessage:"Same drawing · compare both orientations.",needMeaning:"Indicate whether this reading has a meaning you recognize.",choose:"— choose —",relationPrompt:"How do your two readings relate?",comment:"Optional note on variant forms or interpretation",skip:"Skip this drawing",doneEyebrow:"Session complete",doneTitle:"Your observations matter.",doneIntro:"The questionnaire has not transmitted anything. Export a file and send it to the research organizer if you choose.",exportJson:"Download JSON",exportCsv:"Download CSV",exportCaveat:"These results are exploratory observations, not evidence of validated legibility or a statistical ranking.",reveal:"Stimulus provenance, revealed after assessment",footer:"Geometric candidates are not certified readable ambigrams. Study responses stay in your browser unless you explicitly export and share them.",status:["Recognizable character","Possibly a character, uncertain","Not recognizable"],relation:["Same character in both orientations","Different characters, different meanings","Different forms or characters with the same / related meaning","At least one orientation not recognizable","Unsure / cannot judge"],phaseA:"Reading A · upright",phaseB:"Reading B · half-turn",phaseR:"Compare your readings",questionA:"What do you recognize at 0°?",questionB:"What do you recognize at 180°?",questionR:"Both readings have been recorded.",nextA:"Save A · rotate 180°",nextB:"Save B · compare",nextR:"Next drawing",finish:"Finish evaluation",needStatus:"Choose a recognition answer.",needReading:"Please enter the character you recognize, or choose uncertain / not recognizable.",needConfidence:"Choose your confidence, or change recognition to not recognizable.",needRelation:"Select the relation between your readings.",progress:"Drawing {n} / {total}",declined:"The evaluation has ended. No answers were collected.",loading:"Loading source drawings…",loadFail:"Could not load the research drawings. Check your connection and use the GitHub Pages website, not a downloaded HTML file.",skipDone:"Skipped",complete:"Completed",yes:"Yes"},
- zh:{eyebrow:"独立识读 · 180°",title:"旋转后，你实际读出了什么？",intro:"同一幅图，两种方向。先独立识别你看到的汉字，再了解设计者原本想表达的字符。视觉相似不等于可识读。",consentTitle:"开始之前",consent:"本次探索性研究完全自愿。你可以随时停止。页面不会自动提交答案；只有你选择导出并分享文件时，研究者才能收到。问卷不要求姓名、联系方式、账户或 IP 地址。",trackCN:"中文汉字",trackCNDetail:"中国大陆来源 · GB2312",trackJP:"日文汉字",trackJPDetail:"日本 KanjiVG 字形来源",chooseTrack:"请先选择评价中文汉字或日文汉字。",sourceCaveat:"两组研究使用不同字形来源，不能混合统计。日本组使用 KanjiVG；中国组使用中国大陆来源的 Make Me a Hanzi 字形。中国组为未经优化的原字形几何合成，并不是已验证的旋转合字。简繁字形尚未逐字核实。中国字形图片从固定版本的公开 GitHub 加载，服务器可接收常规连接信息，但不会收到问卷回答。",agree:"同意并开始",decline:"不参加",profileTitle:"阅读背景",profileIntro:"这些信息仅用于理解地区字形差异，不用于确定你的身份。",native:"母语或主要阅读语言",proficiency:"汉字识读水平",start:"开始识读",blind:"为避免提示，预计字符和构造方法将在整组评估结束后才揭示。",reading:"你看到了哪个字？（如能识别，请输入）",confidence:"识读信心",meaningQuestion:"你知道这个读法表达的含义吗？",meaningOptions:["是，我知道其含义","像一个汉字，但我不知道其含义","不确定"],meaningGloss:"用自己的话说明含义（选填）",assembling:"正在将原字形几何合成为一幅图形…",ready0:"合成图形 · 0°。先记录识读结果，再旋转。",ready180:"同一幅合成图形，现已旋转 180°。",compareMessage:"同一幅图形 · 比较两种方向。",needMeaning:"请选择你是否理解此方向的含义。",choose:"— 请选择 —",relationPrompt:"你识别出的两种读法有什么关系？",comment:"可选：字形差异或理解说明",skip:"跳过这一图形",doneEyebrow:"评估结束",doneTitle:"感谢你的观察。",doneIntro:"答案没有被自动发送。你可以选择下载文件，再自行发送给研究者。",exportJson:"下载 JSON",exportCsv:"下载 CSV",exportCaveat:"这些属于探索性观察，不等于已验证的可读性或统计排名。",reveal:"评估结束后揭示的素材来源",footer:"几何候选不代表已验证可识读的旋转字谜。只有你主动导出并分享，回答才会离开浏览器。",status:["能识别为某个汉字","可能是汉字，但不确定","不能识别"],relation:["旋转前后是同一个字","两个不同的字，含义不同","不同字形或字符，但含义相同或相关","至少一个方向无法识别","不确定 / 无法判断"],phaseA:"读法 A · 正向",phaseB:"读法 B · 旋转180°",phaseR:"比较两种读法",questionA:"在 0° 时，你认出了什么？",questionB:"在 180° 时，你认出了什么？",questionR:"两种读法已记录。",nextA:"保存 A · 旋转180°",nextB:"保存 B · 比较",nextR:"下一幅图形",finish:"完成评估",needStatus:"请先选择识读结果。",needReading:"请输入识别到的字，或选择不确定 / 无法识别。",needConfidence:"请选择信心程度，或改选无法识别。",needRelation:"请选择两种读法的关系。",progress:"图形 {n} / {total}",declined:"本次评估已结束，没有收集回答。",loading:"正在加载研究图形…",loadFail:"无法加载研究图形。请检查网络并通过 GitHub Pages 网站打开，而不是直接打开下载的 HTML 文件。",skipDone:"已跳过",complete:"已完成",yes:"是"},
- ja:{eyebrow:"独立識読 · 180°",title:"回転後、何と読めますか？",intro:"一つの図形、二つの向き。設計者が意図した漢字を見る前に、実際に認識できた文字を回答してください。幾何学的な類似と判読性は別です。",consentTitle:"はじめに",consent:"参加は任意で、いつでも中止できます。回答は自動送信されず、ファイルを書き出して自分で共有する場合に限り研究者へ届きます。氏名・連絡先・アカウント・IP アドレスを質問しません。",trackCN:"中国語の漢字",trackCNDetail:"中国大陸の資料 · GB2312",trackJP:"日本語の漢字",trackJPDetail:"日本の KanjiVG 字形",chooseTrack:"まず中国語または日本語の評価対象を選択してください。",sourceCaveat:"二つの評価群は原字形が異なり、集計を混ぜることはできません。日本側は KanjiVG、中国側は中国大陸由来の Make Me a Hanzi 字形です。中国側の素材は未最適化の単一ベクトル合成図形で、可読性が確認されたアンビグラムではありません。簡体字・繁体字の逐字的な検証も未完了です。画像は固定版の公開 GitHub から取得しますが、回答は送信されません。",agree:"同意して開始",decline:"参加しない",profileTitle:"読み書きの背景",profileIntro:"字体の地域差を理解するための回答で、個人を特定するものではありません。",native:"主な読書言語",proficiency:"漢字の読解能力",start:"図形の評価を開始",blind:"期待される文字と構築手法は、すべての評価を終えるまで表示しません。",reading:"どの漢字に見えますか？（可能なら入力）",confidence:"認識の確信度",meaningQuestion:"この文字の意味を理解できますか？",meaningOptions:["はい、意味が分かる","漢字のようだが意味は分からない","不確か"],meaningGloss:"意味を自分の言葉で（任意）",assembling:"原字形から一つの図形を構築しています…",ready0:"完成した図形 · 0°。回答後に回転します。",ready180:"同じ図形を 180°回転しました。",compareMessage:"同じ図形 · 二つの向きを比較。",needMeaning:"この向きの意味を理解できるか選択してください。",choose:"— 選択 —",relationPrompt:"二つの読みはどのような関係にありますか？",comment:"任意：字体や解釈のメモ",skip:"この図形をスキップ",doneEyebrow:"評価終了",doneTitle:"ご協力ありがとうございます。",doneIntro:"回答は自動送信されません。必要ならファイルを書き出して研究担当者へ送ってください。",exportJson:"JSON を保存",exportCsv:"CSV を保存",exportCaveat:"探索的な観察であり、可読性の検証や統計的な順位付けではありません。",reveal:"評価後に表示される素材の出典",footer:"幾何学的候補は、判読可能性が検証されたアンビグラムではありません。回答は自分で書き出し共有しない限りブラウザ内に留まります。",status:["漢字として認識できる","漢字らしいが不確か","認識できない"],relation:["回転前後で同じ漢字","異なる漢字で、意味も異なる","異なる字形・文字だが意味が同じか関連する","一方以上の向きで認識できない","不明 / 判断できない"],phaseA:"読み A · 正立",phaseB:"読み B · 180°回転",phaseR:"読みの比較",questionA:"0°では何の文字に見えますか？",questionB:"180°では何の文字に見えますか？",questionR:"両方の読みを記録しました。",nextA:"A を保存して180°回転",nextB:"B を保存して比較",nextR:"次の図形",finish:"評価を完了",needStatus:"認識状態を選んでください。",needReading:"認識した文字を入力するか、不確か・認識できないを選んでください。",needConfidence:"確信度を選ぶか、認識できないを選んでください。",needRelation:"二つの読みの関係を選んでください。",progress:"図形 {n} / {total}",declined:"評価は終了しました。回答は収集されていません。",loading:"素材を読み込み中…",loadFail:"図形を読み込めませんでした。通信環境を確認し、ダウンロードした HTML ではなく GitHub Pages サイトから開いてください。",skipDone:"スキップ",complete:"完了",yes:"はい"}
+const texts={
+ cn:{
+  track:"中文汉字",title:"这个图形能表达意义吗？",tap:"点击图形，观看它旋转 180°。可再次点击旋转。",
+  question:"在哪些方向上，你能读出意义？",choices:["两个方向都能读出意义","只有一个方向能读出意义","两个方向都不能读出意义"],
+  method:"生成方法：",notes:"观察与备注（选填）",next:"下一个图形",finish:"完成评价",
+  rotate:"点击将图形旋转180°。当前方向：",needTurn:"请先点击图形，至少看一次180°旋转。",needChoice:"请选择一个评价选项。",
+  done:"评价完成",description:"感谢你的观察。如果愿意，可以下载文件并发送给研究者。",count:"已评价图形：",
+  privacy:"文件仅在你的设备上生成，不会自动发送。",error:"无法加载图形。请检查网络连接后刷新页面。",
+  methodCN:"原字形矢量合成 · PRC 候选（未优化）",methodV1:"笔画显著性构造 · v1",methodV2:"笔画显著性构造 · v2"
+ },
+ jp:{
+  track:"日本語の漢字",title:"この図形は意味を持って読めますか？",tap:"図形をタップすると180°回転します。もう一度タップするとさらに回転します。",
+  question:"どちらの向きで意味を読み取れますか？",choices:["両方の向きで意味が読み取れる","片方の向きだけ意味が読み取れる","どちらの向きも意味が読み取れない"],
+  method:"生成方法：",notes:"観察・コメント（任意）",next:"次の図形",finish:"評価を終了",
+  rotate:"図形を180°回転します。現在の角度：",needTurn:"評価前に図形をタップして180°回転させてください。",needChoice:"評価を一つ選んでください。",
+  done:"評価終了",description:"ご協力ありがとうございました。希望する場合だけ、ファイルをダウンロードして研究者に送ってください。",count:"評価した図形：",
+  privacy:"ファイルはお使いの端末で作成され、自動送信されません。",error:"図形を読み込めませんでした。通信を確認して再読み込みしてください。",
+  methodCN:"原字形ベクトル合成 · PRC候補（未最適化）",methodV1:"ストローク顕著性構築 · v1",methodV2:"ストローク顕著性構築 · v2"
+ }
 };
-let lang='en',items=[],order=[],seed=0,idx=0,phase='a',answers={},respondent={},track='',shownItemId='',animationBusy=false,animationToken=0;
-const DEMOS=[
-{id:"demo-salience-you-jia",a:"由",b:"甲",method:"salience-blend",kind:"constructed-demo"},
-{id:"demo-common-pu-yuan",a:"圃",b:"園",method:"common-core",kind:"geometry-diagnostic"},
-{id:"demo-overlay-mu-tian",a:"目",b:"田",method:"overlay",kind:"geometry-diagnostic"},
-{id:"demo-c2-hui",a:"回",b:"回",method:"canonical-c2",kind:"source-anchor"},
-{id:"demo-negative-shang-xia",a:"上",b:"下",method:"source-negative-control",kind:"negative-control"}
-];
-function t(k){return L[lang][k]||L.en[k]||k}
-function words(k,vals){let s=t(k);for(const key in vals)s=s.split("{"+key+"}").join(String(vals[key]));return s}
-function switchLang(v){
- const prev={status:valueRadio('status'),meaning:valueRadio('meaning'),rel:valueRadio('rel'),reading:$('reading').value,meaningGloss:$('meaningGloss').value,confidence:$('confidence').value,comment:$('comment').value};
- lang=v;document.documentElement.lang=v==='zh'?'zh-Hans':v;
- document.querySelectorAll('[data-lang]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lang===v)));
- document.querySelectorAll('[data-t]').forEach(el=>el.textContent=t(el.dataset.t));
- if(!$('study').classList.contains('hidden')){
-  paint();
-  for(const [name,value] of [['status',prev.status],['meaning',prev.meaning],['rel',prev.rel]]){
-   if(value!==null){const input=document.querySelector('input[name="'+name+'"][value="'+value+'"]');if(input)input.checked=true;}
-  }
-  $('meaningFields').classList.toggle('hidden',prev.status===2);
-  $('reading').value=prev.reading;$('meaningGloss').value=prev.meaningGloss;$('confidence').value=prev.confidence;$('comment').value=prev.comment;
- }
- if(!$('finished').classList.contains('hidden'))summary();
+const SOURCE='https://raw.githubusercontent.com/skishore/makemeahanzi/bddc96d41bef78427ed0e034e9f7e31d71fd1b92/svgs/';
+let track='',items=[],position=0,turns=0,results=[],seed=0;
+function svgData(svg){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}
+function choose(list){const x=list.slice();const rand=()=>{let t=seed+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return ((t^(t>>>14))>>>0)/4294967296};for(let i=x.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+function scoreMethod(stratum){return stratum==='v1-top'?'stroke-salience-v1':'stroke-salience-v2'}
+async function japaneseItems(){
+ const response=await fetch('../items.json');
+ if(!response.ok)throw Error('Japanese catalog: HTTP '+response.status);
+ const data=await response.json();
+ if(!Array.isArray(data.items))throw Error('Japanese items missing');
+ const selected=['v1-top','v2-top'].flatMap(group=>data.items.filter(x=>x.stratum===group).slice(0,6));
+ if(selected.length!==12)throw Error('Twelve generated Japanese examples expected');
+ return selected.map(x=>({id:x.id,track:'jp',a:x.label_a,b:x.label_b,method:scoreMethod(x.stratum),source:'KanjiVG generated evaluation pilot',svg:x.construction_svg}));
 }
-function show(id){['welcome','profile','study','finished'].forEach(n=>$(n).classList.toggle('hidden',n!==id));window.scrollTo({top:0,behavior:'instant'});}
-function randomSeed(){const a=new Uint32Array(1);if(window.crypto&&window.crypto.getRandomValues)window.crypto.getRandomValues(a);else a[0]=Math.floor(Math.random()*4294967295);return a[0];}
-function shuffle(a,s){let x=s>>>0;const rand=()=>{x=(x+0x6D2B79F5)|0;let q=Math.imul(x^(x>>>15),1|x);q=(q+Math.imul(q^(q>>>7),61|q))^q;return ((q^(q>>>14))>>>0)/4294967296};for(let i=a.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a}
-function ns(tag){return document.createElementNS('http://www.w3.org/2000/svg',tag)}
-function makePath(d,color,width,opacity,flip){const p=ns('path');p.setAttribute('d',d);p.setAttribute('fill','none');p.setAttribute('stroke',color);p.setAttribute('stroke-width',String(width));p.setAttribute('stroke-linejoin','round');p.setAttribute('stroke-linecap','round');p.setAttribute('opacity',String(opacity));if(flip)p.setAttribute('transform','rotate(180 54.5 54.5)');return p}
-function makeDemoSVG(item){const g=window.SINOGRAM_KANJIVG_PATHS;if(!g||!g[item.a]||!g[item.b])throw new Error('Missing pinned geometry for '+item.id);
-const svg=ns('svg');svg.setAttribute('xmlns','http://www.w3.org/2000/svg');svg.setAttribute('viewBox','0 0 109 109');svg.setAttribute('width','109');svg.setAttribute('height','109');svg.style.cssText='position:absolute;left:-10000px;top:0;visibility:hidden;pointer-events:none';document.body.appendChild(svg);
-const pathsA=g[item.a].map(d=>makePath(d,'#24211d',5,1,false)),pathsB=g[item.b].map(d=>makePath(d,'#32666a',5,.6,true));
-if(item.method==='canonical-c2'||item.method==='source-negative-control'){pathsA.forEach(p=>svg.appendChild(p))}
-else if(item.method==='overlay'){pathsA.forEach(p=>{p.setAttribute('opacity','.75');svg.appendChild(p)});pathsB.forEach(p=>svg.appendChild(p))}
-else{[...pathsA,...pathsB].forEach(p=>svg.appendChild(p));const coords=(paths,flipped)=>paths.map(p=>{const n=Math.max(12,Math.ceil(p.getTotalLength()/3)),pts=[];for(let i=0;i<n;i++){const v=p.getPointAtLength(p.getTotalLength()*i/(n-1));pts.push(flipped?[109-v.x,109-v.y]:[v.x,v.y]);}return pts;});const a=coords(pathsA,false),b=coords(pathsB,true),flatA=a.flat(),flatB=b.flat();svg.replaceChildren();
-function match(pts,cloud){return pts.filter(v=>cloud.some(w=>Math.hypot(v[0]-w[0],v[1]-w[1])<=3)).length/Math.max(1,pts.length)}
-[[pathsA,a,flatB],[pathsB,b,flatA]].forEach(([paths,groups,other],side)=>paths.forEach((p,j)=>{const ratio=match(groups[j],other);if(item.method==='common-core'&&ratio<.5)return;p.setAttribute('stroke','#24211d');p.setAttribute('stroke-width',item.method==='common-core'?'7':ratio>=.5?'9':'2.6');p.setAttribute('opacity',side?'.54':'.94');svg.appendChild(p)}));}
-svg.removeAttribute('style');const serial=new XMLSerializer().serializeToString(svg);svg.remove();return serial;}
-function toData(svg){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}
-function animateJapanese(svgText){
- const doc=new DOMParser().parseFromString(svgText,'image/svg+xml');
- if(doc.querySelector('parsererror'))throw Error('Invalid Japanese source SVG');
- const paths=[...doc.querySelectorAll('path')];
- paths.forEach((p,i)=>{
-  const a=doc.createElementNS('http://www.w3.org/2000/svg','animate');
-  a.setAttribute('attributeName','opacity');a.setAttribute('from','0');
-  a.setAttribute('to',p.getAttribute('opacity')||'1');
-  a.setAttribute('begin',(i*1.3/Math.max(1,paths.length-1)).toFixed(3)+'s');
-  a.setAttribute('dur','.26s');a.setAttribute('fill','freeze');p.appendChild(a);
- });
- return new XMLSerializer().serializeToString(doc.documentElement);
-}
-const PRC_SVG='https://raw.githubusercontent.com/skishore/makemeahanzi/bddc96d41bef78427ed0e034e9f7e31d71fd1b92/svgs/';
-function prcSrc(ch){return PRC_SVG+ch.codePointAt(0)+'.svg'}
-const prcCache=new Map();
-function sourceOutline(ch){
- if(!prcCache.has(ch))prcCache.set(ch,(async()=>{
-  const response=await fetch(prcSrc(ch),{cache:'force-cache'});
-  if(!response.ok)throw Error('Chinese source '+ch+' HTTP '+response.status);
+const sourceCache=new Map();
+function finishedPaths(char){
+ if(!sourceCache.has(char))sourceCache.set(char,(async()=>{
+  const response=await fetch(SOURCE+char.codePointAt(0)+'.svg');
+  if(!response.ok)throw Error('Source outline: HTTP '+response.status);
   const doc=new DOMParser().parseFromString(await response.text(),'image/svg+xml');
-  if(doc.querySelector('parsererror'))throw Error('Invalid Chinese source SVG: '+ch);
+  if(doc.querySelector('parsererror'))throw Error('Invalid source geometry');
   const group=[...doc.querySelectorAll('g[transform]')].find(g=>/scale\(1,\s*-1\)\s*translate\(0,\s*-900\)/.test(g.getAttribute('transform')||''));
-  if(!group)throw Error('No outline container for '+ch);
-  const ds=[...group.children].filter(n=>n.localName==='path'&&n.getAttribute('fill')==='lightgray'&&n.getAttribute('d')).map(p=>p.getAttribute('d'));
-  if(!ds.length)throw Error('No finished outline paths for '+ch);
-  return ds;
+  if(!group)throw Error('Source outline group not found');
+  const paths=[...group.children].filter(n=>n.localName==='path'&&n.getAttribute('fill')==='lightgray'&&n.getAttribute('d')).map(n=>n.getAttribute('d'));
+  if(!paths.length)throw Error('Finished outline paths missing');
+  return paths;
  })());
- return prcCache.get(ch);
+ return sourceCache.get(char);
 }
-function vectorPaths(ds){return ds.map(d=>'<path d="'+d.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')+'"/>').join('');}
-function chineseComposite(item,animated){
- const beginA=animated?'<animate attributeName="opacity" from="0" to="1" dur=".48s" fill="freeze"/>':'';
- const beginB=animated?'<animateTransform attributeName="transform" type="rotate" from="0 512 512" to="180 512 512" begin=".48s" dur=".88s" fill="freeze"/><animate attributeName="fill" from="#32666a" to="#24211d" begin="1.36s" dur=".32s" fill="freeze"/>':'';
- return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">'+
- '<g transform="scale(1 -1) translate(0 -900)" fill="#24211d">'+beginA+vectorPaths(item.pathsA)+'</g>'+
- '<g transform="rotate(180 512 512)" fill="#24211d">'+beginB+
- '<g transform="scale(1 -1) translate(0 -900)">'+vectorPaths(item.pathsB)+'</g></g></svg>';
+function pathsMarkup(paths){return paths.map(d=>'<path d="'+d.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')+'"/>').join('')}
+function composite(pathsA,pathsB){
+ return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="#26231f">'+
+ '<g transform="scale(1 -1) translate(0 -900)">'+pathsMarkup(pathsA)+'</g>'+
+ '<g transform="rotate(180 512 512)"><g transform="scale(1 -1) translate(0 -900)">'+pathsMarkup(pathsB)+'</g></g></svg>';
 }
-async function load(which){
-if(items.length&&which===track)return;
-const sample=[];
-if(which==='jp'){
- const r=await fetch('../items.json',{cache:'no-cache'});if(!r.ok)throw Error('items '+r.status);
- const file=await r.json();
- ['v1-top','v2-top','self','control'].forEach(stratum=>file.items.filter(it=>it.stratum===stratum).slice(0,3).forEach(it=>sample.push({id:it.id,track:'jp',a:it.label_a,b:it.label_b,kind:'constructed-pilot',method:'stroke-salience',stratum:it.stratum,source:'KanjiVG / Japanese forms',svg:it.construction_svg,animatedSvg:animateJapanese(it.construction_svg)})));
- for(const d of DEMOS){try{const svg=makeDemoSVG(d);sample.push({...d,track:'jp',stratum:'exploratory',source:'KanjiVG / Rotation Lab',svg,animatedSvg:animateJapanese(svg)});}catch(error){console.warn('Optional Rotation Lab example unavailable',d.id,error);}}
- if(sample.length<12||sample.some(it=>!it.svg))throw Error('Japanese selection invalid');
-}else if(which==='cn'){
- const r=await fetch('../../prc/catalog.json',{cache:'no-cache'});if(!r.ok)throw Error('PRC catalog '+r.status);
- const catalog=await r.json();
- if(catalog.schema!=='prc-public-coarse-catalog-v1'||catalog.region!=='cn-s'||catalog.human_readability_validated!==false||catalog.source_forms_certified!==false||!catalog.partners)throw Error('PRC provenance failure');
- const anchors=['甲','由','王','玉','目','田','回','国','上','下','日','昌'],used=new Set();
+async function chineseItems(){
+ const response=await fetch('../../prc/catalog.json');
+ if(!response.ok)throw Error('PRC catalog: HTTP '+response.status);
+ const data=await response.json();
+ if(data.schema!=='prc-public-coarse-catalog-v1'||data.region!=='cn-s'||!data.partners||data.human_readability_validated!==false)throw Error('PRC provenance mismatch');
+ const anchors=['甲','由','王','玉','目','田','回','国','上','下','日','昌'],chosen=[],seen=new Set();
  for(const a of anchors){
-  const partners=catalog.partners[a]||[];
-  const ranked=partners.find(row=>Array.isArray(row)&&row[0]!==a&&!used.has([a,row[0]].sort().join('|')))||partners[0];
-  if(!ranked)continue;
-  const b=ranked[0],key=[a,b].sort().join('|');if(used.has(key))continue;
-  used.add(key);sample.push({id:'prc-'+a.codePointAt(0)+'-'+b.codePointAt(0),track:'cn',a,b,kind:'source-union-diagnostic',method:'prc-source-vector-union',stratum:'gb2312-coarse',source:'Make Me a Hanzi / pinned Mainland Chinese-source SVG',score_z:ranked[1],score_iou:ranked[2]});
+  const options=data.partners[a]||[];
+  const best=options.find(x=>Array.isArray(x)&&x[0]!==a&&!seen.has([a,x[0]].sort().join(':')))||options[0];
+  if(!best)continue;
+  const b=best[0],key=[a,b].sort().join(':');
+  if(seen.has(key))continue;
+  seen.add(key);chosen.push({id:'prc-'+a.codePointAt(0)+'-'+b.codePointAt(0),track:'cn',a,b,method:'prc-source-vector-union',source:'Make Me a Hanzi · pinned source',svg:''});
  }
- if(sample.length<8)throw Error('Too few Chinese-source candidates');
-  const built=await Promise.all(sample.map(async it=>{
-   try{
-    [it.pathsA,it.pathsB]=await Promise.all([sourceOutline(it.a),sourceOutline(it.b)]);
-    it.svg=chineseComposite(it,false);it.animatedSvg=chineseComposite(it,true);
-    delete it.pathsA;delete it.pathsB;
-    return it;
-   }catch(error){console.warn('Skipping unavailable Chinese source candidate',it.id,error);return null;}
-  }));
-  sample.splice(0,sample.length,...built.filter(Boolean));
-  if(sample.length<4)throw Error('Could not construct enough Chinese SVG drawings');
-}else throw Error('Invalid track');
-items=sample;track=which;seed=randomSeed();order=shuffle(sample.map((_,i)=>i),seed);
+ const built=await Promise.all(chosen.map(async item=>{
+  try{const [a,b]=await Promise.all([finishedPaths(item.a),finishedPaths(item.b)]);item.svg=composite(a,b);return item;}
+  catch(error){console.warn('Unavailable candidate',item.id,error);return null;}
+ }));
+ const available=built.filter(Boolean);
+ if(!available.length)throw Error('No PRC source candidates available');
+ return available;
 }
-function current(){return items[order[idx]]}
-function markProgress(){const n=idx,total=items.length;$('progressText').textContent=words('progress',{n:Math.min(n+1,total),total});$('progressBar').setAttribute('aria-valuenow',String(Math.round(n/total*100)));$('progressFill').style.width=(n/total*100)+'%';}
-function paint(){
- const it=current();if(!it)return;
- markProgress();$('validation').textContent='';
- $('phaseTag').textContent=phase==='a'?'A · 0°':phase==='b'?'B · 180°':'A ↔ B';
- $('phaseName').textContent=t(phase==='a'?'phaseA':phase==='b'?'phaseB':'phaseR');
- $('prompt').textContent=t(phase==='a'?'questionA':phase==='b'?'questionB':'questionR');
- const im=$('drawing'),reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- if(shownItemId!==it.id){
-  shownItemId=it.id;animationToken++;
-  im.style.transition='none';im.style.transform='rotate(0deg)';
-  im.src=toData(reduced?it.svg:(it.animatedSvg||it.svg));
-  void im.offsetWidth;im.style.transition='';
-  animationBusy=!reduced;
-  if(animationBusy){
-   const token=animationToken;
-   window.setTimeout(()=>{
-    if(animationToken===token&&shownItemId===it.id&&phase==='a'){
-     animationBusy=false;$('advance').disabled=false;
-     $('constructionStatus').textContent=t('ready0');
-    }
-   },1800);
-  }
- }else if(phase==='b'||phase==='relation'){
-  animationBusy=false;im.style.transform='rotate(180deg)';
- }
- $('constructionStatus').textContent=animationBusy?t('assembling'):t(phase==='a'?'ready0':phase==='b'?'ready180':'compareMessage');
- $('advance').disabled=animationBusy;
- $('angle').textContent=phase==='a'?'0°':phase==='b'?'180°':'0° / 180°';
- $('readFields').classList.toggle('hidden',phase==='relation');
- $('relationFields').classList.toggle('hidden',phase!=='relation');
- $('skip').classList.toggle('hidden',phase==='relation');
- $('advance').textContent=t(phase==='a'?'nextA':phase==='b'?'nextB':idx===items.length-1?'finish':'nextR');
- if(phase==='relation'){
-  const cmp=$('compare');cmp.replaceChildren();
-  for(const [label,rot] of [['A',0],['B',180]]){
-   const fig=document.createElement('figure'),view=document.createElement('img'),cap=document.createElement('figcaption');
-   view.src=toData(it.svg);view.style.transform='rotate('+rot+'deg)';view.alt=label+' · '+rot+'°';
-   fig.appendChild(view);cap.textContent=label+' · '+rot+'°';fig.appendChild(cap);cmp.appendChild(fig);
-  }
-  makeOptions('relationOptions','rel',t('relation'));$('comment').value=answers[it.id]?.comment||'';
- }else{
-  makeOptions('recognitionOptions','status',t('status'));
-  makeOptions('meaningOptions','meaning',t('meaningOptions'));
-  $('meaningFields').classList.remove('hidden');
-  $('reading').value='';$('meaningGloss').value='';$('confidence').value='';
+function show(id){for(const name of ['home','gallery','done'])$(name).classList.toggle('hidden',name!==id);window.scrollTo(0,0)}
+function methodText(method){const t=texts[track];if(method==='stroke-salience-v1')return t.methodV1;if(method==='stroke-salience-v2')return t.methodV2;return t.methodCN}
+function render(){
+ const t=texts[track],item=items[position];
+ $('track-label').textContent=t.track;
+ $('gallery-title').textContent=t.title;
+ $('tap-hint').textContent=t.tap;
+ $('question').textContent=t.question;
+ $('method-title').textContent=t.method;
+ $('method-value').textContent=methodText(item.method);
+ $('notes-title').textContent=t.notes;
+ $('next').textContent=position===items.length-1?t.finish:t.next;
+ $('progress').textContent=(position+1)+' / '+items.length;
+ $('warning').textContent='';
+ $('note').value='';
+ $('choices').replaceChildren();
+ t.choices.forEach((label,index)=>{
+  const option=document.createElement('label');option.className='choice';
+  const input=document.createElement('input');input.type='radio';input.name='assessment';input.value=String(2-index);
+  const span=document.createElement('span');span.textContent=label;
+  option.append(input,span);$('choices').appendChild(option);
+ });
+ turns=0;
+ const image=$('glyph');
+ image.style.transition='none';
+ image.style.transform='rotate(0deg)';
+ image.src=svgData(item.svg);
+ $('angle').textContent='0°';
+ $('rotate').setAttribute('aria-label',t.rotate+'0°');
+ void image.offsetWidth;
+ requestAnimationFrame(()=>{image.style.transition='';});
+ show('gallery');
+}
+function rotate(){
+ if(!items.length)return;
+ turns+=1;
+ const degrees=180*turns;
+ $('glyph').style.transition='';
+ $('glyph').style.transform='rotate('+degrees+'deg)';
+ $('angle').textContent=(degrees%360)+'°';
+ $('rotate').setAttribute('aria-label',texts[track].rotate+(degrees%360)+'°');
+ $('warning').textContent='';
+}
+function next(){
+ const t=texts[track],answer=document.querySelector('input[name="assessment"]:checked');
+ if(turns<1){$('warning').textContent=t.needTurn;return;}
+ if(!answer){$('warning').textContent=t.needChoice;return;}
+ const item=items[position];
+ results.push({position:position+1,id:item.id,track,method:item.method,source:item.source,intended_a:item.a,intended_b:item.b,meaning_orientations:Number(answer.value),turn_count:turns,observation:$('note').value.trim()});
+ position+=1;
+ if(position===items.length){complete();return;}
+ render();
+}
+function complete(){
+ show('done');
+ const t=texts[track];
+ $('done-title').textContent=t.done;
+ $('done-description').textContent=t.description;
+ $('done-count').textContent=t.count+results.length;
+ $('done-privacy').textContent=t.privacy;
+}
+function report(){
+ return {schema:'sinogram-simple-reader-v1',track,seed,explanation:'0 = neither orientation meaningful; 1 = one orientation meaningful; 2 = both orientations meaningful',answers:results};
+}
+function csv(){
+ const keys=['position','id','track','method','source','intended_a','intended_b','meaning_orientations','turn_count','observation'];
+ const enc=value=>'"'+String(value??'').replace(/"/g,'""')+'"';
+ return '\uFEFF'+[keys.map(enc).join(','),...results.map(row=>keys.map(k=>enc(row[k])).join(','))].join('\r\n')+'\r\n';
+}
+function txt(){
+ const values=['Sinogram Ambigrams · Reader Gallery','Track: '+track,'Evaluated: '+results.length,'Rating: 0=neither, 1=one, 2=both',''];
+ for(const x of results){values.push(x.position+'. '+x.id+' | method: '+x.method+' | meaning: '+x.meaning_orientations+'/2 | turns: '+x.turn_count);values.push('Notes: '+(x.observation||'—'));values.push('');}
+ return values.join('\n');
+}
+function download(ext,body,mime){
+ const blob=new Blob([body],{type:mime}),href=URL.createObjectURL(blob),link=document.createElement('a');
+ link.href=href;link.download='sinogram-reader-'+track+'-'+seed+'.'+ext;
+ document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(href),2000);
+}
+async function start(which){
+ track=which;position=0;turns=0;results=[];
+ const random=new Uint32Array(1);crypto.getRandomValues(random);seed=random[0];
+ const cn=$('choose-cn'),jp=$('choose-jp');
+ cn.disabled=true;jp.disabled=true;
+ $('home-error').textContent=which==='cn'?'正在加载图形…':'図形を読み込んでいます…';
+ try{
+  items=choose(await (which==='cn'?chineseItems():japaneseItems()));
+  if(!items.length)throw Error('Empty gallery');
+  render();
+ }catch(error){
+  console.error(error);$('home-error').textContent=texts[which].error;cn.disabled=false;jp.disabled=false;
  }
 }
-function makeOptions(host,name,labels){const parent=$(host);parent.replaceChildren();labels.forEach((txt,i)=>{const label=document.createElement('label');label.className='opt';const input=document.createElement('input');input.type='radio';input.name=name;input.value=String(i);const span=document.createElement('span');span.textContent=txt;label.append(input,span);parent.append(label)})}
-function valueRadio(name){const el=document.querySelector('input[name="'+name+'"]:checked');return el?Number(el.value):null}
-function next(){const it=current();let a=answers[it.id]||{id:it.id};if(phase==='a'||phase==='b'){const status=valueRadio('status'),reading=$('reading').value.trim(),confidence=$('confidence').value,meaning=valueRadio('meaning'),meaningGloss=$('meaningGloss').value.trim();
-if(status===null){$('validation').textContent=t('needStatus');return}
-if(status===0&&!reading){$('validation').textContent=t('needReading');return}
-if(status!==2&&!confidence){$('validation').textContent=t('needConfidence');return}
-if(status!==2&&meaning===null){$('validation').textContent=t('needMeaning');return}
-a[phase]={status,reading,confidence:confidence?Number(confidence):null,meaning:status===2?null:meaning,meaning_gloss:status===2?'':meaningGloss};answers[it.id]=a;phase=phase==='a'?'b':'relation';paint();return;}
-const rel=valueRadio('rel');if(rel===null){$('validation').textContent=t('needRelation');return}
-a.relation=rel;a.comment=$('comment').value.trim();a.skipped=false;answers[it.id]=a;idx++;if(idx>=items.length){finish();return;}phase='a';paint();}
-function skip(){const it=current();answers[it.id]={id:it.id,skipped:true,a:null,b:null,relation:null,comment:''};idx++;if(idx>=items.length){finish();return;}phase='a';paint();}
-function finish(){show('finished');summary()}
-function classify(a){if(a.skipped)return 'skipped';if(!a.a||!a.b)return 'incomplete';if(a.a.status===2||a.b.status===2||a.relation===3)return 'unreadable';if(a.relation===0)return 'same-character reported';if(a.relation===1)return 'different-meaning reported';if(a.relation===2)return 'semantic/variant ambiguity';return 'uncertain';}
-function collect(){return {schema:'native-reader-exploratory-v2',study:'sinogram-ambigram',consent:true,language:lang,seed,track,respondent,protocol:{selection:track==='jp'?'first three pilot items per stratum + five pinned Rotation Lab examples':'coarse PRC candidates from twelve preselected GB2312 anchors, deduplicated',pilot_strata:track==='jp'?['v1-top','v2-top','self','control']:['gb2312-coarse'],note:'Exploratory convenience subset. Chinese single-ink vector composites are not optimized constructed ambigrams. Source-form certification is pending. Construction animation precedes both readings and may cue respondents; do not describe this as blind to component geometry. Chinese and Japanese tracks are separate. Meaning and identity are self-reported, not independently verified.'},items:order.map((i,pos)=>{const it=items[i],r=answers[it.id]||{};return {position:pos+1,id:it.id,track:it.track,source:it.source,method:it.method,kind:it.kind,stratum:it.stratum,expected_a:it.a,expected_b:it.b,reading_a:r.a?.reading||'',meaning_a:r.a?.meaning??null,meaning_gloss_a:r.a?.meaning_gloss||'',status_a:r.a?.status??null,confidence_a:r.a?.confidence??null,reading_b:r.b?.reading||'',meaning_b:r.b?.meaning??null,meaning_gloss_b:r.b?.meaning_gloss||'',status_b:r.b?.status??null,confidence_b:r.b?.confidence??null,both_meaningful_reported:r.a&&r.b?(r.a.meaning===0&&r.b.meaning===0):null,relation:r.relation??null,classification:classify(r),comment:r.comment||'',skipped:!!r.skipped}})};}
-function download(name,mime,body){const blob=new Blob([body],{type:mime}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}
-function csv(){const data=collect();const head=['position','id','track','source','method','kind','stratum','expected_a','expected_b','reading_a','meaning_a','meaning_gloss_a','status_a','confidence_a','reading_b','meaning_b','meaning_gloss_b','status_b','confidence_b','both_meaningful_reported','relation','classification','comment','skipped'];function enc(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'}const lines=[head.map(enc).join(',')];data.items.forEach(it=>lines.push(head.map(k=>enc(it[k])).join(',')));return '\uFEFF'+lines.join('\r\n')+'\r\n';}
-function summary(){const data=collect(),container=$('summary');container.replaceChildren();const table=document.createElement('table'),head=document.createElement('tr');['ID','Source','Method','A','B','Reading A','Reading B','Reported class'].forEach(s=>{const th=document.createElement('th');th.textContent=s;head.appendChild(th)});table.appendChild(head);data.items.forEach(it=>{const tr=document.createElement('tr');[it.id,it.kind,it.method,it.expected_a,it.expected_b,it.reading_a,it.reading_b,it.classification].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});table.appendChild(tr)});container.appendChild(table)}
-document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>switchLang(b.dataset.lang)));
-$('agree').onclick=()=>{const chosen=document.querySelector('input[name="sourceTrack"]:checked');if(!chosen){$('sourceRequired').textContent=t('chooseTrack');return;}track=chosen.value;$('sourceRequired').textContent='';show('profile');};
-$('decline').onclick=()=>{show('welcome');$('welcome').replaceChildren(document.createTextNode(t('declined')))};
-$('start').onclick=async()=>{respondent={native: $('native').value,proficiency:$('proficiency').value};if(!respondent.native||!respondent.proficiency){$('loadStatus').textContent=t('choose');return;}const button=$('start');button.disabled=true;$('loadStatus').textContent=t('loading');try{await load(track);show('study');phase='a';idx=0;paint()}catch(err){console.error(err);$('loadStatus').textContent=t('loadFail');button.disabled=false}};
-$('advance').onclick=next;$('skip').onclick=skip;
-$('recognitionOptions').addEventListener('change',()=>{$('meaningFields').classList.toggle('hidden',valueRadio('status')===2)});
-$('json').onclick=()=>download('sinogram-reader-'+seed+'.json','application/json;charset=utf-8',JSON.stringify(collect(),null,2));
-$('csv').onclick=()=>download('sinogram-reader-'+seed+'.csv','text/csv;charset=utf-8',csv());
+$('choose-cn').addEventListener('click',()=>start('cn'));
+$('choose-jp').addEventListener('click',()=>start('jp'));
+$('rotate').addEventListener('click',rotate);
+$('next').addEventListener('click',next);
+$('download-csv').addEventListener('click',()=>download('csv',csv(),'text/csv;charset=utf-8'));
+$('download-txt').addEventListener('click',()=>download('txt',txt(),'text/plain;charset=utf-8'));
 })();
 </script>
 </body>
