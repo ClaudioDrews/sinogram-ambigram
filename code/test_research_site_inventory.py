@@ -125,25 +125,24 @@ class TestResearchSiteInventory(unittest.TestCase):
                                   capture_output=True, text=True, check=False)
             self.assertEqual(proc.returncode, 0, proc.stderr)
 
-    def test_gallery_does_not_mislabel_unimplemented_methods(self):
-        data = json.loads((ROOT / 'evaluation/recognition/stimuli.json').read_text('utf-8'))
+    def test_gallery_has_all_24_methods_with_verified_visual_provenance(self):
+        data = json.loads((ROOT/'evaluation/recognition/stimuli.json').read_text('utf-8'))
         self.assertEqual(data['schema'], 'sinogram-reader-curated-methods-v2')
         self.assertTrue(data['jp_source_pin'].startswith('KanjiVG'))
-        self.assertTrue(data['cn_source_pin'].startswith('skishore'))
-        unshown = {x['id'] for x in data['cn_unillustrated']}
-        shown = {x['method'] for x in data['cn']}
-        self.assertFalse(unshown & shown)
-        self.assertEqual(shown, {'cn-natural-self', 'cn-natural-pair', 'cn-source-union'})
+        self.assertEqual(len(data['jp']), 20)
+        self.assertEqual(data['cn'], [])
         built = json.loads((ROOT/'evaluation/recognition/generated/manifest.json').read_text('utf-8'))
         self.assertEqual(built['schema'], 'sinogram-prc-method-examples-v1')
         self.assertEqual(len(built['items']), 22)
-        self.assertEqual(len({x['method'] for x in built['items']}), 11)
         for item in built['items']:
             self.assertTrue((ROOT/'evaluation/recognition/generated'/item['file']).exists(), item['id'])
+        catalog = json.loads((ROOT/'methods/catalog.json').read_text('utf-8'))
+        represented = {x['method'] for x in data['jp'] + built['items']}
+        self.assertEqual(represented, {x['slug'] for x in catalog['methods']})
         self.assertEqual({x['type'] for x in data['jp']},
                          {'natural-self', 'natural-pair', 'constructed', 'search-illustration'})
-        self.assertIn('no native reader', data['evidence'].lower())
-        self.assertEqual(len(json.loads((ROOT / 'evaluation/items.json').read_text('utf-8'))['items']), 48)
+        self.assertIn('neither has native-reader validation', data['evidence'].lower())
+        self.assertEqual(len(json.loads((ROOT/'evaluation/items.json').read_text('utf-8'))['items']), 48)
 
 
 if __name__ == '__main__':
