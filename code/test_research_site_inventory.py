@@ -96,6 +96,35 @@ class TestResearchSiteInventory(unittest.TestCase):
         for relative in ('docs/zh/README.md', 'docs/ja/README.md'):
             self.assertIn('/methods/', (ROOT / relative).read_text(encoding='utf-8'))
 
+    def test_all_24_method_pages_have_real_examples_or_honest_input_illustrations(self):
+        catalog = json.loads((ROOT / 'methods/catalog.json').read_text('utf-8'))
+        methods = catalog['methods']
+        self.assertEqual(len(methods), 24)
+        self.assertEqual(sum(m['track'] == 'jp' for m in methods), 13)
+        self.assertEqual(sum(m['track'] == 'cn' for m in methods), 11)
+        index = (ROOT / 'methods/index.html').read_text('utf-8')
+        detail = (ROOT / 'methods/detail.js').read_text('utf-8')
+        self.assertIn('methodSlugs=', index)
+        self.assertIn('requestAnimationFrame', detail)
+        for method in methods:
+            page = ROOT / 'methods' / method['slug'] / 'index.html'
+            self.assertTrue(page.exists(), method['slug'])
+            html = page.read_text('utf-8')
+            self.assertIn('data-method="' + method['slug'] + '"', html)
+            self.assertIn('id="rotation"', html)
+            self.assertIn('id="play"', html)
+            self.assertIn('id="visual"', html)
+            self.assertIn('detail.js', html)
+        jp = json.loads((ROOT/'evaluation/recognition/stimuli.json').read_text('utf-8'))['jp']
+        cn = json.loads((ROOT/'evaluation/recognition/generated/manifest.json').read_text('utf-8'))['items']
+        represented = {x['method'] for x in jp + cn}
+        self.assertEqual(represented, {x['slug'] for x in methods})
+        node = shutil.which('node')
+        if node:
+            proc = subprocess.run([node, '--check', str(ROOT/'methods/detail.js')],
+                                  capture_output=True, text=True, check=False)
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+
     def test_gallery_does_not_mislabel_unimplemented_methods(self):
         data = json.loads((ROOT / 'evaluation/recognition/stimuli.json').read_text('utf-8'))
         self.assertEqual(data['schema'], 'sinogram-reader-curated-methods-v2')
