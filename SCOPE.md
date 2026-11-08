@@ -1,6 +1,6 @@
 # Scope
 
-> **Two separate experimental geometric tracks:** 2,770 Japanese kanji (KanjiVG) and a 6,763-codepoint Mainland Chinese GB2312 shortlist (Make Me a Hanzi). The Chinese track uses source forms that are not independently certified for each region. Neither track establishes human readability.
+> **Two coequal experimental research tracks:** Japanese kanji (2,770 KanjiVG glyphs) **and** Chinese hanzi (6,763 GB2312 codepoints; Make Me a Hanzi). Both investigate natural half-turns, distinct-character pairs, and geometric construction; both have open questions and unvalidated human readability. Their different source glyphs, geometric scales, and regional-form constraints demand separate measurements, **not unequal priority, maturity, or scientific status**.
 
 This document distinguishes shipped research from draft experiments and documents geographic and linguistic boundaries. *Sinograms* here refers to the wider research question, not to a claim that all regional forms are interchangeable or that all Chinese characters are covered.
 
@@ -42,7 +42,7 @@ Two distinct scales appear in the datasets and must not be mixed:
 [`data/README.md`](data/README.md) is the reference for which file uses which
 scale.
 
-## Experimental PRC-source track
+## Chinese research track — PRC-source geometry
 
 The independent [PRC Explorer](prc/) reads a measured shortlist of 6,763 GB2312 characters using Make Me a Hanzi geometry, rather than Japanese KanjiVG vectors. The pinned input includes 9,574 source glyph records and fully covers the GB2312 repertoire. Its 106,347 coarse-screened candidate pairs are **not** fine-grid exact results, not a confirmed Mainland normative form certification, and not validated human-readable ambigrams. Source-derived rendering stays with the Arphic Public License; [the research method](methods/PRC_COARSE_SEARCH.md) and [source audit](LICENSE-AUDIT.md) describe the boundaries. Future regional inventories (including a verified official 2013 TCC transcription) and exact PRC refinement are separate tasks.
 
