@@ -107,14 +107,44 @@ function match(pts,cloud){return pts.filter(v=>cloud.some(w=>Math.hypot(v[0]-w[0
 [[pathsA,a,flatB],[pathsB,b,flatA]].forEach(([paths,groups,other],side)=>paths.forEach((p,j)=>{const ratio=match(groups[j],other);if(item.method==='common-core'&&ratio<.5)return;p.setAttribute('stroke','#24211d');p.setAttribute('stroke-width',item.method==='common-core'?'7':ratio>=.5?'9':'2.6');p.setAttribute('opacity',side?'.54':'.94');svg.appendChild(p)}));}
 return new XMLSerializer().serializeToString(svg);}
 function toData(svg){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}
-async function load(){if(items.length)return;const r=await fetch('../items.json',{cache:'no-cache'});if(!r.ok)throw Error('items '+r.status);const file=await r.json();const sample=[];['v1-top','v2-top','self','control'].forEach(stratum=>{file.items.filter(it=>it.stratum===stratum).slice(0,3).forEach(it=>sample.push({id:it.id,a:it.label_a,b:it.label_b,kind:'constructed-pilot',method:'stroke-salience',stratum:it.stratum,source:'KanjiVG / Japanese forms',svg:it.construction_svg}));});for(const d of DEMOS)sample.push({...d,stratum:'exploratory',source:'KanjiVG / Rotation Lab',svg:makeDemoSVG(d)});if(sample.length!==17||sample.some(it=>!it.svg))throw Error('Stimulus selection invalid');items=sample;seed=randomSeed();order=shuffle(sample.map((_,i)=>i),seed);}
+const PRC_SVG='https://raw.githubusercontent.com/skishore/makemeahanzi/bddc96d41bef78427ed0e034e9f7e31d71fd1b92/svgs/';
+function prcSrc(ch){return PRC_SVG+ch.codePointAt(0)+'.svg'}
+async function load(which){
+if(items.length&&which===track)return;
+const sample=[];
+if(which==='jp'){
+ const r=await fetch('../items.json',{cache:'no-cache'});if(!r.ok)throw Error('items '+r.status);
+ const file=await r.json();
+ ['v1-top','v2-top','self','control'].forEach(stratum=>file.items.filter(it=>it.stratum===stratum).slice(0,3).forEach(it=>sample.push({id:it.id,track:'jp',a:it.label_a,b:it.label_b,kind:'constructed-pilot',method:'stroke-salience',stratum:it.stratum,source:'KanjiVG / Japanese forms',svg:it.construction_svg})));
+ for(const d of DEMOS)sample.push({...d,track:'jp',stratum:'exploratory',source:'KanjiVG / Rotation Lab',svg:makeDemoSVG(d)});
+ if(sample.length!==17||sample.some(it=>!it.svg))throw Error('Japanese selection invalid');
+}else if(which==='cn'){
+ const r=await fetch('../../prc/catalog.json',{cache:'no-cache'});if(!r.ok)throw Error('PRC catalog '+r.status);
+ const catalog=await r.json();
+ if(catalog.schema!=='prc-public-coarse-catalog-v1'||catalog.region!=='cn-s'||catalog.human_readability_validated!==false||catalog.source_forms_certified!==false||!catalog.partners)throw Error('PRC provenance failure');
+ const anchors=['甲','由','王','玉','目','田','回','国','上','下','日','昌'],used=new Set();
+ for(const a of anchors){
+  const partners=catalog.partners[a]||[];
+  const ranked=partners.find(row=>Array.isArray(row)&&row[0]!==a&&!used.has([a,row[0]].sort().join('|')))||partners[0];
+  if(!ranked)continue;
+  const b=ranked[0],key=[a,b].sort().join('|');if(used.has(key))continue;
+  used.add(key);sample.push({id:'prc-'+a.codePointAt(0)+'-'+b.codePointAt(0),track:'cn',a,b,kind:'source-overlay-diagnostic',method:'prc-source-overlay',stratum:'gb2312-coarse',source:'Make Me a Hanzi / pinned Mainland Chinese-source SVG',score_z:ranked[1],score_iou:ranked[2]});
+ }
+ if(sample.length<8)throw Error('Too few Chinese-source candidates');
+}else throw Error('Invalid track');
+items=sample;track=which;seed=randomSeed();order=shuffle(sample.map((_,i)=>i),seed);
+}
 function current(){return items[order[idx]]}
 function markProgress(){const n=idx,total=items.length;$('progressText').textContent=words('progress',{n:Math.min(n+1,total),total});$('progressBar').setAttribute('aria-valuenow',String(Math.round(n/total*100)));$('progressFill').style.width=(n/total*100)+'%';}
 function paint(){
 const it=current();if(!it)return;markProgress();$('validation').textContent='';$('phaseTag').textContent=phase==='a'?'A · 0°':phase==='b'?'B · 180°':'A ↔ B';$('phaseName').textContent=t(phase==='a'?'phaseA':phase==='b'?'phaseB':'phaseR');$('prompt').textContent=t(phase==='a'?'questionA':phase==='b'?'questionB':'questionR');
-$('drawing').src=toData(it.svg);$('drawing').style.transform='rotate('+(phase==='a'?0:180)+'deg)';$('angle').textContent=phase==='a'?'0°':phase==='b'?'180°':'0° / 180°';
+if(it.track==='cn'){$('drawing').classList.add('hidden');$('cnArt').classList.remove('hidden');$('cnA').src=prcSrc(it.a);$('cnB').src=prcSrc(it.b);$('cnArt').style.transform='rotate('+(phase==='a'?0:180)+'deg)';}
+else{$('cnArt').classList.add('hidden');$('drawing').classList.remove('hidden');$('drawing').src=toData(it.svg);$('drawing').style.transform='rotate('+(phase==='a'?0:180)+'deg)';}
+$('angle').textContent=phase==='a'?'0°':phase==='b'?'180°':'0° / 180°';
 $('readFields').classList.toggle('hidden',phase==='relation');$('relationFields').classList.toggle('hidden',phase!=='relation');$('skip').classList.toggle('hidden',phase==='relation');$('advance').textContent=t(phase==='a'?'nextA':phase==='b'?'nextB':idx===items.length-1?'finish':'nextR');
-if(phase==='relation'){const cmp=$('compare');cmp.replaceChildren();for(const [a,rot] of [['A',0],['B',180]]){const f=document.createElement('figure'),im=document.createElement('img'),cap=document.createElement('figcaption');im.src=toData(it.svg);im.style.transform='rotate('+rot+'deg)';im.alt=a;cap.textContent=a+' · '+rot+'°';f.append(im,cap);cmp.appendChild(f)}makeOptions('relationOptions','rel',t('relation'));$('comment').value=answers[it.id]?.comment||'';}
+if(phase==='relation'){const cmp=$('compare');cmp.replaceChildren();for(const [a,rot] of [['A',0],['B',180]]){const f=document.createElement('figure'),im=document.createElement('img'),cap=document.createElement('figcaption');if(it.track==='cn'){const view=document.createElement('div');view.className='cnArt';view.style.transform='rotate('+rot+'deg)';for(const key of ['a','b']){const image=document.createElement('img');image.className=key==='a'?'srcA':'srcB';image.src=prcSrc(it[key]);image.alt='';view.appendChild(image);}f.appendChild(view);}
+else{im.src=toData(it.svg);im.style.transform='rotate('+rot+'deg)';im.alt=a;f.appendChild(im);}
+cap.textContent=a+' · '+rot+'°';f.appendChild(cap);cmp.appendChild(f)}makeOptions('relationOptions','rel',t('relation'));$('comment').value=answers[it.id]?.comment||'';}
 else{makeOptions('recognitionOptions','status',t('status'));$('reading').value='';$('confidence').value='';}
 }
 function makeOptions(host,name,labels){const parent=$(host);parent.replaceChildren();labels.forEach((txt,i)=>{const label=document.createElement('label');label.className='opt';const input=document.createElement('input');input.type='radio';input.name=name;input.value=String(i);const span=document.createElement('span');span.textContent=txt;label.append(input,span);parent.append(label)})}
@@ -129,14 +159,14 @@ a.relation=rel;a.comment=$('comment').value.trim();a.skipped=false;answers[it.id
 function skip(){const it=current();answers[it.id]={id:it.id,skipped:true,a:null,b:null,relation:null,comment:''};idx++;if(idx>=items.length){finish();return;}phase='a';paint();}
 function finish(){show('finished');summary()}
 function classify(a){if(a.skipped)return 'skipped';if(!a.a||!a.b)return 'incomplete';if(a.a.status===2||a.b.status===2||a.relation===3)return 'unreadable';if(a.relation===0)return 'same-character reported';if(a.relation===1)return 'different-meaning reported';if(a.relation===2)return 'semantic/variant ambiguity';return 'uncertain';}
-function collect(){return {schema:'native-reader-exploratory-v1',study:'sinogram-ambigram',consent:true,language:lang,seed,respondent,protocol:{selection:'first three pilot items per stratum + five pinned Rotation Lab examples',pilot_strata:['v1-top','v2-top','self','control'],note:'Exploratory convenience subset. Method visualizations are not all ambigram constructions. Self-reported identity and semantic status are not independently verified.'},items:order.map((i,pos)=>{const it=items[i],r=answers[it.id]||{};return {position:pos+1,id:it.id,source:it.source,method:it.method,kind:it.kind,stratum:it.stratum,expected_a:it.a,expected_b:it.b,reading_a:r.a?.reading||'',status_a:r.a?.status??null,confidence_a:r.a?.confidence??null,reading_b:r.b?.reading||'',status_b:r.b?.status??null,confidence_b:r.b?.confidence??null,relation:r.relation??null,classification:classify(r),comment:r.comment||'',skipped:!!r.skipped}})};}
+function collect(){return {schema:'native-reader-exploratory-v1',study:'sinogram-ambigram',consent:true,language:lang,seed,track,respondent,protocol:{selection:track==='jp'?'first three pilot items per stratum + five pinned Rotation Lab examples':'coarse PRC candidates from twelve preselected GB2312 anchors, deduplicated',pilot_strata:track==='jp'?['v1-top','v2-top','self','control']:['gb2312-coarse'],note:'Exploratory convenience subset. Chinese source overlays are not refined constructed ambigrams. Source-form certification is pending. Chinese and Japanese tracks are separate. Self-reported identity and semantic status are not independently verified.'},items:order.map((i,pos)=>{const it=items[i],r=answers[it.id]||{};return {position:pos+1,id:it.id,track:it.track,source:it.source,method:it.method,kind:it.kind,stratum:it.stratum,expected_a:it.a,expected_b:it.b,reading_a:r.a?.reading||'',status_a:r.a?.status??null,confidence_a:r.a?.confidence??null,reading_b:r.b?.reading||'',status_b:r.b?.status??null,confidence_b:r.b?.confidence??null,relation:r.relation??null,classification:classify(r),comment:r.comment||'',skipped:!!r.skipped}})};}
 function download(name,mime,body){const blob=new Blob([body],{type:mime}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}
-function csv(){const data=collect();const head=['position','id','source','method','kind','stratum','expected_a','expected_b','reading_a','status_a','confidence_a','reading_b','status_b','confidence_b','relation','classification','comment','skipped'];function enc(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'}const lines=[head.map(enc).join(',')];data.items.forEach(it=>lines.push(head.map(k=>enc(it[k])).join(',')));return '\uFEFF'+lines.join('\r\n')+'\r\n';}
+function csv(){const data=collect();const head=['position','id','track','source','method','kind','stratum','expected_a','expected_b','reading_a','status_a','confidence_a','reading_b','status_b','confidence_b','relation','classification','comment','skipped'];function enc(v){return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'}const lines=[head.map(enc).join(',')];data.items.forEach(it=>lines.push(head.map(k=>enc(it[k])).join(',')));return '\uFEFF'+lines.join('\r\n')+'\r\n';}
 function summary(){const data=collect(),container=$('summary');container.replaceChildren();const table=document.createElement('table'),head=document.createElement('tr');['ID','Source','Method','A','B','Reading A','Reading B','Reported class'].forEach(s=>{const th=document.createElement('th');th.textContent=s;head.appendChild(th)});table.appendChild(head);data.items.forEach(it=>{const tr=document.createElement('tr');[it.id,it.kind,it.method,it.expected_a,it.expected_b,it.reading_a,it.reading_b,it.classification].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});table.appendChild(tr)});container.appendChild(table)}
 document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>switchLang(b.dataset.lang)));
-$('agree').onclick=()=>show('profile');
+$('agree').onclick=()=>{const chosen=document.querySelector('input[name="sourceTrack"]:checked');if(!chosen){$('sourceRequired').textContent=t('chooseTrack');return;}track=chosen.value;$('sourceRequired').textContent='';show('profile');};
 $('decline').onclick=()=>{show('welcome');$('welcome').replaceChildren(document.createTextNode(t('declined')))};
-$('start').onclick=async()=>{respondent={native: $('native').value,proficiency:$('proficiency').value};if(!respondent.native||!respondent.proficiency){$('loadStatus').textContent=t('choose');return;}const button=$('start');button.disabled=true;$('loadStatus').textContent=t('loading');try{await load();show('study');phase='a';idx=0;paint()}catch(err){console.error(err);$('loadStatus').textContent=t('loadFail');button.disabled=false}};
+$('start').onclick=async()=>{respondent={native: $('native').value,proficiency:$('proficiency').value};if(!respondent.native||!respondent.proficiency){$('loadStatus').textContent=t('choose');return;}const button=$('start');button.disabled=true;$('loadStatus').textContent=t('loading');try{await load(track);show('study');phase='a';idx=0;paint()}catch(err){console.error(err);$('loadStatus').textContent=t('loadFail');button.disabled=false}};
 $('advance').onclick=next;$('skip').onclick=skip;
 $('json').onclick=()=>download('sinogram-reader-'+seed+'.json','application/json;charset=utf-8',JSON.stringify(collect(),null,2));
 $('csv').onclick=()=>download('sinogram-reader-'+seed+'.csv','text/csv;charset=utf-8',csv());
