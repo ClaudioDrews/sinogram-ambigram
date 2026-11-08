@@ -101,6 +101,7 @@ function switchLang(v){
   for(const [name,value] of [['status',prev.status],['meaning',prev.meaning],['rel',prev.rel]]){
    if(value!==null){const input=document.querySelector('input[name="'+name+'"][value="'+value+'"]');if(input)input.checked=true;}
   }
+  $('meaningFields').classList.toggle('hidden',prev.status===2);
   $('reading').value=prev.reading;$('meaningGloss').value=prev.meaningGloss;$('confidence').value=prev.confidence;$('comment').value=prev.comment;
  }
  if(!$('finished').classList.contains('hidden'))summary();
@@ -178,7 +179,7 @@ if(which==='jp'){
   const ranked=partners.find(row=>Array.isArray(row)&&row[0]!==a&&!used.has([a,row[0]].sort().join('|')))||partners[0];
   if(!ranked)continue;
   const b=ranked[0],key=[a,b].sort().join('|');if(used.has(key))continue;
-  used.add(key);sample.push({id:'prc-'+a.codePointAt(0)+'-'+b.codePointAt(0),track:'cn',a,b,kind:'source-overlay-diagnostic',method:'prc-source-overlay',stratum:'gb2312-coarse',source:'Make Me a Hanzi / pinned Mainland Chinese-source SVG',score_z:ranked[1],score_iou:ranked[2]});
+  used.add(key);sample.push({id:'prc-'+a.codePointAt(0)+'-'+b.codePointAt(0),track:'cn',a,b,kind:'source-union-diagnostic',method:'prc-source-vector-union',stratum:'gb2312-coarse',source:'Make Me a Hanzi / pinned Mainland Chinese-source SVG',score_z:ranked[1],score_iou:ranked[2]});
  }
  if(sample.length<8)throw Error('Too few Chinese-source candidates');
   const built=await Promise.all(sample.map(async it=>{
