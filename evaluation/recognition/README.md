@@ -6,7 +6,7 @@ This page is an **exploratory feedback tool**, not the original 48-item prompted
 
 ## Participant flow
 
-1. On the opening screen, select **Chinese (汉字)** or **Japanese (漢字)**. There are exactly two material choices; text switches to the chosen reading language automatically.
+1. The opening screen starts in **English** and has a top **EN / 中文 / 日本語** interface-language selector. This selector changes **only the introduction** and is hidden after selection. The visitor then chooses **Chinese (汉字)** or **Japanese (漢字)** from exactly two material choices. All subsequent evaluation screens automatically use the language of the selected material (Chinese or Japanese), regardless of the introduction language.
 2. View **one fully consolidated drawing** on a fixed light-colored canvas. **Tap the drawing itself** to visibly rotate it **180°**; each further tap performs another animated half-turn. There is no automatic animation and no animation of source components.
 3. Choose exactly one **meaning recognition** response: *both orientations*, *one orientation*, or *neither orientation*. The participant must rotate the drawing at least once before advancing.
 4. See the **generation method**, with no expected character labels. Enter an optional observation.

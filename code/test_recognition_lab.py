@@ -28,7 +28,15 @@ class TestRecognitionGallery(unittest.TestCase):
         self.assertEqual(h.count('class="language-card"'), 2)
         self.assertNotIn('id="proficiency"', h)
         self.assertNotIn('id="native"', h)
-        self.assertNotIn('data-lang="en"', h)
+        for code in ('en','zh','ja'):
+            self.assertIn(f'data-intro-lang="{code}"', h)
+        self.assertEqual(h.count('data-intro-lang="'), 3)
+        self.assertIn('id="introLangs"', h)
+        self.assertIn("setIntroLanguage('en')", h)
+        self.assertIn("button.dataset.introLang===code", h)
+        self.assertIn("id!=='home'", h)
+        self.assertIn("track==='cn'?'zh-Hans':'ja'", h)
+        self.assertIn("function setIntroLanguage(code)", h)
         self.assertIn("start('cn')", h)
         self.assertIn("start('jp')", h)
 
