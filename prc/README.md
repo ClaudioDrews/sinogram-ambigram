@@ -52,7 +52,7 @@ The 106,347 pairs result was independently produced in [GitHub Actions](https://
 
 ## Related Chinese-method research outputs
 
-This PRC Explorer remains a **coarse ranking/overlay tool**, but it is only one part of the **equally important Chinese research track**. All **11 Chinese method pages** and **22 real source-pinned constructed examples** are available in the [Research Methods index](../methods/) and [Reader Gallery](../evaluation/recognition/). The published experiments include centre and extremity optimisation, deterministic and searched sector width, R-ODD, harmonic thickness, and A/B fusion null outputs. They do not establish readability.
+This PRC Explorer remains a **coarse ranking/overlay tool**, but it is only one part of the **equally important Chinese research track**. All **11 Chinese method pages** and **22 real source-pinned method examples** are available in the [Research Methods index](../methods/) and [Reader Gallery](../evaluation/recognition/). The published experiments include centre and extremity optimisation, deterministic and searched sector width, R-ODD, harmonic thickness, and A/B fusion null outputs. They do not establish readability.
 
 ## Next research steps
 
