@@ -57,7 +57,7 @@ Japanese historical metric pages illustrate their input geometry with current Ka
 | Chinese / MMah | [C₂-even harmonic thickness field](methods/cn-harmonic/) | 目 ↔ 目 | Actual pinned-source geometric output |
 | Chinese / MMah | [Registered A/B stroke fusion](methods/cn-ab-fusion/) | 甲 ↔ 由 | Actual pinned-source geometric output |
 
-**[View the complete interactive method index](methods/)** · [Browse the 24 method pages](methods/catalog.json) · [Try the native-language Reader Gallery](evaluation/recognition/). The gallery includes representatives of all **13 Japanese and 11 Chinese method families**, clearly distinguishing reconstructed algorithm output from explanatory source-glyph illustrations. The original 48-item Japanese pilot is archived separately and unchanged.
+**[View the complete interactive method index](methods/)** · [Browse the 24 method pages](methods/catalog.json) · [Try the native-language Reader Gallery](evaluation/recognition/). The gallery includes examples of all **13 Japanese and 11 Chinese method families**, using 20 Japanese and 22 Chinese source-attributed visuals, clearly distinguishing reconstructed algorithm output from explanatory source-glyph illustrations. The original 48-item Japanese pilot is archived separately and unchanged.
 
 ### Japanese / KanjiVG
 
