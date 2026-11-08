@@ -50,6 +50,10 @@ The build is executed and checked by [GitHub Actions](../.github/workflows/prc-s
 
 The 106,347 pairs result was independently produced in [GitHub Actions](https://github.com/ClaudioDrews/sinogram-ambigram/actions/runs/42381308937). A small subset is exposed for convenient browsing, but the full stage is reproducible from the source.
 
+## Related Chinese-method research outputs
+
+This PRC Explorer remains a **coarse ranking/overlay tool**, but it is only one part of the **equally important Chinese research track**. All **11 Chinese method pages** and **22 real source-pinned constructed examples** are available in the [Research Methods index](../methods/) and [Reader Gallery](../evaluation/recognition/). The published experiments include centre and extremity optimisation, deterministic and searched sector width, R-ODD, harmonic thickness, and A/B fusion null outputs. They do not establish readability.
+
 ## Next research steps
 
 Detailed 109-grid pair refinement and optimal rotation-centre experiments, source-form/official-TCC checks, and automated output of aesthetically improved constructions are **separate stages**. Human-reader studies are planned **after** publication and are not a release gate. Numerical ranks must never be described as confirmed recognizability.
