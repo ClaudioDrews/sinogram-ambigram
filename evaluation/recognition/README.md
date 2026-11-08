@@ -1,48 +1,50 @@
-# Native Reader Recognition Lab (exploratory v1)
+# Native Reader Recognition Lab (exploratory v2)
 
-This is a **separate, blind, exploratory recognition exercise**, not a replacement for the registered 48-item prompted-legibility pilot in [`methods/HUMAN_EVAL.md`](../../methods/HUMAN_EVAL.md).
+This is an **exploratory, intended-label-blind recognition exercise**, separate from the registered 48-item prompted-legibility pilot in [`methods/HUMAN_EVAL.md`](../../methods/HUMAN_EVAL.md). Source characters, expected answers, construction methods and source scores are not disclosed during ratings. The preliminary construction animation itself may cue component geometry; **do not call this a fully blinded perceptual experiment**.
 
-## Study-track separation
+## Independent material tracks
 
-The welcome screen requires an exclusive choice **before enrollment**:
+The landing page requires a choice of **Chinese OR Japanese** before the profile questionnaire. The materials are never mixed:
 
-- **Chinese characters (汉字):** Mainland Chinese-source Make Me a Hanzi SVGs, selected from the pinned 6,763-character GB2312 candidate catalogue in [`prc/catalog.json`](../../prc/catalog.json). The page uses a simple upright-A / 180°-rotated-B overlay of source glyphs at 48% opacity, as in the PRC exploratory viewer. **These are not refined, constructed or validated ambigrams.** GB2312 membership does not certify the simplified/traditional form of every source glyph.
-- **Japanese characters (漢字):** KanjiVG-derived drawings from the existing 48-item evaluation set (the first three in each of its four strata, 12 total), plus five pinned Rotation Lab examples (17 total). Those five examples include different *kinds*: constructed visual blends, geometry diagnostics, source anchors, and a negative control. They are **not equivalent generator methods**.
+- **Chinese (汉字):** candidate pairs from the pinned GB2312-derived [`prc/catalog.json`](../../prc/catalog.json), using source glyph outlines fetched from a pinned Make Me a Hanzi commit. A parser extracts the **finished, unanimated stroke silhouettes** from each source SVG; it removes the original stroke-order animations, grey drawing guides, animation masks and animated paths. The two silhouettes are combined into **one black-ink vector composition**, with the B outline rotated 180° before combination. This is a deterministic geometric union of source forms: **not a stroke-refined, optimized or human-validated ambigram**. Candidate pairs whose source geometry cannot be retrieved are skipped with a console warning; fewer than four available candidates abort the session. Mainland source does not certify each character's simplified/traditional form.
+- **Japanese (漢字):** 12 KanjiVG-derived constructed SVGs from the existing 48-item [`evaluation/items.json`](../items.json), choosing three from each of four pilot strata. Up to five additional Rotation Lab examples (constructed demonstration, geometry diagnostics, C2 anchor, negative control) are added if their geometry can be produced. A failure of an optional example no longer prevents the 12 committed pilot drawings from appearing.
 
-The tracks never share stimuli during a session. They have different source glyphs, different selection logic, and different construction maturity, so **do not combine them into one success rate or compare raw success percentages as if the inputs were matched**.
+**Dark-mode visibility:** the drawing stage and side-by-side comparisons retain a fixed light paper background because the SVG ink is dark, even when the surrounding UI follows the browser's dark theme.
 
-The website's **EN / 中文 / 日本語** buttons translate *only interface copy* and never select or replace the stimulus track. The rater separately records their primary reading language (Simplified Chinese, Traditional Chinese, Japanese, other) and proficiency. English, Chinese and Japanese versions of the task convey the same intent.
+The **EN / 中文 / 日本語** controls translate interface text independently of the material track. The questionnaire also records the respondent's main reading language and self-reported proficiency. These tracks are not comparable samples: do not pool their rates or treat them as equivalent generator outputs.
 
-## Blind recognition sequence
+## Visual and rating sequence
 
-1. Consent, mutually exclusive material track choice, primary reading language and proficiency.
-2. Randomize **within the chosen track only**, with a recorded client-generated random seed. No expected characters, methods, geometry scores, or provenance are shown during judgement.
-3. Present orientation A at 0°; record: identifiable / uncertain / unrecognizable, free-text observed character, and confidence (1–5 if possible).
-4. Show the exact same drawing rotated 180°; record the same independent reading for B.
-5. Only after both readings, present A and B simultaneously and ask whether the rater perceived one character, two different meanings, related variants/meanings, unreadability, or uncertainty. Optional notes.
-6. Export **locally** in UTF-8 JSON or BOM-prefixed RFC-style quoted CSV. The participant manually shares the file; no form submission is implemented. After finishing, the original expected source codepoints and provenance are revealed.
+1. Record voluntary participation, source track and reading background.
+2. Randomize within the selected material track, recording a client-side random seed. Intended character identities remain hidden until after the entire session.
+3. Display a **construction animation**: Chinese source silhouettes move into a consolidated vector drawing; Japanese final strokes are progressively revealed. The animation ends before advancing to the first rating. When `prefers-reduced-motion: reduce` is active, display the static final SVG without this animation.
+4. Present **one consolidated drawing at 0°**. Record whether it is recognizable, the independently typed character (when possible), **whether the reader recognizes its meaning** (yes / no / unsure), an optional gloss in the respondent's own words and confidence (1–5).
+5. Save the 0° response **before** rotating the **exact same DOM image** 180° with a visible CSS transition. Save the same independent character-and-meaning responses for this second orientation.
+6. Display both orientations side by side using **the same static consolidated SVG** (0° and 180°), record the perceived relation between readings and an optional comment.
+7. After all stimuli, reveal intended identities and construction provenance. The participant may manually export UTF-8 JSON or BOM-prefixed CSV; the site does not submit results to a server.
 
-The questionnaire asks for no account, name, contact information, IP address, or age. GitHub Pages and the upstream image host can still receive ordinary HTTP connection logs; do not describe website access as network-anonymous. In the Chinese track, source glyphs are retrieved from the same **pinned** upstream commit used by the existing PRC explorer. The questionnaire does not transmit answers. The Japanese track embeds its source glyphs in repository files.
+The meaning question is hidden when a drawing is explicitly rated unrecognizable; such missing semantic responses remain null. Switching interface languages preserves unsent responses.
 
-## Data schema
+**Interpretation caution:** The animation may prime a participant to attend to the source components. Although expected identities are not written on screen until the end, this is **not a strictly construction-blind experiment**. A future controlled comparison could omit construction animation for a separate group and compare results.
 
-`native-reader-exploratory-v1`: `track`, `language` (interface language), `respondent.native`, `respondent.proficiency`, `seed`, `protocol`, and ordered `items[]` with source provenance, method, stratum, intended readings (for post-collection evaluation), independent free-text readings and recognition responses for both orientations, relation response, optional comment and skipped status.
+## Data format
 
-The webpage's `classification` field is an **analyst-friendly label for what a rater reported**. It does not certify linguistic identity, character equivalence, semantic meaning or human-legibility thresholds. It is possible for a participant to type one character while declaring an uncertain reading; preserve both raw fields.
+The export schema is `native-reader-exploratory-v2` (not interchangeable with v1). It preserves `track`, interface `language`, `respondent`, `seed`, protocol metadata and ordered item records with provenance and original intended readings.
 
-## Interpretation and quality controls
+For **each orientation**, exports contain the typed character, recognition status, confidence, a semantic recognition code (`meaning_a` / `meaning_b`: **0 yes**, **1 no**, **2 uncertain**, **null not asked/not answered**) and optional free-text gloss (`meaning_gloss_a` / `meaning_gloss_b`). `both_meaningful_reported` is true only when both orientations received affirmative meaning reports, false when responses exist but this is not true, and null for skipped/incomplete responses. The independently reported cross-orientation `relation` is also preserved.
 
-- **Type 1 candidate:** both readings independently recognizable, with the *same actual character*. Orthographic self-symmetry alone is insufficient.
-- **Type 2 candidate (the more useful goal):** both independently recognizable as different characters with different meanings, assessed for the participant's language and variant conventions.
-- **Failure:** one or both orientations not recognizable; record separately from incomplete/skipped/uncertain.
-- A different character may have the same or closely related meaning; keep this as a distinct ambiguity category.
-- **Evaluate per track first**, and then per `kind` and `method`. Do not claim a technique works because a geometry-diagnostic overlay was judged recognizable.
-- The source forms and external preselected pilot examples do not constitute a probability sample. Japanese and Chinese samples are not matched for complexity, glyph inventory, construction method or known readability.
-- **Do not present the screenshot conversation with a single Chinese reader as an item-level measured dataset.** It is qualitative feedback motivating this protocol, not a completed blinded study.
-- Before any formal inference, freeze an item manifest, implement identity/variant adjudication (native-language experts), multiple independent raters, verified region-specific source forms, appropriate sample-size planning and pre-registered analysis. Consent and publication practices may require additional ethics/privacy review.
+The `classification` output is a convenience label for **what the participant reports**, not independently established character identity or verified semantic equivalence. Do not treat free-text glyph entries or perceived semantic relations as ground truth without native-language adjudication.
 
-## Deployment and reproducibility
+## Constraints and reproducibility
 
-The static page is [`index.html`](index.html), hosted at `/evaluation/recognition/` after this branch is merged and GitHub Pages deploys. It consumes the committed `evaluation/items.json`, the committed PRC derived catalogue and the pinned source for Chinese SVG images. No database or write API is needed.
+- **Type 1:** both orientations independently identify the same character and a recognizable meaning.
+- **Type 2:** both orientations independently identify distinct characters with distinct meanings.
+- **Failure or ambiguity:** preserve unreadable, semantically unknown, uncertain, skipped and incomplete results separately. A recognizable form does not necessarily imply a recognized meaning.
+- The Chinese candidate is a single *rendered* vector composition, but its construction remains an unoptimized union. Geometric equivalence or a successful CSS rotation does not prove ambigram readability.
+- The two cohorts differ in source data, methods and selection; comparisons must be stratified by track and stimulus type.
+- Before formal inference: freeze a manifest, independently verify regional glyph forms, recruit multiple native readers, adjudicate character identity and meaning, evaluate presentation-order bias and develop a preregistered study design. Consent/publication may require an ethics/privacy review.
+- The screenshot conversation with one Chinese native reader remains qualitative design feedback, **not** a completed blinded study.
 
-This module is deliberately isolated from the original [prompted-legibility evaluation](../). Its original items, builder, language strings and statistical protocol are untouched.
+The page resides in [`index.html`](index.html), with repository-relative links to its Japanese JSON and Chinese derived catalogue. Chinese source outlines are fetched at runtime from the pinned public GitHub source; this requires network access and the image host may receive connection metadata. No personal responses are sent to GitHub by the questionnaire.
+
+This module does not change the earlier [prompted-legibility evaluation](../) or its registered protocol.
