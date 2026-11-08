@@ -29,7 +29,6 @@ class TestRecognitionGallery(unittest.TestCase):
         self.assertNotIn('id="proficiency"', h)
         self.assertNotIn('id="native"', h)
         self.assertNotIn('data-lang="en"', h)
-        self.assertIn("choose('cn')", h) if False else None
         self.assertIn("start('cn')", h)
         self.assertIn("start('jp')", h)
 
@@ -53,7 +52,6 @@ class TestRecognitionGallery(unittest.TestCase):
         self.assertIn('name=\'assessment\'', h)
         self.assertIn('id="note"', h)
         self.assertIn("value=String(2-index)", h)
-        self.assertIn("for(const [", h) if False else None
         self.assertIn("meaning_orientations:Number(answer.value)", h)
         self.assertIn("t.choices.forEach((label,index)", h)
         self.assertIn("$('method-value').textContent=methodText(item.method)", h)
