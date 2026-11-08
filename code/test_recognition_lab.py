@@ -64,21 +64,56 @@ class TestRecognitionGallery(unittest.TestCase):
         self.assertIn("t.choices.forEach((label,index)", h)
         self.assertIn("$('method-value').textContent=methodText(item.method)", h)
 
-    def test_sources_are_constructed_and_track_specific(self):
+    def test_curated_sources_and_methods_are_provenance_distinct(self):
         h = self.html
-        self.assertIn("fetch('../items.json')", h)
-        self.assertIn("['v1-top','v2-top']", h)
-        self.assertIn("selected.length!==12", h)
+        self.assertIn("fetch('stimuli.json')", h)
         self.assertIn("fetch('../../prc/catalog.json')", h)
         self.assertIn("prc-public-coarse-catalog-v1", h)
         self.assertIn("human_readability_validated!==false", h)
         self.assertIn("function composite(pathsA,pathsB)", h)
+        self.assertIn("function single(paths)", h)
         self.assertIn("getAttribute('fill')==='lightgray'", h)
         self.assertIn("bddc96d41bef78427ed0e034e9f7e31d71fd1b92", h)
-        items=json.loads(ITEMS.read_text(encoding="utf-8"))['items']
-        chosen=[r for group in ('v1-top','v2-top') for r in [it for it in items if it['stratum']==group][:6]]
-        self.assertEqual(len(chosen), 12)
-        self.assertTrue(all('<svg' in item['construction_svg'] for item in chosen))
+        self.assertIn("jpPoints(d)", h)
+        self.assertIn("jpProximity(", h)
+        self.assertIn("if(row.method==='jp-shared'&&ratio<.35)return", h)
+
+        curated = json.loads((PAGE.parent / 'stimuli.json').read_text(encoding="utf-8"))
+        self.assertEqual(curated['schema'], 'sinogram-reader-curated-methods-v2')
+        self.assertEqual(len(curated['jp']), 13)
+        self.assertEqual(len(curated['cn']), 9)
+        self.assertEqual(
+            {row['method'] for row in curated['jp']},
+            {'jp-natural-self', 'jp-natural-pair', 'jp-overlay',
+             'jp-salience', 'jp-shared', 'jp-c2-blend'}
+        )
+        self.assertEqual(
+            {row['method'] for row in curated['cn']},
+            {'cn-natural-self', 'cn-natural-pair', 'cn-source-union'}
+        )
+        self.assertEqual(len(curated['cn_unillustrated']), 7)
+        self.assertTrue(all(row['source'].startswith('KanjiVG') for row in curated['jp']))
+        self.assertTrue(all('Make Me a Hanzi' in row['source'] for row in curated['cn']))
+        self.assertTrue(all(curated['jp_glyphs'].get(row['a']) for row in curated['jp']))
+        self.assertTrue(all(curated['jp_glyphs'].get(row['b']) for row in curated['jp']))
+        self.assertTrue(all(row['type'] in ('natural-self','natural-pair','constructed')
+                            for row in curated['jp'] + curated['cn']))
+        self.assertFalse(any(row['method'] in {m['id'] for m in curated['cn_unillustrated']}
+                             for row in curated['cn']))
+
+        # Keep the original, independently defined 48-item human-evaluation pilot untouched.
+        historic = json.loads(ITEMS.read_text(encoding='utf-8'))['items']
+        self.assertEqual(len(historic), 48)
+        self.assertTrue(all('<svg' in row['construction_svg'] for row in historic))
+
+    def test_method_and_status_are_visible_and_exported(self):
+        h = self.html
+        self.assertIn('id="type-value"', h)
+        self.assertIn('id="method-inventory-link"', h)
+        self.assertIn("status:item.status", h)
+        self.assertIn("type:item.type", h)
+        self.assertIn("'method','type','status','source'", h)
+        self.assertIn("methodLabels[track][method]", h)
 
     def test_csv_and_txt_are_optional_local_downloads(self):
         h = self.html
