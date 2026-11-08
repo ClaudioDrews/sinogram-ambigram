@@ -1,0 +1,726 @@
+{
+  "schema": "sinogram-prc-method-examples-v1",
+  "source_commit": "bddc96d41bef78427ed0e034e9f7e31d71fd1b92",
+  "source_sha256": "a28c478b5178e98f67f510b2d52fde08a69dc664654ef43498253b9b764d46ee",
+  "licence": "Arphic Public License; see ../../../licenses/ARPHICPL.TXT",
+  "code": "code/build_prc_method_gallery.py, code/prc_construct.py, code/prc_{r_odd,harmonic,ab_fusion}.py",
+  "disclaimer": "Actual geometric code output, not a native-reader validated ambigram.",
+  "items": [
+    {
+      "id": "cn-natural-self-30000-30000",
+      "method": "cn-natural-self",
+      "track": "cn",
+      "type": "natural-self",
+      "status": "unmodified-source-geometric-candidate",
+      "a": "田",
+      "b": "田",
+      "file": "cn-natural-self-30000-30000.svg",
+      "svg_sha256": "f90828c68c5cd330179275048ee6ee6d31804b7c957785a521e670b2ea022004",
+      "raster_sha256": "5f9fcb2eac69e2796c041d282444dcc7fb0354212e619a6dacc63c695865a852",
+      "metrics": {
+        "symmetry_before": 0.3547058823529412,
+        "symmetry_after": 0.3547058823529412,
+        "pixel_equal_to_source": true,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 1700
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-natural-self-30446-30446",
+      "method": "cn-natural-self",
+      "track": "cn",
+      "type": "natural-self",
+      "status": "unmodified-source-geometric-candidate",
+      "a": "目",
+      "b": "目",
+      "file": "cn-natural-self-30446-30446.svg",
+      "svg_sha256": "8f40f30318ce4623ee887f011be01b84abb595ce7c903580bafb0cd7db2657fa",
+      "raster_sha256": "db9de95902bbd992624152e50966b436ca49d63ab2c82a09765ffc47dde5b142",
+      "metrics": {
+        "symmetry_before": 0.4866412213740458,
+        "symmetry_after": 0.4866412213740458,
+        "pixel_equal_to_source": true,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 1572
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-natural-pair-30002-30001",
+      "method": "cn-natural-pair",
+      "track": "cn",
+      "type": "natural-pair",
+      "status": "unmodified-source-geometric-candidate",
+      "a": "甲",
+      "b": "由",
+      "file": "cn-natural-pair-30002-30001.svg",
+      "svg_sha256": "ec942b5bd7371fbb2982cabbf3c1fbd08b78901570f662a78df2cfd9179ffe06",
+      "raster_sha256": "f5b9ae29d77b1f8f7667b50d99210ebdca253cb287b212e3be7aedb6eeaafaa6",
+      "metrics": {
+        "symmetry_before": 0.2247964934251722,
+        "symmetry_after": 0.2247964934251722,
+        "pixel_equal_to_source": true,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 1597
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-natural-pair-29579-29577",
+      "method": "cn-natural-pair",
+      "track": "cn",
+      "type": "natural-pair",
+      "status": "unmodified-source-geometric-candidate",
+      "a": "王",
+      "b": "玉",
+      "file": "cn-natural-pair-29579-29577.svg",
+      "svg_sha256": "c2a6dbce0a63a0a6acf2f5a77a347cd554919ccb56f1561a5bab8efa5553a497",
+      "raster_sha256": "6ee804b3ffb66b7e0956af8cc1a10dd67649b076ce6b10710985b78f96c6b365",
+      "metrics": {
+        "symmetry_before": 0.35719503287070853,
+        "symmetry_after": 0.35719503287070853,
+        "pixel_equal_to_source": true,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 1369
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-source-union-30002-30001",
+      "method": "cn-source-union",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "甲",
+      "b": "由",
+      "file": "cn-source-union-30002-30001.svg",
+      "svg_sha256": "0f3ceb90fac1bcbaa230761cbe600e1b3a02c134833492a76d8ff004d1ff4a21",
+      "raster_sha256": "55888c2bcb39c708867ea4636ccfb274293df13b5dc22ddcfc9730622f98479c",
+      "metrics": {
+        "operator": "corrected-median ink union",
+        "symmetry_before": 0.2247964934251722,
+        "symmetry_after": 0.4309090909090909,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 2750
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-source-union-29579-29577",
+      "method": "cn-source-union",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "王",
+      "b": "玉",
+      "file": "cn-source-union-29579-29577.svg",
+      "svg_sha256": "93af79ae924b44ae7418fd4896dcc6b347095babfb0b66490ca3a6a98bbfcb6d",
+      "raster_sha256": "dd5795ab18fc64be3f84db5409c49b8532206235b7cfaeae1ac6f5fc1ed746c5",
+      "metrics": {
+        "operator": "corrected-median ink union",
+        "symmetry_before": 0.35719503287070853,
+        "symmetry_after": 0.9043588658484977,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 2363
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-centre-optimisation-30000-30000",
+      "method": "cn-centre-optimisation",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "田",
+      "b": "田",
+      "file": "cn-centre-optimisation-30000-30000.svg",
+      "svg_sha256": "f90828c68c5cd330179275048ee6ee6d31804b7c957785a521e670b2ea022004",
+      "raster_sha256": "5f9fcb2eac69e2796c041d282444dcc7fb0354212e619a6dacc63c695865a852",
+      "metrics": {
+        "selected_center": [
+          54.376658457286084,
+          58.2439213554092
+        ],
+        "selected_symmetry": 0.5858823529411765,
+        "symmetry_before": 0.5858823529411765,
+        "symmetry_after": 0.5858823529411765,
+        "pixel_equal_to_source": true,
+        "centre": [
+          54.376658457286084,
+          58.2439213554092
+        ],
+        "ink_pixels": 1700
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-centre-optimisation-30446-30446",
+      "method": "cn-centre-optimisation",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "目",
+      "b": "目",
+      "file": "cn-centre-optimisation-30446-30446.svg",
+      "svg_sha256": "8f40f30318ce4623ee887f011be01b84abb595ce7c903580bafb0cd7db2657fa",
+      "raster_sha256": "db9de95902bbd992624152e50966b436ca49d63ab2c82a09765ffc47dde5b142",
+      "metrics": {
+        "selected_center": [
+          53.85288423140086,
+          61.28590390000626
+        ],
+        "selected_symmetry": 0.6653944020356234,
+        "symmetry_before": 0.6653944020356234,
+        "symmetry_after": 0.6653944020356234,
+        "pixel_equal_to_source": true,
+        "centre": [
+          53.85288423140086,
+          61.28590390000626
+        ],
+        "ink_pixels": 1572
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-extremity-reconciliation-30000-30000",
+      "method": "cn-extremity-reconciliation",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "田",
+      "b": "田",
+      "file": "cn-extremity-reconciliation-30000-30000.svg",
+      "svg_sha256": "69963bb1991e3250984597e6654eda413764500373af94597f46568967a9f3e8",
+      "raster_sha256": "abf2a2bb68fc611b1fe01b8977152d27bd20d06b4c58776576a5c5ec8a2eb32a",
+      "metrics": {
+        "reconciliation": {
+          "places": 8,
+          "pairs": 1,
+          "reweighted": 2,
+          "trimmed": 0,
+          "extended": 0,
+          "orphans": 6,
+          "direction_error": -9.23783538156247
+        },
+        "symmetry_before": 0.3547058823529412,
+        "symmetry_after": 0.3544973544973545,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 1701
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-extremity-reconciliation-30446-30446",
+      "method": "cn-extremity-reconciliation",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "目",
+      "b": "目",
+      "file": "cn-extremity-reconciliation-30446-30446.svg",
+      "svg_sha256": "7bedbdb18cb0ffdbae4b6ebb844095c839f102cc3a928eea8d9d0d8c6a312a5a",
+      "raster_sha256": "881b3d56e29f606e09fb9374ac24e6a2fd2c1938d8388abdca69f77bda1f068a",
+      "metrics": {
+        "reconciliation": {
+          "places": 7,
+          "pairs": 0,
+          "reweighted": 0,
+          "trimmed": 2,
+          "extended": 0,
+          "orphans": 5,
+          "direction_error": -42.489465356865566
+        },
+        "symmetry_before": 0.4866412213740458,
+        "symmetry_after": 0.47560975609756095,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 1558
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-sector-deterministic-30000-30000",
+      "method": "cn-sector-deterministic",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "田",
+      "b": "田",
+      "file": "cn-sector-deterministic-30000-30000.svg",
+      "svg_sha256": "9ee4ebb21f2bec6d2f72b51d5aa8ceb4968f64aa7c4a4fb4b63e1c10cd7ed4a4",
+      "raster_sha256": "25023cb1ca6a81c1595da385bd0baabfc30b3ef30fe8fb4c6d17127056ad5097",
+      "metrics": {
+        "sector_multipliers": [
+          1.4,
+          1.4,
+          1.2424242424242424,
+          1.1833333333333333,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "symmetry_before": 0.3547058823529412,
+        "symmetry_after": 0.39442013129102843,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 1828
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-sector-deterministic-30446-30446",
+      "method": "cn-sector-deterministic",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "目",
+      "b": "目",
+      "file": "cn-sector-deterministic-30446-30446.svg",
+      "svg_sha256": "0c298f26e3460f8e9603fbaee21550eccdfacb3cc53a538bce1cdb0715e399ee",
+      "raster_sha256": "24957636e7b11d75966f189b88eee09d260f2fe7470ff61170ff33706daee410",
+      "metrics": {
+        "sector_multipliers": [
+          1.0,
+          1.1928934010152283,
+          1.2268041237113403,
+          1.0,
+          1.0,
+          1.1071428571428572,
+          1.0,
+          1.0,
+          1.06
+        ],
+        "symmetry_before": 0.4866412213740458,
+        "symmetry_after": 0.4895646988670245,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 1677
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-sector-search-30000-30000",
+      "method": "cn-sector-search",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "田",
+      "b": "田",
+      "file": "cn-sector-search-30000-30000.svg",
+      "svg_sha256": "bd346a501e90dce312f5d000181be50566037a3f552cdf86c2b6d2c9046a32cb",
+      "raster_sha256": "f6f5025d325978c3151944a1cb572c5a26926442a5a40a87bb75c74f904fa9e9",
+      "metrics": {
+        "sector_multipliers": [
+          1.45,
+          0.7,
+          1.45,
+          1.45,
+          1.45,
+          1.45,
+          1.45,
+          0.55,
+          0.7
+        ],
+        "objective": {
+          "sym": 0.5009910802775025,
+          "retention": 0.9070588235294118,
+          "growth": 1.1870588235294117,
+          "ok": true
+        },
+        "rounds": 1,
+        "symmetry_before": 0.3547058823529412,
+        "symmetry_after": 0.5009910802775025,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 2018
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-sector-search-30446-30446",
+      "method": "cn-sector-search",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "目",
+      "b": "目",
+      "file": "cn-sector-search-30446-30446.svg",
+      "svg_sha256": "11acd03b17256faf0a9ef4b199991ec8aa2252778a3ea339a2ecef5dead206af",
+      "raster_sha256": "f1ee95a6dda5df0a20db1c736fd583e992b35abb31e478d4f8a7a461e579d6a4",
+      "metrics": {
+        "sector_multipliers": [
+          1.45,
+          0.55,
+          1.45,
+          1.45,
+          0.7,
+          1.45,
+          1.45,
+          1.0,
+          1.45
+        ],
+        "objective": {
+          "sym": 0.6030617823947513,
+          "retention": 0.9115776081424937,
+          "growth": 1.1634860050890585,
+          "ok": true
+        },
+        "rounds": 1,
+        "symmetry_before": 0.4866412213740458,
+        "symmetry_after": 0.6030617823947513,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 1829
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-width-fixed-30000-30000",
+      "method": "cn-width-fixed",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "田",
+      "b": "田",
+      "file": "cn-width-fixed-30000-30000.svg",
+      "svg_sha256": "f90828c68c5cd330179275048ee6ee6d31804b7c957785a521e670b2ea022004",
+      "raster_sha256": "5f9fcb2eac69e2796c041d282444dcc7fb0354212e619a6dacc63c695865a852",
+      "metrics": {
+        "corrected_half_width": true,
+        "symmetry_before": 0.3547058823529412,
+        "symmetry_after": 0.3547058823529412,
+        "pixel_equal_to_source": true,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 1700
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-width-fixed-30446-30446",
+      "method": "cn-width-fixed",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "目",
+      "b": "目",
+      "file": "cn-width-fixed-30446-30446.svg",
+      "svg_sha256": "8f40f30318ce4623ee887f011be01b84abb595ce7c903580bafb0cd7db2657fa",
+      "raster_sha256": "db9de95902bbd992624152e50966b436ca49d63ab2c82a09765ffc47dde5b142",
+      "metrics": {
+        "corrected_half_width": true,
+        "symmetry_before": 0.4866412213740458,
+        "symmetry_after": 0.4866412213740458,
+        "pixel_equal_to_source": true,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 1572
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-r-odd-30000-30000",
+      "method": "cn-r-odd",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "田",
+      "b": "田",
+      "file": "cn-r-odd-30000-30000.svg",
+      "svg_sha256": "28237d97c492c9f3bcc60723e7a21b9c4dff8c5edc52b5829dd40fd9ba1fc946",
+      "raster_sha256": "1cf76b1fb393b4125c718c075aa34066467284d46b27a12b0d2a46c411f25021",
+      "metrics": {
+        "objective": {
+          "sym": 0.4866727941176471,
+          "retention": 1.0,
+          "growth": 1.28,
+          "ok": true
+        },
+        "parameters": {
+          "lam": 0.9,
+          "radius": 12.4,
+          "cap": 1.9,
+          "growth_max": 1.28
+        },
+        "symmetry_before": 0.3547058823529412,
+        "symmetry_after": 0.4866727941176471,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 2176
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-r-odd-30446-30446",
+      "method": "cn-r-odd",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "目",
+      "b": "目",
+      "file": "cn-r-odd-30446-30446.svg",
+      "svg_sha256": "a95ccf54d9c8800a1189164577938e86b48f775f60442b31531baeb97a653824",
+      "raster_sha256": "fd51f7ddc550e23d55c0325ec4d17291e77fa493d7850f2d5c299a4807ef45d7",
+      "metrics": {
+        "objective": {
+          "sym": 0.591948310139165,
+          "retention": 0.9968193384223919,
+          "growth": 1.2798982188295165,
+          "ok": true
+        },
+        "parameters": {
+          "lam": 0.9,
+          "radius": 12.4,
+          "cap": 1.9,
+          "growth_max": 1.28
+        },
+        "symmetry_before": 0.4866412213740458,
+        "symmetry_after": 0.591948310139165,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 2012
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-harmonic-30000-30000",
+      "method": "cn-harmonic",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "田",
+      "b": "田",
+      "file": "cn-harmonic-30000-30000.svg",
+      "svg_sha256": "21214421c8623c50bf7874ecd6963076bdeda91a49f4538111d6a837bbf1bae6",
+      "raster_sha256": "e0fe715fd69c02ebf8d241561d769965ff0c0204b89d9cb3e76d52fb4d176dd6",
+      "metrics": {
+        "objective": {
+          "score": {
+            "sym": 0.5150071462601239,
+            "retention": 0.9329411764705883,
+            "growth": 1.234705882352941,
+            "ok": true
+          },
+          "coefficients": [
+            0.2,
+            0.2,
+            0.4,
+            -0.2,
+            0.4
+          ]
+        },
+        "parameters": {
+          "levels": [
+            -0.2,
+            0.2
+          ],
+          "rounds": 2,
+          "growth_max": 1.28
+        },
+        "symmetry_before": 0.3547058823529412,
+        "symmetry_after": 0.5150071462601239,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 2099
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-harmonic-30446-30446",
+      "method": "cn-harmonic",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "目",
+      "b": "目",
+      "file": "cn-harmonic-30446-30446.svg",
+      "svg_sha256": "a5382e3d46ad2eed111a6b64af4422925c578ad497c40679555333c6264bab9d",
+      "raster_sha256": "a68ada461844a788653c942d1dda142071efa9eac7e529c3e4c05c3680e60b55",
+      "metrics": {
+        "objective": {
+          "score": {
+            "sym": 0.5491329479768786,
+            "retention": 0.9389312977099237,
+            "growth": 1.210559796437659,
+            "ok": true
+          },
+          "coefficients": [
+            0.2,
+            0.2,
+            0.4,
+            0.0,
+            0.2
+          ]
+        },
+        "parameters": {
+          "levels": [
+            -0.2,
+            0.2
+          ],
+          "rounds": 2,
+          "growth_max": 1.28
+        },
+        "symmetry_before": 0.4866412213740458,
+        "symmetry_after": 0.5491329479768786,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 1903
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-ab-fusion-30002-30001",
+      "method": "cn-ab-fusion",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "甲",
+      "b": "由",
+      "file": "cn-ab-fusion-30002-30001.svg",
+      "svg_sha256": "0f3ceb90fac1bcbaa230761cbe600e1b3a02c134833492a76d8ff004d1ff4a21",
+      "raster_sha256": "55888c2bcb39c708867ea4636ccfb274293df13b5dc22ddcfc9730622f98479c",
+      "metrics": {
+        "objective": {
+          "metrics": {
+            "f1_a": 0.7347596043248217,
+            "f1_b": 0.7861399249613772,
+            "minimum_f1": 0.7347596043248217,
+            "joint_f1": 0.5776238602085665,
+            "stroke_count": 10
+          },
+          "matched_strokes": 0,
+          "total_a": 5,
+          "total_b": 5,
+          "centre": [
+            54.5,
+            54.5
+          ]
+        },
+        "parameters": {
+          "threshold": 4.0,
+          "alphas": [
+            0.25,
+            0.5,
+            0.75
+          ]
+        },
+        "identical_to_union": true,
+        "symmetry_before": 0.2247964934251722,
+        "symmetry_after": 0.4309090909090909,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 2750
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    },
+    {
+      "id": "cn-ab-fusion-38886-33416",
+      "method": "cn-ab-fusion",
+      "track": "cn",
+      "type": "constructed",
+      "status": "experimental-operator-output",
+      "a": "韦",
+      "b": "芈",
+      "file": "cn-ab-fusion-38886-33416.svg",
+      "svg_sha256": "a4da7903c4fc2d9a4ce062d96c0e62af78a8b4d1335370e369aa67b1387d11fb",
+      "raster_sha256": "67ba287bc2c785c66582acc17898a1ddb12ea4de7a210e4fbaafcee5055439ad",
+      "metrics": {
+        "objective": {
+          "metrics": {
+            "f1_a": 0.8075962018990505,
+            "f1_b": 0.8318237454100367,
+            "minimum_f1": 0.8075962018990505,
+            "joint_f1": 0.6717776974425883,
+            "stroke_count": 11
+          },
+          "matched_strokes": 0,
+          "total_a": 4,
+          "total_b": 7,
+          "centre": [
+            54.5,
+            54.5
+          ]
+        },
+        "parameters": {
+          "threshold": 4.0,
+          "alphas": [
+            0.25,
+            0.5,
+            0.75
+          ]
+        },
+        "identical_to_union": true,
+        "symmetry_before": 0.3941831683168317,
+        "symmetry_after": 0.5561609388097234,
+        "pixel_equal_to_source": false,
+        "centre": [
+          54.5,
+          54.5
+        ],
+        "ink_pixels": 2386
+      },
+      "source": "Make Me a Hanzi · corrected median geometry · Arphic Public License"
+    }
+  ]
+}
